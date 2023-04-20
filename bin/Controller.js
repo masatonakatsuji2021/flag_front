@@ -8,6 +8,7 @@ return class Controller{
     handleAfter(){}
     handleRenderBefore(){}
     handleRenderAfter(){}
+    leave(){}
 
     __rendering(){
 

@@ -19,6 +19,7 @@ module.exports = function(option){
         Form: fs.readFileSync(__dirname + "/bin/Form.js").toString(),
         Request: fs.readFileSync(__dirname + "/bin/Request.js").toString(),
         Response: fs.readFileSync(__dirname + "/bin/Response.js").toString(),
+        LocalStorage: fs.readFileSync(__dirname + "/bin/LocalStorage.js").toString(),
     };
 
     if(require.resolve("@flag/validate")){
@@ -29,7 +30,7 @@ module.exports = function(option){
      
     option.contents = "rendering";
 
-    option.Uncompressed = true;
+    // option.uncompressed = true;
 
     option.startCallback = async function(){
 
