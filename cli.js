@@ -35,13 +35,28 @@ const cli = require("@flag/cli");
             .outn()
         ;
 
+        var create = {};
+
         while(!name){
-            var name = cli.in("- Project Name");
+            var name = cli.in("- Project Name?");
             if(!name){
                 cli.outn("[error] not input project name. retry.");
             }
         }
 
+        create.name = name;
+
+        while(!type){
+            var type = cli.in("- Create Project Type? (web/cordova/electron)[web]");
+
+            if(!type){
+                type = "web";
+            }
+        }
+
+        create.type = type;
+
+        cli.outn();
 
     }
 

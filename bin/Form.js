@@ -86,6 +86,12 @@ return class Form{
 
         var dom = Dom("#" + this.formName);
 
+        var getChildError = dom.querySelectorAll("[data-name]");
+        for(var n = 0 ; n <getChildError.length ; n++){
+            var gce = getChildError[n];
+            gce.innerHTML = "";
+        }
+
         var getChild = dom.querySelectorAll("[name]");
 
         Request.refresh(getChild);
@@ -124,5 +130,19 @@ return class Form{
     onReset(callback){
         Data.__form[this.formName].eventReset = callback;
          return this;
+    }
+
+    setError(validates){
+        var v = validates.get();
+        var columns = Object.keys(v);
+
+        Dom("#" + this.formName + " [data-name]").innerHTML = "";
+
+        for(var n = 0 ; n < columns.length ; n++){
+            var key = columns[n];
+            var val = v[key].join("\n");
+            Dom("#" + this.formName + " [data-name=" + key + "]").innerHTML = val;
+        }
+        return this;
     }
 }

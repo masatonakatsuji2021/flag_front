@@ -8,6 +8,7 @@ const Dom = function(selectName){
     }
 
     var dom = document.querySelector(selector);
+
     return dom;
 };
 return Dom;
