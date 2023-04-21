@@ -1,13 +1,40 @@
+/**
+ * FLAG - Single Page Action(SPA) FW
+ * 
+ * Controller
+ * 
+ * Date   : 2023/04/21
+ * Author : nakatsuji masato
+ */
 const Data = use("Data");
 const Routes = use("Routes");
 const Response = use("Response");
 
 return class Controller{
 
+    /**
+     * handleBefore
+     */
     handleBefore(){}
+
+    /**
+     * handleAfter
+     */
     handleAfter(){}
+
+    /**
+     * handleRenderBefore
+     */
     handleRenderBefore(){}
+
+    /**
+     * handleRenderAfter
+     */
     handleRenderAfter(){}
+
+    /**
+     * leave
+     */
     leave(){}
 
     __rendering(){

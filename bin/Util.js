@@ -42,4 +42,10 @@ return new class Util{
         }
     }
     
+    datetime(format, datetime){
+
+        
+
+
+    }
 }
