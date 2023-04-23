@@ -30,7 +30,7 @@ return new class Response{
 
                 if(this.__before_controller){
                     var befCont = this.__before_controller;
-                    await befCont.leave();
+                    await befCont.handleLeave();
                 }
 
                 if(routes.mode == "notfound"){
@@ -42,7 +42,7 @@ return new class Response{
                 var contPath = "app/Controller/" + controllerName + ".js";
         
                 if(!useExists(contPath)){
-                    throw("\"" + controllername + "\" Class is not found.");
+                    throw("\"" + controllerName + "\" Class is not found.");
                 }
         
                 const Controller = use(contPath);
@@ -141,8 +141,9 @@ return new class Response{
 
         var viewPath = "View/" + viewName + ".html";
         if(!useExists(viewPath)){
-            console.error("View data does not exist. Check if source file \"" + viewPath + "\" exists.");
-            return;
+            var message = "[Rendering ERROR] View data does not exist. Check if source file \"" + viewPath + "\" exists.";
+            console.error(message);
+            return "<pre>" + message + "</pre>"; 
         }
         
         var content = use(viewPath);
@@ -156,8 +157,9 @@ return new class Response{
         var templatePath = "Template/" + templateName + ".html";
 
         if(!useExists(templatePath)){
-            console.error("Template data does not exist. Check if source file \"" + templatePath + "\" exists.");
-            return;
+            var message = "[Rendering ERROR] Template data does not exist. Check if source file \"" + templatePath + "\" exists.";
+            console.error(message);
+            return "<pre>" + message + "</pre>"; 
         }
 
         var content = use(templatePath);

@@ -8,19 +8,24 @@ module.exports = function(option){
         option = {};
     }
 
-    option.core = {
-        Util: fs.readFileSync(__dirname + "/bin/Util.js").toString(),
-        Ajax: fs.readFileSync(__dirname + "/bin/Ajax.js").toString(),
-        Data: fs.readFileSync(__dirname + "/bin/Data.js").toString(),
-        Dom: fs.readFileSync(__dirname + "/bin/Dom.js").toString(),
-        Routes: fs.readFileSync(__dirname + "/bin/Routes.js").toString(),
-        Controller: fs.readFileSync(__dirname + "/bin/Controller.js").toString(),
-        Exception: fs.readFileSync(__dirname + "/bin/Exception.js").toString(),
-        Form: fs.readFileSync(__dirname + "/bin/Form.js").toString(),
-        Request: fs.readFileSync(__dirname + "/bin/Request.js").toString(),
-        Response: fs.readFileSync(__dirname + "/bin/Response.js").toString(),
-        LocalStorage: fs.readFileSync(__dirname + "/bin/LocalStorage.js").toString(),
-    };
+    if(!option.core){
+        option.core = {};
+    }
+
+    option.core.Util = fs.readFileSync(__dirname + "/bin/Util.js").toString();
+    option.core.Data = fs.readFileSync(__dirname + "/bin/Data.js").toString();
+    option.core.Ajax = fs.readFileSync(__dirname + "/bin/Ajax.js").toString();
+    option.core.Dom = fs.readFileSync(__dirname + "/bin/Dom.js").toString();
+    option.core.VDom = fs.readFileSync(__dirname + "/bin/VDom.js").toString();
+    option.core.VDomControl = fs.readFileSync(__dirname + "/bin/VDomControl.js").toString();
+    option.core.VDomStatic = fs.readFileSync(__dirname + "/bin/VDomStatic.js").toString();
+    option.core.Routes = fs.readFileSync(__dirname + "/bin/Routes.js").toString();
+    option.core.Controller = fs.readFileSync(__dirname + "/bin/Controller.js").toString();
+    option.core.Exception = fs.readFileSync(__dirname + "/bin/Exception.js").toString();
+    option.core.Form = fs.readFileSync(__dirname + "/bin/Form.js").toString();
+    option.core.Request = fs.readFileSync(__dirname + "/bin/Request.js").toString();
+    option.core.Response = fs.readFileSync(__dirname + "/bin/Response.js").toString();
+    option.core.LocalStorage = fs.readFileSync(__dirname + "/bin/LocalStorage.js").toString();
 
     if(require.resolve("@flag/validate")){
         option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/Validator.js").toString();

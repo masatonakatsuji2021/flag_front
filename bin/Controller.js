@@ -33,9 +33,9 @@ return class Controller{
     handleRenderAfter(){}
 
     /**
-     * leave
+     * handleLeave
      */
-    leave(){}
+    handleLeave(){}
 
     __rendering(){
 
