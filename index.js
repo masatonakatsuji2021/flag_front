@@ -8,6 +8,44 @@ module.exports = function(option){
         option = {};
     }
 
+    if(!option.const){
+        option.const = {};
+    }
+
+    if(option.const.PATH_APP == undefined){
+        option.const.PATH_APP = "app";
+    }
+    if(option.const.PATH_CONFIG == undefined){
+        option.const.PATH_CONFIG = option.const.PATH_APP + "/config";
+    }
+    if(option.const.PATH_CONTROLLER == undefined){
+        option.const.PATH_CONTROLLER = option.const.PATH_APP + "/Controller";
+    }
+    if(option.const.PATH_FORM == undefined){
+        option.const.PATH_FORM = option.const.PATH_APP + "/Form";
+    }
+    if(option.const.PATH_VALIDATOR == undefined){
+        option.const.PATH_VALIDATOR = option.const.PATH_APP + "/VALIDATOR";
+    }
+    if(option.const.PATH_EXCEPTION == undefined){
+        option.const.PATH_EXCEPTION = option.const.PATH_APP + "/Exception";
+    }
+    if(option.const.PATH_BACKGROUND == undefined){
+        option.const.PATH_BACKGROUND = option.const.PATH_APP + "/Background";
+    }
+    if(option.const.PATH_RENDERING == undefined){
+        option.const.PATH_RENDERING = "rendering";
+    }
+    if(option.const.PATH_VIEW == undefined){
+        option.const.PATH_VIEW = option.const.PATH_RENDERING + "/View";
+    }
+    if(option.const.PATH_TEMPLATE == undefined){
+        option.const.PATH_TEMPLATE = option.const.PATH_RENDERING + "/Template";
+    }
+    if(option.const.PATH_VIEWPART == undefined){
+        option.const.PATH_VIEWPART = option.const.PATH_RENDERING + "/ViewPart";
+    }
+
     if(!option.core){
         option.core = {};
     }
@@ -22,10 +60,12 @@ module.exports = function(option){
     option.core.Routes = fs.readFileSync(__dirname + "/bin/Routes.js").toString();
     option.core.Controller = fs.readFileSync(__dirname + "/bin/Controller.js").toString();
     option.core.Exception = fs.readFileSync(__dirname + "/bin/Exception.js").toString();
+    option.core.Background = fs.readFileSync(__dirname + "/bin/Background.js").toString();
     option.core.Form = fs.readFileSync(__dirname + "/bin/Form.js").toString();
     option.core.Request = fs.readFileSync(__dirname + "/bin/Request.js").toString();
     option.core.Response = fs.readFileSync(__dirname + "/bin/Response.js").toString();
     option.core.LocalStorage = fs.readFileSync(__dirname + "/bin/LocalStorage.js").toString();
+    option.core.SessionStorage = fs.readFileSync(__dirname + "/bin/SessionStorage.js").toString();
 
     if(require.resolve("@flag/validate")){
         option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/Validator.js").toString();
@@ -35,11 +75,11 @@ module.exports = function(option){
      
     option.contents = "rendering";
 
-    // option.uncompressed = true;
+    option.uncompressed = true;
 
     option.startCallback = async function(){
 
-        window.addEventListener("load", function(){
+        window.addEventListener("load", async function(){
             
             const Util = use("Util");
             const Data = use("Data");
@@ -47,10 +87,7 @@ module.exports = function(option){
             const Routes = use("Routes");
             const Request = use("Request");
             const Response = use("Response");
-    
-            var routes = Routes.searchRoute();
-            Response.rendering(routes);
-    
+       
             window.addEventListener("popstate", function(e){
 
                 Request.clear();
@@ -145,9 +182,16 @@ module.exports = function(option){
                 }
     
                 Request.__file_uploads[name].push(buffers);
-    
             });
 
+            if(useExists(PATH_BACKGROUND + "/Background.js")){
+                const Background = use(PATH_BACKGROUND + "/Background.js");
+                const bg = new Background();
+                await bg.handle();
+            }
+
+            var routes = Routes.searchRoute();
+            Response.rendering(routes);
         });
 
     };

@@ -42,10 +42,69 @@ return new class Util{
         }
     }
     
-    datetime(format, datetime){
+    dt(datetime){
 
-        
+        if(datetime){
+            var d = new Date(datetime);
+        }
+        else{
+            var d = new Date();
+        }
 
+        const _DateTime = function(dt){
 
+            this.format = function(format){
+
+                if(format == undefined){
+                    format = "YYYY/MM/DD HH:II:SS";
+                }
+
+                format = format.split("YYYY").join(this.getYear());
+                format = format.split("MM").join(this.getMonth());
+                format = format.split("DD").join(this.getDate());
+                format = format.split("W").join(this.getDay());
+                format = format.split("HH").join(this.getHours());
+                format = format.split("II").join(this.getMinutes());
+                format = format.split("SS").join(this.getSeconds());
+                format = format.split("U").join(this.getTime());
+                
+                return format;
+            };
+
+            this.getYear = function(){
+                return dt.getFullYear();
+            };
+
+            this.getMonth = function(){
+                return ("00" + (dt.getMonth() + 1)).slice(-2);
+            };
+
+            this.getDate = function(){
+                return ("00" + dt.getDate()).slice(-2);
+            };
+
+            this.getDay = function(){
+                return dt.getDay();
+            };
+
+            this.getHours = function(){
+                return ("00" + dt.getHours()).slice(-2);
+            };
+
+            this.getMinutes = function(){
+                return ("00" + dt.getMinutes()).slice(-2);
+            };
+
+            this.getSeconds = function(){
+                return ("00" + dt.getSeconds()).slice(-2);
+            };
+
+            this.getTime = function(){
+                return dt.getTime();
+            };
+        };
+
+        return new _DateTime(d);
     }
+
 }
