@@ -1,3 +1,5 @@
+const DomControl = use("DomControl");
+
 const Dom = function(selectName){
 
     if(selectName){
@@ -7,8 +9,10 @@ const Dom = function(selectName){
         var selector = "[spa-contents]";
     }
 
-    var dom = document.querySelector(selector);
+    var qs = document.querySelector(selector);
 
-    return dom;
+    return qs;
+
+    return new DomControl(qs);
 };
 return Dom;

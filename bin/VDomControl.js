@@ -143,7 +143,6 @@ return class VDomControl{
             this._qs.forEach(function(qs_){
                 qs_.innerText = string;
             });
-            this.refresh();
             return this;
         }
     }
@@ -156,7 +155,6 @@ return class VDomControl{
             this._qs.forEach(function(qs_){
                 qs_.innerHTML = string;
             });
-            this.refresh();
             return this;
         }
     }
@@ -194,7 +192,6 @@ return class VDomControl{
         this._qs.forEach(function(qs_){
             qs_.remove();
         });
-        this.refresh();
         return this;
     }
 
