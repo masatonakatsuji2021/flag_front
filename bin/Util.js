@@ -32,6 +32,10 @@ return new class Util{
         return string.substring(0,1).toUpperCase() + string.substring(1);
     }
 
+    lcFirst(string){
+        return string.substring(0,1).toLowerCase() + string.substring(1);
+    }
+
     getClassName(string, classType){
         return string.substring(0, string.indexOf(classType));
     }

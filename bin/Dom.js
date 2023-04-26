@@ -1,4 +1,4 @@
-const DomControl = use("DomControl");
+// const DomControl = use("DomControl");
 
 const Dom = function(selectName){
 

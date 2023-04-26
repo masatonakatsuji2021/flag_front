@@ -21,7 +21,7 @@ return class Form{
         }
         else{           
             var className = Util.getClassName(this.constructor.name,"Form");
-            this.formName = className;
+            this.formName = Util.lcFirst(className);
             if(formName){
                 this.formName = formName;                
             }
@@ -32,8 +32,225 @@ return class Form{
         }
     }
 
+    handleSubmit(){}
+    handleReset(){}
+    handleSetting(){}
+
+    setting(...argv){
+        this.handleSetting(...argv);
+    }
+
     #_getData(){
         return Data.__form[this.formName];
+    }
+
+    tagInput(name, option){
+
+        var str = this.#_tagInput(name, option);
+
+        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
+
+        dom.innerHTML = str;
+
+        return this;
+    }
+
+    #_tagInput(name, option){
+
+        if(option == undefined){
+            option = {};
+        }
+
+        if(!option.type){
+            option.type = "text";
+        }
+
+        var optionStr = this.#_setOptionString(option);
+
+        var str = "<input name=\"" + name + "\" " + optionStr + ">";
+
+        return str;
+    }
+
+    tagHidden(name, value, option){
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "hidden";
+
+        option.value = value;
+
+        return this.tagInput(name, option);
+    }
+
+    tagNumber(name, option){
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "number";
+
+        return this.tagInput(name, option);
+    }
+
+    tagPassword(name, option){
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "password";
+
+        return this.tagInput(name, option);
+    }
+
+    tagFile(name, option){
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "file";
+
+        return this.tagInput(name, option);
+    }
+
+    tagSelect(name, selects, option){
+
+        if(option == undefined){
+            option = {};
+        }
+
+        var optionStr = this.#_setOptionString(option);
+
+        var selectStr = "";
+
+        if(option.empty){
+            selectStr += "<option value=\"\">" + option.empty + "</option>";
+        }
+
+        var columns = Object.keys(selects);
+        for(var n = 0 ; n < columns.length ; n++){
+            var key = columns[n];
+            var val = selects[key];
+            selectStr += "<option value=\"" + key + "\">" + val + "</option>";
+        }
+
+        var str = "<select name=\"" + name + "\" " + optionStr + ">" + selectStr + "</select>";
+
+        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
+
+        dom.innerHTML = str;
+
+        return this;
+    }
+
+    tagTextarea(name, option){
+
+        if(option == undefined){
+            option = {};
+        }
+
+        var optionStr = this.#_setOptionString(option);
+
+        var str = "<textarea name=\"" + name + "\" " + optionStr + "></textarea>";
+
+        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
+
+        dom.innerHTML = str;
+
+        return this;
+    }
+
+    tagRadio(name, selects, option){
+
+        if(option == undefined){
+            option = {};
+        }
+
+        var str = "";
+
+        var columns = Object.keys(selects);
+        for(var n = 0 ; n < columns.length ; n++){
+            var key = columns[n];
+            var val = selects[key];
+
+            option.type = "radio";
+            option.value = key;
+
+            str += "<label>" + this.#_tagInput(name, option) + val + "</label>";
+        }
+
+        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
+
+        dom.innerHTML = str;
+
+        return this;
+    }
+
+    tagCheckbox(name, selects, option){
+
+        if(option == undefined){
+            option = {};
+        }
+
+        var str = "";
+
+        var columns = Object.keys(selects);
+        for(var n = 0 ; n < columns.length ; n++){
+            var key = columns[n];
+            var val = selects[key];
+
+            option.type = "checkbox";
+            option.value = key;
+
+            str += "<label>" + this.#_tagInput(name + "[]", option) + val + "</label>";
+        }
+
+        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
+
+        dom.innerHTML = str;
+
+        return this;
+    }
+
+    tagSubmit(value, option){
+
+    }
+
+    tagReset(value, option){
+
+        
+    }
+
+    setValues(data){
+
+
+
+    }
+    
+
+    #_setOptionString(option){
+
+        var str = "";
+
+        if(option.default){
+            option.value = option.default;
+            delete option.default;
+        }
+
+        var columns = Object.keys(option);
+        for(var n = 0 ; n < columns.length ; n++){
+            var key = columns[n];
+            var val = option[key];
+
+            str += " " + key + "=\"" + val + "\"";
+        }
+
+        return str;
     }
 
     existSubmitEvent(){
@@ -93,6 +310,8 @@ return class Form{
         }
 
         var getChild = dom.querySelectorAll("[name]");
+
+        console.log(getChild);
 
         Request.refresh(getChild);
 

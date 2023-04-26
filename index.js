@@ -75,7 +75,9 @@ module.exports = function(option){
      
     option.contents = "rendering";
 
-    option.uncompressed = true;
+    if(option.uncompressed == undefined){
+        option.uncompressed = false;
+    }
 
     option.startCallback = async function(){
 
