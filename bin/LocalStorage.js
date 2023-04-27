@@ -4,7 +4,7 @@ return new class LocalStorage{
 
         this.__name = "flag";
 
-        const app = use("app/config/app.js");
+        const app = use("app/config/app");
 
         if(app.localStorage){
             if(app.localStorage.name){

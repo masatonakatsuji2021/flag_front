@@ -4,8 +4,24 @@ const Dom = use("Dom");
 
 return new class Response{
 
+    __page_status = true;
+
     constructor(){
         this.__before_controller = null;
+    }
+
+    pageDisable(){
+        this.__page_status = false;
+        return this;
+    }
+
+    pageEnable(){
+        this.__page_status = true;
+        return this;
+    }
+
+    setPageStatus(){
+        return this.__page_status;
     }
 
     redirect(url, sliented){
@@ -39,7 +55,7 @@ return new class Response{
                
                 var controllerName = routes.controller.substring(0,1).toUpperCase() + routes.controller.substring(1) + "Controller";
         
-                var contPath = "app/Controller/" + controllerName + ".js";
+                var contPath = "app/Controller/" + controllerName;
         
                 if(!useExists(contPath)){
                     throw("\"" + controllerName + "\" Class is not found.");
@@ -94,7 +110,7 @@ return new class Response{
 
                 try{
                     
-                    var expPath = "app/Exception/Exception.js";
+                    var expPath = "app/Exception/Exception";
 
                     if(!useExists(expPath)){
                         console.error("\Exception\" Class is not found.");

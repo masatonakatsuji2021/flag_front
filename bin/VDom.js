@@ -3,6 +3,15 @@ const VDomControl = use("VDomControl");
 
 const VDom = function(refObj, qs0){
 
+    if(!refObj){
+
+        return {
+            refresh: ()=>{
+                VDomStatic.refresh();
+            },
+        };
+    }
+
     if(typeof refObj == "string"){
         var refName = refObj;
 
@@ -14,7 +23,7 @@ const VDom = function(refObj, qs0){
     }
     else{
         var qs = refObj;
-        var refName = qs[0].ref;
+        var refName = qs[0].ref;    
     }
 
     if(qs.length == 0){

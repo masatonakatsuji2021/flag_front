@@ -4,7 +4,7 @@ return new class SessionStorage{
 
         this.__name = "flag";
 
-        const app = use("app/config/app.js");
+        const app = use("app/config/app");
 
         if(app.sessionStorage){
             if(app.sessionStorage.name){

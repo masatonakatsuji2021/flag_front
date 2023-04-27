@@ -83,18 +83,35 @@ module.exports = function(option){
 
         window.addEventListener("load", async function(){
             
-            const Util = use("Util");
-            const Data = use("Data");
-            const Form = use("Form");
-            const Routes = use("Routes");
-            const Request = use("Request");
-            const Response = use("Response");
-       
+            const { Util, Data, Form, VDom, Routes, Request, Response } = uses([
+                "Util",
+                "Data",
+                "Form",
+                "VDom",
+                "Routes",
+                "Request",
+                "Response",
+            ]);
+
             window.addEventListener("popstate", function(e){
 
+                if(!Response.setPageStatus()){
+                    if(Data.__before_url){
+                        history.pushState(null,null,Data.__before_url);
+                    }
+                    else{
+
+                        history.pushState(null,null);
+                    }
+                    return false;
+                }
+
                 Request.clear();
+                VDom().refresh();
                 
                 var url = location.hash.substring(1);
+
+                Data.__before_url = location.hash;
 
                 var routes = Routes.searchRoute(url);
                 Response.rendering(routes);

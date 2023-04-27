@@ -1,4 +1,4 @@
-const app = use("app/config/app.js");
+const app = use("app/config/app");
 
 return new class Routes{
 
