@@ -1,9 +1,35 @@
 <style>
 .fl_dialog{
-
-
+    background:rgba(0,0,0,0.7);
+    position:fixed;
+    z-index:1000;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+}
+.fl_dialog .window{
+    font-size:13px;
+    background:#fff;
+    color:#222;
+    padding:10px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:80%;
+    max-width:300px;
+    transform:translateX(-50%) translateY(-50%);
+    -webkit-transform:translateX(-50%) translateY(-50%);
+}
+.fl_dialog .window p{
+    margin:0;
+    margin-bottom:20px;
+}
+.fl_dialog .window a{
+    color:#179;
+    cursor:pointer;
 }
 </style>
-<div class="fl_dialog" ref="dialog">
-    <div class="window"></div>
+<div class="fl_dialog" data-uid="{{uid}}">
+    <div class="window" ref="window">{{contents}}</div>
 </div>
