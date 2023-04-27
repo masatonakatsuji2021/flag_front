@@ -49,6 +49,9 @@ module.exports = function(option){
     if(!option.core){
         option.core = {};
     }
+    if(!option.coreHtml){
+        option.coreHtml = {};
+    }
 
     option.core.Util = fs.readFileSync(__dirname + "/bin/Util.js").toString();
     option.core.Data = fs.readFileSync(__dirname + "/bin/Data.js").toString();
@@ -66,6 +69,9 @@ module.exports = function(option){
     option.core.Response = fs.readFileSync(__dirname + "/bin/Response.js").toString();
     option.core.LocalStorage = fs.readFileSync(__dirname + "/bin/LocalStorage.js").toString();
     option.core.SessionStorage = fs.readFileSync(__dirname + "/bin/SessionStorage.js").toString();
+
+    option.core.Dialog = fs.readFileSync(__dirname + "/bin/Dialog.js").toString();
+    option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
 
     if(require.resolve("@flag/validate")){
         option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/Validator.js").toString();
