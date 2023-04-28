@@ -200,16 +200,16 @@ return new class Response{
 
     bindView(selector, viewName){
         var content = this.view(viewName);
-        Dom(selector).innerHTML = content;
+        Dom(selector).html(content);
     }
 
     bindTemplate(selector, templateName){
         var content = this.template(templateName);
-        Dom(selector).innerHTML = content;
+        Dom(selector).html(content);
     }
 
     bindViewPart(selector, viewPartName){
         var content = this.viewPart(viewPartName);
-        Dom(selector).innerHTML = content;
+        Dom(selector).html(content);
     }
 }

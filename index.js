@@ -57,9 +57,13 @@ module.exports = function(option){
     option.core.Data = fs.readFileSync(__dirname + "/bin/Data.js").toString();
     option.core.Ajax = fs.readFileSync(__dirname + "/bin/Ajax.js").toString();
     option.core.Dom = fs.readFileSync(__dirname + "/bin/Dom.js").toString();
+    option.core.DomControl = fs.readFileSync(__dirname + "/bin/DomControl.js").toString();
+    option.core.DomStatic = fs.readFileSync(__dirname + "/bin/DomStatic.js").toString();
+    /*
     option.core.VDom = fs.readFileSync(__dirname + "/bin/VDom.js").toString();
     option.core.VDomControl = fs.readFileSync(__dirname + "/bin/VDomControl.js").toString();
     option.core.VDomStatic = fs.readFileSync(__dirname + "/bin/VDomStatic.js").toString();
+    */
     option.core.Routes = fs.readFileSync(__dirname + "/bin/Routes.js").toString();
     option.core.Controller = fs.readFileSync(__dirname + "/bin/Controller.js").toString();
     option.core.Exception = fs.readFileSync(__dirname + "/bin/Exception.js").toString();
@@ -93,7 +97,7 @@ module.exports = function(option){
                 "Util",
                 "Data",
                 "Form",
-                "VDom",
+                // "VDom",
                 "Routes",
                 "Request",
                 "Response",
@@ -113,7 +117,7 @@ module.exports = function(option){
                 }
 
                 Request.clear();
-                VDom().refresh();
+                // VDom().refresh();
                 
                 var url = location.hash.substring(1);
 

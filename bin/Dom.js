@@ -1,17 +1,15 @@
-// const DomControl = use("DomControl");
+const DomControl = use("DomControl");
 
 const Dom = function(selectName){
 
     if(selectName){
-        var selector = "[spa-contents] " + selectName;    
+        var selector = "html " + selectName;    
     }
     else{
-        var selector = "[spa-contents]";
+        var selector = "html *";
     }
 
-    var qs = document.querySelector(selector);
-
-    return qs;
+    var qs = document.querySelectorAll(selector);
 
     return new DomControl(qs);
 };

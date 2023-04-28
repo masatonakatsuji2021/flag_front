@@ -50,7 +50,9 @@ return class Form{
 
         var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
 
-        dom.innerHTML = str;
+        if(dom){
+            dom.html(str);
+        }
 
         return this;
     }
@@ -143,7 +145,9 @@ return class Form{
 
         var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
 
-        dom.innerHTML = str;
+        if(dom){
+            dom.html(str);
+        }
 
         return this;
     }
@@ -160,7 +164,9 @@ return class Form{
 
         var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
 
-        dom.innerHTML = str;
+        if(dom){
+            dom.html(str);
+        }
 
         return this;
     }
@@ -186,7 +192,9 @@ return class Form{
 
         var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
 
-        dom.innerHTML = str;
+        if(dom){
+            dom.html(str);
+        }
 
         return this;
     }
@@ -212,7 +220,9 @@ return class Form{
 
         var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
 
-        dom.innerHTML = str;
+        if(dom){
+            dom.html(str);
+        }
 
         return this;
     }
@@ -306,7 +316,7 @@ return class Form{
         var getChildError = dom.querySelectorAll("[data-name]");
         for(var n = 0 ; n <getChildError.length ; n++){
             var gce = getChildError[n];
-            gce.innerHTML = "";
+            gce.html("");
         }
 
         var getChild = dom.querySelectorAll("[name]");
@@ -355,12 +365,12 @@ return class Form{
         var v = validates.get();
         var columns = Object.keys(v);
 
-        Dom("#" + this.formName + " [data-name]").innerHTML = "";
+        Dom("#" + this.formName + " [data-name]").html("");
 
         for(var n = 0 ; n < columns.length ; n++){
             var key = columns[n];
             var val = v[key].join("\n");
-            Dom("#" + this.formName + " [data-name=" + key + "]").innerHTML = val;
+            Dom("#" + this.formName + " [data-name=" + key + "]").html(val);
         }
         return this;
     }

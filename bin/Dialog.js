@@ -10,7 +10,7 @@ return class Dialog{
         baseHtml = Util.base64Decode(baseHtml);
         baseHtml = baseHtml.split("{{uid}}").join(uid);
         baseHtml = baseHtml.split("{{contents}}").join(contents);
-        Dom().insertAdjacentHTML("afterend", baseHtml);
+        Dom().append(baseHtml);
 
         return Dom("[uid=\"" + uid + "\"]");
     }

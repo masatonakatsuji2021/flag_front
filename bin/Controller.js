@@ -52,7 +52,7 @@ return class Controller{
 
                 Data.before_template = this.template;
 
-                Response.bindTemplate(null, this.template);
+                Response.bindTemplate("body", this.template);
                 Response.bindView("[spa-contents]", this.view);
             }
             else{
@@ -62,7 +62,7 @@ return class Controller{
         }
         else{
             Data.before_template = null;
-            Response.bindView(null, this.view);
+            Response.bindView("body", this.view);
         }
 
     }
