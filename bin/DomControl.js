@@ -96,7 +96,6 @@ return class DomControl{
         for(var n = 0 ; n < this._qs.length ;n ++){
             var qs = this._qs[n];
             var buff = qs.querySelectorAll(selector);
-            console.log(buff);
             buff.forEach(function(b_){
                 qss.push(b_);
             })
@@ -293,9 +292,17 @@ return class DomControl{
     }
 
     addClass(className){
+
+        if(typeof className == "string"){
+            className = [ className ];
+        }
+
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
-            qs.classList.add(className);
+            for(var n2 = 0 ; n2 < className.length ; n2++){
+                var c = className[n2];
+                qs.classList.add(c);
+            }
         }
         return this;
     }

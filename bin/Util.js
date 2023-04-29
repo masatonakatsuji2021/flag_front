@@ -111,4 +111,13 @@ return new class Util{
         return new _DateTime(d);
     }
 
+    sleep(time){
+
+        return new Promise(function(resolve){
+            setTimeout(function(){
+                resolve();
+            },time);
+        });
+
+    }
 }
