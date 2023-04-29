@@ -4,7 +4,15 @@ const cli = require("@flag/cli");
 
     cli.outn();
 
-    cli.outn("FLAG - SPA Fontend Build")
+    cli.outn("FLAG - SPA Fontend Applicaiton Console")
+        .outn()
+        .outn("[Command]")
+        .outn()
+        .outn("create {project_name}　  - プロジェクトを作成します")
+        .outn("                           {project_name} : Cerate Project Name")
+        .outn()
+        .outn("build  {?project_name}　 - プロジェクトのビルドを実行します")
+        .outn("                           {project_name} : Build Project Name")
         .outn()
     ;
     
