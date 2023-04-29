@@ -1,6 +1,9 @@
-const Util = use("Util");
-const Routes = use("Routes");
-const Dom = use("Dom");
+const { Util, Routes, Dom, Data } = uses([
+    "Util",
+    "Routes",
+    "Dom",
+    "Data",
+]);
 
 return new class Response{
 
@@ -114,6 +117,7 @@ return new class Response{
 
                     if(!useExists(expPath)){
                         console.error("\Exception\" Class is not found.");
+                        this.#_defautShowException();
                         return;
                     }
 
@@ -124,7 +128,8 @@ return new class Response{
                         exps.handle ||
                         cont.before_handle
                     )){
-                        throw("\handle\" method on \"Exception\" class is not found.");
+                        console.error("\handle\" method on \"Exception\" class is not found.");
+                        return;
                     }
 
                     await exps.handleBefore(error);
@@ -211,5 +216,13 @@ return new class Response{
     bindViewPart(selector, viewPartName){
         var content = this.viewPart(viewPartName);
         Dom(selector).html(content);
+    }
+
+    #_defautShowException(){
+        var content = use("ExceptionHtml");
+        content = Util.base64Decode(content);
+        Dom("body").html(content);
+        this.__before_controller = null;
+        Data.before_template = null;
     }
 }

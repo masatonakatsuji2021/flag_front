@@ -122,14 +122,16 @@ module.exports = function(option){
     option.core.Routes = fs.readFileSync(__dirname + "/bin/Routes.js").toString();
     option.core.Controller = fs.readFileSync(__dirname + "/bin/Controller.js").toString();
     option.core.Exception = fs.readFileSync(__dirname + "/bin/Exception.js").toString();
+
     option.core.Background = fs.readFileSync(__dirname + "/bin/Background.js").toString();
     option.core.Form = fs.readFileSync(__dirname + "/bin/Form.js").toString();
     option.core.Request = fs.readFileSync(__dirname + "/bin/Request.js").toString();
     option.core.Response = fs.readFileSync(__dirname + "/bin/Response.js").toString();
     option.core.LocalStorage = fs.readFileSync(__dirname + "/bin/LocalStorage.js").toString();
     option.core.SessionStorage = fs.readFileSync(__dirname + "/bin/SessionStorage.js").toString();
-
     option.core.Dialog = fs.readFileSync(__dirname + "/bin/Dialog.js").toString();
+
+    option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
     option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
 
     if(require.resolve("@flag/validate")){
