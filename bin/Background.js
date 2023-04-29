@@ -2,4 +2,4 @@ return class Background{
 
     handle(){}
 
-}
+};

@@ -75,4 +75,4 @@ return new class Request{
 
         this._post = data;
     }
-}
+};

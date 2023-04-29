@@ -42,4 +42,4 @@ return new class SessionStorage{
         sessionStorage.setItem(this.__name, JSON.stringify(buff));
         return this;
     }
-}
+};

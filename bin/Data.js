@@ -5,4 +5,4 @@ return new class Data{
         this.__file_uploads = {};
     }
 
-}
+};

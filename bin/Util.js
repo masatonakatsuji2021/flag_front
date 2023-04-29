@@ -118,6 +118,5 @@ return new class Util{
                 resolve();
             },time);
         });
-
     }
-}
+};

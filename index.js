@@ -114,8 +114,8 @@ module.exports = function(option){
     option.core.Dom = fs.readFileSync(__dirname + "/bin/Dom.js").toString();
     option.core.DomControl = fs.readFileSync(__dirname + "/bin/DomControl.js").toString();
     option.core.DomStatic = fs.readFileSync(__dirname + "/bin/DomStatic.js").toString();
-    /*
     option.core.VDom = fs.readFileSync(__dirname + "/bin/VDom.js").toString();
+    /*
     option.core.VDomControl = fs.readFileSync(__dirname + "/bin/VDomControl.js").toString();
     option.core.VDomStatic = fs.readFileSync(__dirname + "/bin/VDomStatic.js").toString();
     */

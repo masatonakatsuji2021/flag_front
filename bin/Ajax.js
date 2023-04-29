@@ -101,4 +101,4 @@ return new class Ajax{
         return str;
     }
 
-}
+};

@@ -42,4 +42,4 @@ return new class LocalStorage{
         localStorage.setItem(this.__name, JSON.stringify(buff));
         return this;
     }
-}
+};

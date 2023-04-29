@@ -374,4 +374,4 @@ return class Form{
         }
         return this;
     }
-}
+};

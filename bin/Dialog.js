@@ -46,4 +46,4 @@ return class Dialog{
         return v;
     }
 
-}
+};

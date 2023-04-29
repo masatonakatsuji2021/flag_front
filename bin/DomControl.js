@@ -187,7 +187,7 @@ return class DomControl{
         return this.attribute(name, value);
     }
 
-    removeAttributes(name){
+    removeAttribute(name){
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.removeAttribute(name);
@@ -457,4 +457,4 @@ return class DomControl{
         }
         return this;
     }
-}
+};

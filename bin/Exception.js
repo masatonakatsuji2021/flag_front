@@ -12,4 +12,4 @@ return class Exception extends Controller{
 
     before_handle(){}
 
-}
+};

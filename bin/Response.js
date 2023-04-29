@@ -225,4 +225,4 @@ return new class Response{
         this.__before_controller = null;
         Data.before_template = null;
     }
-}
+};
