@@ -1,75 +1,39 @@
+const fs = require("fs");
 const cli = require("@flag/cli");
 
 (async function(){
 
-    cli.outn();
-
-    cli.outn("FLAG - SPA Fontend Applicaiton Console")
+    cli
         .outn()
-        .outn("[Command]")
-        .outn()
-        .outn("create {project_name}　  - プロジェクトを作成します")
-        .outn("                           {project_name} : Cerate Project Name")
-        .outn()
-        .outn("build  {?project_name}　 - プロジェクトのビルドを実行します")
-        .outn("                           {project_name} : Build Project Name")
+        .outn("=== FLAG - SPA Fontend Applicaiton Console ==================")
         .outn()
     ;
-    
-    var args = cli.getArgs();
 
-    if(args[0]){
-        var cmd = args[0];
+    var args = cli.getArgsOption();
+
+    if(args._any[0] == "create"){
+
+        const create = require("./cmd/create.js");
+        var juge = await create(args);
+
+        if(!juge){
+            return;
+        }
+
+        const build = require("./cmd/build.js");
+        await build(args);
+    }
+    else if(args._any[0] == "build"){
+        const build = require("./cmd/build.js");
+        await build(args);
+    }
+    else if(args._any[0] == "remove"){
+        const remove = require("./cmd/remove.js");
+        await remove(args);
     }
     else{
-        while(!cmd){
-            var cmd = await cli.in("Prease Command");
-            if(!cmd){
-                cli.outn("[error] not input command. retry.");
-            }
-        }
+        const info = require("./cmd/info.js");
+        info();
     }
-    cli.outn("--------------------------------------------------");
-
-    if(cmd == "build"){
-
-        cli.outn("SPA Build.");
-
-
-    }
-    else if(cmd == "create"){
-
-        cli.outn("Create SPA Project.")
-            .outn()
-        ;
-
-        var create = {};
-
-        while(!name){
-            var name = cli.in("- Project Name?");
-            if(!name){
-                cli.outn("[error] not input project name. retry.");
-            }
-        }
-
-        create.name = name;
-
-        while(!type){
-            var type = cli.in("- Create Project Type? (web/cordova/electron)[web]");
-
-            if(!type){
-                type = "web";
-            }
-        }
-
-        create.type = type;
-
-        cli.outn();
-
-    }
-
-
-
-
 
 })();
