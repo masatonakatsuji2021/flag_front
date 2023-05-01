@@ -46,4 +46,35 @@ return class Dialog{
         return v;
     }
 
+    alert(message, title, option){
+
+        if(!option){
+            option = {};
+        }
+
+        if(!option.close){
+            option.close = {};
+        }
+
+        if(!option.close.text){
+            option.close.text = "Close";
+        }
+
+        var str = "<div class=\"message\">" + message + "</div><div style=\"text-align:right\"><a class=\"close_btn\">" + option.close.text + "</a></div>";
+
+        if(title){
+            str = "<div class=\"title\">" + title + "</div>" + str;
+        }
+
+        var v = this.open(str, option);
+
+        v.child(".close_btn").on("click", ()=>{
+            if(option.close.callback){
+                option.close.callback.bind(v)();
+            }
+            v.remove();
+        });
+
+    }
+
 };

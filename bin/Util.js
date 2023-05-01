@@ -119,4 +119,10 @@ return new class Util{
             },time);
         });
     }
+
+    promise(callback){
+        return new Promise(callback);
+    }
+
+    
 };
