@@ -1,9 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 const cli = require("@flag/cli");
+const { execSync } = require("child_process");
 
 module.exports = async function(args){
 
+    console.log(args);
+    
     const deepSearch = function(path){
 
         var glob = fs.readdirSync(path);
@@ -53,15 +56,24 @@ module.exports = async function(args){
     if(args.directory){
         create.directory = args.directory;
     }
+    if(args.d){
+        create.directory = args.d;
+    }
 
     create.format = "web";
     if(args.format){
         create.format = args.format;
     }
+    if(args.f){
+        create.format = args.f;
+    }
 
     create.typeScript = false;
     if(args.typescript){
         create.typeScript = args.typescript;
+    }
+    if(args.t){
+        create.typeScript = args.t;
     }
 
     create.root = "./" + create.name + "/src";
@@ -85,6 +97,12 @@ module.exports = async function(args){
     }
 
     var padEnd = 15;
+
+    if(create.format.indexOf("cordova")>-1){
+        create.build = "./" + create.name + "/www";
+        cli.yellow("#").yellow("[WARN] The build directory will be the default path \"www\" for cordova projects");
+        cli.outn();
+    }
 
     cli
         .outn("Project Name".padEnd(padEnd) + "= " + create.name)
@@ -120,16 +138,38 @@ module.exports = async function(args){
     }
 
     if(alreadyIndex !== null){
-        cli.red("[ERROR]").outn(" Project \"" + create.name + "\" already exists.");
-        return false;
+        cli.yellow("[WARM] Project \"" + create.name + "\" already exists.");
+
+        create.name = create.name + "_1";
+
+        var judge = await cli.in("Would you like to create it as a different project name \""+ create.name + "\"? [n]");
+
+        if(!judge){
+            return false;
+        }
     }
 
     var rootPath = create.directory + "/" + create.name;
 
-    fs.mkdirSync(rootPath, {
-        recursive: true,
-    });
-    cli.green("# ").outn("Mkdir " + rootPath);
+    if(create.format.indexOf("cordova") !== -1){
+        // create cordova project..
+        cli.green("#").outn("cordova create " + create.name);
+        res = execSync("cordova create " + create.name, {cwd: create.directory});
+        cli.outn("#" + res.toString());
+
+        var buildPath = create.directory + "/" + create.name + "/www";
+
+        fs.rmdirSync(buildPath, {
+            recursive: true
+        });
+        cli.green("#").outn("Rmdir " + create.build);
+    }
+    else{
+        fs.mkdirSync(rootPath, {
+            recursive: true,
+        });
+        cli.green("# ").outn("Mkdir " + rootPath);    
+    }
 
     packageJson.flagFront.push({
         name: create.name,
@@ -168,10 +208,24 @@ module.exports = async function(args){
         cli.green("# ").outn("SourceCopy " + outputFile);
     }
 
-    if(create.format.indexOf("cordova")){
+    if(create.typeScript){
+
+        var tsJson = {
+            compilerOptions: {
+                paths: {
+                    "*" : "./node_modules/@flag/front/bin/*",
+                },
+            },
+        };
+
+        fs.writeFileSync(create.directory + "/tsconfig.json", JSON.stringify(tsJson,null,"  "));
+    }
+
+    if(create.format == "electron"){
 
     }
-    else if(create.format.indexOf("electron")){
+    else if(create.format == "nwjs"){
+
 
     }
 
