@@ -10,5 +10,7 @@ export default class Exception extends Controller{
         this.view = "error/index";
     }
 
+    handle(exception : Exception = null){}
+
     before_handle(){}
 };

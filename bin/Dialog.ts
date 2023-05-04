@@ -1,61 +1,80 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const Util_1 = require("Util");
-const Dom_1 = require("Dom");
-class Dialog {
-    open(contents, option) {
-        if (!option) {
+import Util from "Util";
+import Dom from "Dom";
+
+export default class Dialog{
+
+    open(contents, option){
+
+        if(!option){
             option = {};
         }
-        var uid = Util_1.default.uniqId();
+
+        var uid = Util.uniqId();
         var baseHtml = use("DialogHtml");
-        baseHtml = Util_1.default.base64Decode(baseHtml);
+        baseHtml = Util.base64Decode(baseHtml);
         baseHtml = baseHtml.split("{{uid}}").join(uid);
         baseHtml = baseHtml.split("{{contents}}").join(contents);
-        (0, Dom_1.default)("body").append(baseHtml);
-        var v = (0, Dom_1.default)("[data-uid=\"" + uid + "\"]");
-        if (option.class) {
+        Dom("body").append(baseHtml);
+
+        var v = Dom("[data-uid=\"" + uid + "\"]");
+
+        if(option.class){
             v.child(".window").addClass(option.class);
         }
+
         return v;
     }
-    loading(message, option) {
-        if (!option) {
+
+    loading(message, option){
+
+        if(!option){
             option = {};
         }
-        if (!option.class) {
+
+        if(!option.class){
             option.class = [];
         }
         option.class.push("loading_circle");
+
         var str = "<div class=\"icon\"></div>";
-        if (message) {
+        if(message){
             str += "<div class=\"message\">" + message + "</div>";
         }
+
         var v = this.open(str, option);
+
         return v;
     }
-    alert(message, title, option) {
-        if (!option) {
+
+    alert(message, title, option){
+
+        if(!option){
             option = {};
         }
-        if (!option.close) {
+
+        if(!option.close){
             option.close = {};
         }
-        if (!option.close.text) {
+
+        if(!option.close.text){
             option.close.text = "Close";
         }
+
         var str = "<div class=\"message\">" + message + "</div><div style=\"text-align:right\"><a class=\"close_btn\">" + option.close.text + "</a></div>";
-        if (title) {
+
+        if(title){
             str = "<div class=\"title\">" + title + "</div>" + str;
         }
+
         var v = this.open(str, option);
-        v.child(".close_btn").on("click", () => {
-            if (option.close.callback) {
+
+        v.child(".close_btn").on("click", ()=>{
+            if(option.close.callback){
                 option.close.callback.bind(v)();
             }
             v.remove();
         });
+
     }
-}
-exports.default = Dialog;
-;
+
+};

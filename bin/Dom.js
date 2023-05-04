@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const DomControl_1 = require("DomControl");
-const Dom = function (selectName) {
+const Dom = function (selectName = null) {
     if (selectName) {
         var selector = "html " + selectName;
     }

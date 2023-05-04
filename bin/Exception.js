@@ -8,6 +8,7 @@ class Exception extends Controller_1.default {
         Data_1.default.before_template = null;
         this.view = "error/index";
     }
+    handle(exception = null) { }
     before_handle() { }
 }
 exports.default = Exception;

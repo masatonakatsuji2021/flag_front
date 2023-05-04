@@ -1,6 +1,6 @@
 import DomControl from "DomControl";
 
-const Dom = function(selectName){
+const Dom = function(selectName : string = null){
 
     if(selectName){
         var selector = "html " + selectName;    
