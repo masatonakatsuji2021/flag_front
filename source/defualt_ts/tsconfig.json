@@ -4,10 +4,8 @@
     "module": "commonjs",
     "lib": ["es6","dom"],
     "paths": {
-      "*": ["./bin/*"]
+      "*": ["../node_modules/@flag/front/bin/*"],
+      "app/*": ["./src/app/*"],
     }
-  },
-  "exclude": [
-    "./source/*",
-  ]
+  }
 }
