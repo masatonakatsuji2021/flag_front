@@ -1,15 +1,14 @@
-const Data = use("Data");
-const Controller = use("Controller");
-
-return class Exception extends Controller{
-
-    constructor(){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Data_1 = require("Data");
+const Controller_1 = require("Controller");
+class Exception extends Controller_1.default {
+    constructor() {
         super();
-
-        Data.before_template = null;
+        Data_1.default.before_template = null;
         this.view = "error/index";
     }
-
-    before_handle(){}
-
-};
+    before_handle() { }
+}
+exports.default = Exception;
+;

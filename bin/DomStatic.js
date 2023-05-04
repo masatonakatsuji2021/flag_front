@@ -1,3 +1,7 @@
-return new class DomStatic{
-    __uids = {};
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = new class DomStatic {
+    constructor() {
+        this.__uids = {};
+    }
 };

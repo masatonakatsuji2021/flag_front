@@ -1,377 +1,272 @@
-const Util = use("Util");
-const Data = use("Data");
-const Dom = use("Dom");
-const Request = use("Request");
-
-return class Form{
-    
-    constructor(formName){
-
-        if(this.constructor.name == "Form"){
+"use strict";
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var _Form_instances, _Form__getData, _Form__tagInput, _Form__setOptionString;
+Object.defineProperty(exports, "__esModule", { value: true });
+const Util_1 = require("Util");
+const Data_1 = require("Data");
+const Dom_1 = require("Dom");
+const Request_1 = require("Request");
+class Form {
+    constructor(formName) {
+        _Form_instances.add(this);
+        this.formName = null;
+        if (this.constructor.name == "Form") {
             this.formName = formName;
             var className = "Form";
-
-            if(!Data.__form[this.formName]){
-                Data.__form[this.formName] = {
+            if (!Data_1.default.__form[this.formName]) {
+                Data_1.default.__form[this.formName] = {
                     class: className,
                     eventSubmit: null,
                     eventReset: null,
                 };
             }
         }
-        else{           
-            var className = Util.getClassName(this.constructor.name,"Form");
-            this.formName = Util.lcFirst(className);
-            if(formName){
-                this.formName = formName;                
+        else {
+            var className = Util_1.default.getClassName(this.constructor.name, "Form");
+            this.formName = Util_1.default.lcFirst(className);
+            if (formName) {
+                this.formName = formName;
             }
-
-            Data.__form[this.formName] = {
+            Data_1.default.__form[this.formName] = {
                 class: className,
             };
         }
     }
-
-    handleSubmit(){}
-    handleReset(){}
-    handleSetting(){}
-
-    setting(...argv){
+    handleSubmit() { }
+    handleReset() { }
+    handleSetting() { }
+    // @ts-ignore
+    setting(...argv) {
+        // @ts-ignore
         this.handleSetting(...argv);
     }
-
-    #_getData(){
-        return Data.__form[this.formName];
-    }
-
-    tagInput(name, option){
-
-        var str = this.#_tagInput(name, option);
-
-        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
-
-        if(dom){
+    tagInput(name, option) {
+        var str = __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option);
+        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        if (dom) {
             dom.html(str);
         }
-
         return this;
     }
-
-    #_tagInput(name, option){
-
-        if(option == undefined){
+    tagHidden(name, value, option) {
+        if (option == undefined) {
             option = {};
         }
-
-        if(!option.type){
-            option.type = "text";
-        }
-
-        var optionStr = this.#_setOptionString(option);
-
-        var str = "<input name=\"" + name + "\" " + optionStr + ">";
-
-        return str;
-    }
-
-    tagHidden(name, value, option){
-
-        if(option == undefined){
-            option = {};
-        }
-
         option.type = "hidden";
-
         option.value = value;
-
         return this.tagInput(name, option);
     }
-
-    tagNumber(name, option){
-
-        if(option == undefined){
+    tagNumber(name, option) {
+        if (option == undefined) {
             option = {};
         }
-
         option.type = "number";
-
         return this.tagInput(name, option);
     }
-
-    tagPassword(name, option){
-
-        if(option == undefined){
+    tagPassword(name, option) {
+        if (option == undefined) {
             option = {};
         }
-
         option.type = "password";
-
         return this.tagInput(name, option);
     }
-
-    tagFile(name, option){
-
-        if(option == undefined){
+    tagFile(name, option) {
+        if (option == undefined) {
             option = {};
         }
-
         option.type = "file";
-
         return this.tagInput(name, option);
     }
-
-    tagSelect(name, selects, option){
-
-        if(option == undefined){
+    tagSelect(name, selects, option) {
+        if (option == undefined) {
             option = {};
         }
-
-        var optionStr = this.#_setOptionString(option);
-
+        var optionStr = __classPrivateFieldGet(this, _Form_instances, "m", _Form__setOptionString).call(this, option);
         var selectStr = "";
-
-        if(option.empty){
+        if (option.empty) {
             selectStr += "<option value=\"\">" + option.empty + "</option>";
         }
-
         var columns = Object.keys(selects);
-        for(var n = 0 ; n < columns.length ; n++){
+        for (var n = 0; n < columns.length; n++) {
             var key = columns[n];
             var val = selects[key];
             selectStr += "<option value=\"" + key + "\">" + val + "</option>";
         }
-
         var str = "<select name=\"" + name + "\" " + optionStr + ">" + selectStr + "</select>";
-
-        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
-
-        if(dom){
+        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        if (dom) {
             dom.html(str);
         }
-
         return this;
     }
-
-    tagTextarea(name, option){
-
-        if(option == undefined){
+    tagTextarea(name, option) {
+        if (option == undefined) {
             option = {};
         }
-
-        var optionStr = this.#_setOptionString(option);
-
+        var optionStr = __classPrivateFieldGet(this, _Form_instances, "m", _Form__setOptionString).call(this, option);
         var str = "<textarea name=\"" + name + "\" " + optionStr + "></textarea>";
-
-        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
-
-        if(dom){
+        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        if (dom) {
             dom.html(str);
         }
-
         return this;
     }
-
-    tagRadio(name, selects, option){
-
-        if(option == undefined){
+    tagRadio(name, selects, option) {
+        if (option == undefined) {
             option = {};
         }
-
         var str = "";
-
         var columns = Object.keys(selects);
-        for(var n = 0 ; n < columns.length ; n++){
+        for (var n = 0; n < columns.length; n++) {
             var key = columns[n];
             var val = selects[key];
-
             option.type = "radio";
             option.value = key;
-
-            str += "<label>" + this.#_tagInput(name, option) + val + "</label>";
+            str += "<label>" + __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option) + val + "</label>";
         }
-
-        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
-
-        if(dom){
+        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        if (dom) {
             dom.html(str);
         }
-
         return this;
     }
-
-    tagCheckbox(name, selects, option){
-
-        if(option == undefined){
+    tagCheckbox(name, selects, option) {
+        if (option == undefined) {
             option = {};
         }
-
         var str = "";
-
         var columns = Object.keys(selects);
-        for(var n = 0 ; n < columns.length ; n++){
+        for (var n = 0; n < columns.length; n++) {
             var key = columns[n];
             var val = selects[key];
-
             option.type = "checkbox";
             option.value = key;
-
-            str += "<label>" + this.#_tagInput(name + "[]", option) + val + "</label>";
+            str += "<label>" + __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name + "[]", option) + val + "</label>";
         }
-
-        var dom = Dom("#" + this.formName).querySelector("[form-name=\"" + name + "\"]");
-
-        if(dom){
+        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        if (dom) {
             dom.html(str);
         }
-
         return this;
     }
-
-    tagSubmit(value, option){
-
+    tagSubmit(value, option) {
     }
-
-    tagReset(value, option){
-
-        
+    tagReset(value, option) {
     }
-
-    setValues(data){
-
-
-
+    setValues(data) {
     }
-    
-
-    #_setOptionString(option){
-
-        var str = "";
-
-        if(option.default){
-            option.value = option.default;
-            delete option.default;
-        }
-
-        var columns = Object.keys(option);
-        for(var n = 0 ; n < columns.length ; n++){
-            var key = columns[n];
-            var val = option[key];
-
-            str += " " + key + "=\"" + val + "\"";
-        }
-
-        return str;
-    }
-
-    existSubmitEvent(){
-
-        if(this.constructor.name == "Form"){
-            if(this.#_getData().eventSubmit){
-                return true;
-            }    
-        }
-        else{
-            if(this.handleSubmit){
+    existSubmitEvent() {
+        if (this.constructor.name == "Form") {
+            if (__classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventSubmit) {
                 return true;
             }
         }
-
-
+        else {
+            if (this.handleSubmit) {
+                return true;
+            }
+        }
         return false;
     }
-
-    existResetEvent(){
-
-        if(this.constructor.name == "Form"){
-            if(this.#_getData().eventReset){
+    existResetEvent() {
+        if (this.constructor.name == "Form") {
+            if (__classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventReset) {
                 return true;
             }
         }
-        else{
-            if(this.handleReset){
+        else {
+            if (this.handleReset) {
                 return true;
             }
         }
-
         return false;
     }
-
-    getSubmitEvent(){
-        if(this.constructor.name == "Form"){
-            return this.#_getData().eventSubmit;
+    getSubmitEvent() {
+        if (this.constructor.name == "Form") {
+            return __classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventSubmit;
         }
-        else{
+        else {
             return this.handleSubmit;
         }
     }
-
-    getResetEvent(){
-        return this.#_getData().eventReset;
+    getResetEvent() {
+        return __classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventReset;
     }
-
-    submit(){
-
-        var dom = Dom("#" + this.formName);
-
-        var getChildError = dom.querySelectorAll("[data-name]");
-        for(var n = 0 ; n <getChildError.length ; n++){
+    submit() {
+        var dom = (0, Dom_1.default)("#" + this.formName);
+        var getChildError = dom.child("[data-name]");
+        for (var n = 0; n < getChildError.length; n++) {
             var gce = getChildError[n];
             gce.html("");
         }
-
-        var getChild = dom.querySelectorAll("[name]");
-
+        var getChild = dom.child("[name]");
         console.log(getChild);
-
-        Request.refresh(getChild);
-
-        var post = Request.get();
-
-        if(this.existSubmitEvent()){
+        Request_1.default.refresh(getChild);
+        var post = Request_1.default.get();
+        if (this.existSubmitEvent()) {
             this.getSubmitEvent()(post);
         }
-
         return this;
     }
-
-    reset(){
-
-        var dom = Dom("#" + this.formName);
-
-        var getChild = dom.querySelectorAll("[name]");
-
-        Request.refresh(getChild);
-    
-        var post = Request.get();
-
-        if(this.existResetEvent()){
+    reset() {
+        var dom = (0, Dom_1.default)("#" + this.formName);
+        var getChild = dom.child("[name]");
+        Request_1.default.refresh(getChild);
+        var post = Request_1.default.get();
+        if (this.existResetEvent()) {
             this.getResetEvent()(post);
         }
-
         return this;
     }
-
-    onSubmit(callback){
-        Data.__form[this.formName].eventSubmit = callback;
+    onSubmit(callback) {
+        Data_1.default.__form[this.formName].eventSubmit = callback;
         return this;
     }
-
-    onReset(callback){
-        Data.__form[this.formName].eventReset = callback;
-         return this;
+    onReset(callback) {
+        Data_1.default.__form[this.formName].eventReset = callback;
+        return this;
     }
-
-    setError(validates){
+    setError(validates) {
         var v = validates.get();
         var columns = Object.keys(v);
-
-        Dom("#" + this.formName + " [data-name]").html("");
-
-        for(var n = 0 ; n < columns.length ; n++){
+        (0, Dom_1.default)("#" + this.formName + " [data-name]").html("");
+        for (var n = 0; n < columns.length; n++) {
             var key = columns[n];
             var val = v[key].join("\n");
-            Dom("#" + this.formName + " [data-name=" + key + "]").html(val);
+            (0, Dom_1.default)("#" + this.formName + " [data-name=" + key + "]").html(val);
         }
         return this;
     }
+}
+exports.default = Form;
+_Form_instances = new WeakSet(), _Form__getData = function _Form__getData() {
+    return Data_1.default.__form[this.formName];
+}, _Form__tagInput = function _Form__tagInput(name, option) {
+    if (option == undefined) {
+        option = {};
+    }
+    if (!option.type) {
+        option.type = "text";
+    }
+    var optionStr = __classPrivateFieldGet(this, _Form_instances, "m", _Form__setOptionString).call(this, option);
+    var str = "<input name=\"" + name + "\" " + optionStr + ">";
+    return str;
+}, _Form__setOptionString = function _Form__setOptionString(option) {
+    var str = "";
+    if (option.default) {
+        option.value = option.default;
+        delete option.default;
+    }
+    var columns = Object.keys(option);
+    for (var n = 0; n < columns.length; n++) {
+        var key = columns[n];
+        var val = option[key];
+        str += " " + key + "=\"" + val + "\"";
+    }
+    return str;
 };
+;

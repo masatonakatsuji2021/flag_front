@@ -2,7 +2,7 @@ const fs = require("fs");
 const cli = require("@flag/cli");
 const build = require("@flag/build");
 const path = require("path");
-const Startor = require("../bin/Startor.js");
+const Startor = fs.readFileSync(path.dirname(__dirname) + "/bin/Startor.js").toString();
 
 module.exports = function(args){
 
@@ -103,11 +103,14 @@ module.exports = function(args){
 
     option.core.Util = fs.readFileSync(__dirname + "/bin/Util.js").toString();
     option.core.Data = fs.readFileSync(__dirname + "/bin/Data.js").toString();
-    option.core.Ajax = fs.readFileSync(__dirname + "/bin/Ajax.js").toString();
+    /*
+    option.core.Ajax = fs.readFileSync(__dirname + "/bin/Ajax.ts").toString();
+    */
     option.core.Dom = fs.readFileSync(__dirname + "/bin/Dom.js").toString();
     option.core.DomControl = fs.readFileSync(__dirname + "/bin/DomControl.js").toString();
     option.core.DomStatic = fs.readFileSync(__dirname + "/bin/DomStatic.js").toString();
-    option.core.VDom = fs.readFileSync(__dirname + "/bin/VDom.js").toString();
+    /*
+    option.core.VDom = fs.readFileSync(__dirname + "/bin/VDom.ts").toString();
     /*
     option.core.VDomControl = fs.readFileSync(__dirname + "/bin/VDomControl.js").toString();
     option.core.VDomStatic = fs.readFileSync(__dirname + "/bin/VDomStatic.js").toString();
@@ -115,23 +118,26 @@ module.exports = function(args){
     option.core.Routes = fs.readFileSync(__dirname + "/bin/Routes.js").toString();
     option.core.Controller = fs.readFileSync(__dirname + "/bin/Controller.js").toString();
     option.core.Exception = fs.readFileSync(__dirname + "/bin/Exception.js").toString();
-
-    option.core.Background = fs.readFileSync(__dirname + "/bin/Background.js").toString();
+/*
+    option.core.Background = fs.readFileSync(__dirname + "/bin/Background.ts").toString();
+    */
     option.core.Form = fs.readFileSync(__dirname + "/bin/Form.js").toString();
     option.core.Request = fs.readFileSync(__dirname + "/bin/Request.js").toString();
     option.core.Response = fs.readFileSync(__dirname + "/bin/Response.js").toString();
-    option.core.LocalStorage = fs.readFileSync(__dirname + "/bin/LocalStorage.js").toString();
-    option.core.SessionStorage = fs.readFileSync(__dirname + "/bin/SessionStorage.js").toString();
-    option.core.Dialog = fs.readFileSync(__dirname + "/bin/Dialog.js").toString();
+/*
+    option.core.LocalStorage = fs.readFileSync(__dirname + "/bin/LocalStorage.ts").toString();
+    option.core.SessionStorage = fs.readFileSync(__dirname + "/bin/SessionStorage.ts").toString();
+    option.core.Dialog = fs.readFileSync(__dirname + "/bin/Dialog.ts").toString();
 
     option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
     option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
 
     if(require.resolve("@flag/validate")){
-        option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/Validator.js").toString();
-        option.core.ValidateRule = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateRule.js").toString();
-        option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateResponse.js").toString();
+        option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/Validator.ts").toString();
+        option.core.ValidateRule = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateRule.ts").toString();
+        option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateResponse.ts").toString();
     }
+  */   
      
     option.contents = "rendering";
 
@@ -139,7 +145,7 @@ module.exports = function(args){
         option.uncompressed = false;
     }
 
-    option.startCallback = Startor;
+    option.startCallback = "function(){\nlet exports = {} ;\n" + Startor + "}";
 
     build(option);
 
