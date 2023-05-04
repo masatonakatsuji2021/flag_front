@@ -20,7 +20,7 @@ export default new class Util{
         let str : string = "";
 
         for(var n = 0 ; n < length ; n++){
-            let index : number = Math.random() * 10000;
+            let index : number = parseInt((Math.random() * 10000).toString());
             let s : string = lbn[index % lbn.length];
 
             str += s;
@@ -29,25 +29,25 @@ export default new class Util{
         return str;
     }
 
-    ucFirst(string){
+    ucFirst(string : string) : string{
         return string.substring(0,1).toUpperCase() + string.substring(1);
     }
 
-    lcFirst(string){
+    lcFirst(string : string) : string{
         return string.substring(0,1).toLowerCase() + string.substring(1);
     }
 
-    getClassName(string, classType){
+    getClassName(string : string, classType : string) : string{
         return string.substring(0, string.indexOf(classType));
     }
 
-    searchForm(formName){
+    searchForm(formName : string){
         if(Data.__form[formName]){
             return Data.__form[formName];
         }
     }
     
-    dt(datetime){
+    dt(datetime : string){
 
         if(datetime){
             var d = new Date(datetime);
@@ -112,7 +112,7 @@ export default new class Util{
         return new _DateTime(d);
     }
 
-    sleep(time){
+    sleep(time : number) : Promise<unknown>{
 
         return new Promise(function(resolve: Function){
             setTimeout(function(){
@@ -121,9 +121,7 @@ export default new class Util{
         });
     }
 
-    promise(callback){
+    promise(callback) : Promise<unknown>{
         return new Promise(callback);
-    }
-
-    
+    }    
 };

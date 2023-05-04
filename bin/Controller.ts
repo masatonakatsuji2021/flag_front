@@ -1,10 +1,14 @@
 /**
+ * -----------------------------------------------------
+ * 
  * FLAG - Single Page Action(SPA) FW
  * 
  * Controller
  * 
  * Date   : 2023/04/21
  * Author : nakatsuji masato
+ * 
+ * -----------------------------------------------------
  */
 
 import Data from "Data";
@@ -13,32 +17,57 @@ import Response from "Response";
 
 export default class Controller{
 
+    /**
+     * view
+     * 
+     * Set the page view path to display
+     * If not specified, automatically determined by "{Controller Name}/{action name}"
+     * If you use it, place the HTML file in the path "rendering/View/{Controller Name}/{action Name}.html".
+     */
     view: string = null;
     
+    /**
+     * template
+     * 
+     * Specifies the template name to use on the displayed page.
+     * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.
+     * 
+     */
     template: string = null;
 
     /**
      * handleBefore
+     * 
+     * Event handler executed just before transitioning to the page.
      */
-    handleBefore(){}
+    handleBefore() : void{}
 
     /**
      * handleAfter
+     * 
+     * Event handler executed immediately after transitioning to the page
      */
-    handleAfter(){}
+    handleAfter() : void{}
 
     /**
      * handleRenderBefore
+     * 
+     * Event handler executed immediately after page transition and rendering process to the screen is completed
      */
-    handleRenderBefore(){}
+    handleRenderBefore() : void{}
 
     /**
      * handleRenderAfter
+     * 
+     * Event handler that is executed after page transition, after rendering process to the screen is completed, 
+     * and after the event for each action is completed.
      */
-    handleRenderAfter(){}
+    handleRenderAfter() : void{}
 
     /**
      * handleLeave
+     * 
+     * Event handler executed when leaving the page
      */
     handleLeave(){}
 

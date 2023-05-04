@@ -35,7 +35,7 @@ exports.default = new (_a = class Response {
         setPageStatus() {
             return this.__page_status;
         }
-        redirect(url, sliented) {
+        redirect(url, sliented = false) {
             if (!url) {
                 url = "/";
             }

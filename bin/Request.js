@@ -14,9 +14,9 @@ exports.default = new class Request {
     }
     refresh(targetForm) {
         var data = {};
-        for (var n = 0; n < targetForm.length; n++) {
-            var target = targetForm[n];
-            var name = target.name;
+        for (var n = 0; n < targetForm.get.length; n++) {
+            let target = targetForm.get[n];
+            let name = target.name;
             if (!name) {
                 continue;
             }

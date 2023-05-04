@@ -15,7 +15,7 @@ exports.default = new class Util {
         const lbn = "0123456789ABCDEFGHIJKNLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         let str = "";
         for (var n = 0; n < length; n++) {
-            let index = Math.random() * 10000;
+            let index = parseInt((Math.random() * 10000).toString());
             let s = lbn[index % lbn.length];
             str += s;
         }

@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const Dom_1 = require("Dom");
 class Dialog {
-    open(contents, option) {
-        if (!option) {
+    open(contents, option = null) {
+        if (option == null) {
             option = {};
         }
         var uid = Util_1.default.uniqId();
@@ -19,7 +19,7 @@ class Dialog {
         }
         return v;
     }
-    loading(message, option) {
+    loading(message = null, option = null) {
         if (!option) {
             option = {};
         }
@@ -34,8 +34,8 @@ class Dialog {
         var v = this.open(str, option);
         return v;
     }
-    alert(message, title, option) {
-        if (!option) {
+    alert(message, title = null, option = null) {
+        if (option == null) {
             option = {};
         }
         if (!option.close) {

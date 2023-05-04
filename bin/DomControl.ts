@@ -24,23 +24,23 @@ export default class DomControl{
         return this._qs.length;
     }
 
-    first(){
+    first() : DomControl{
         return new DomControl([ this._qs[0] ]);
     }
 
-    last(){
+    last() : DomControl{
         return new DomControl([ this._qs[this._qs.length - 1] ]);
     }
 
-    parent(){
+    parent() : DomControl{
         return new DomControl([ this._qs[this._qs.length - 1].parentNode ]);
     }
 
-    index(index){
+    index(index : number) : DomControl{
         return new DomControl([ this._qs[index] ]);
     }
 
-    findOnAttr(name, value){
+    findOnAttr(name : string, value) : DomControl{
         var qss = [];
         for(var n = 0 ; n < this._qs.length ;n ++){
             var qs = this._qs[n];
@@ -56,7 +56,7 @@ export default class DomControl{
         return new DomControl(qss);
     }
 
-    findOnVirtual(name, value){
+    findOnVirtual(name : string, value) : DomControl{
         var qss = [];
         for(var n = 0 ; n < this._qs.length ;n ++){
             var qs = this._qs[n];
@@ -88,7 +88,7 @@ export default class DomControl{
         return new DomControl(qss);
     }
 
-    child(selector){
+    child(selector : string = null) : DomControl{
         
         if(!selector){
             selector = "*";
@@ -105,7 +105,7 @@ export default class DomControl{
         return new DomControl(qss);
     }
 
-    text(string){
+    text(string : string = null) : string | DomControl{
         if(string == undefined){
             return this._qs[this._qs.length - 1].innerText;
         }
@@ -118,7 +118,7 @@ export default class DomControl{
         }
     }
 
-    html(string){
+    html(string : string = null) : string | DomControl{
         if(string == undefined){
             return this._qs[this._qs.length - 1].innerHTML;
         }
@@ -131,28 +131,28 @@ export default class DomControl{
         }
     }
 
-    append(string){
+    append(string : string) : DomControl{
         this._qs.forEach(function(qs){
             qs.insertAdjacentHTML("beforeend", string);
         });
         return this;
     }
 
-    before(string){
+    before(string : string) : DomControl{
         this._qs.forEach(function(qs){
             qs.insertAdjacentHTML("beforebegin", string);
         });
         return this;
     }
 
-    after(string){
+    after(string : string) : DomControl{
         this._qs.forEach(function(qs){
             qs.insertAdjacentHTML("afterend", string);
         });
         return this;
     }
 
-    remove(){
+    remove() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.remove();
@@ -160,11 +160,11 @@ export default class DomControl{
         return this;
     }
 
-    empty(){
+    empty() : String | DomControl{
         return this.html("");
     }
 
-    on(eventName, callback){
+    on(eventName : string, callback : Function) : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.addEventListener(eventName, callback.bind(this));
@@ -172,7 +172,7 @@ export default class DomControl{
         return this;
     }
 
-    attribute(name, value){
+    attribute(name : string, value = null) : string | DomControl{
         if(value == undefined){
             return this._qs[this._qs.length - 1].attributes[name].value;
         }
@@ -185,11 +185,11 @@ export default class DomControl{
         }
     }
 
-    attr(name, value){
+    attr(name : string, value) : string | DomControl{
         return this.attribute(name, value);
     }
 
-    removeAttribute(name){
+    removeAttribute(name : string) : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.removeAttribute(name);
@@ -197,11 +197,11 @@ export default class DomControl{
         return this;
     }
 
-    removeAttr(name){
+    removeAttr(name : string) : DomControl{
         return this.removeAttribute(name);
     }
 
-    virtual(name, value){
+    virtual(name : string, value = null) : string | DomControl{
         if(value == undefined){
             var qs = this._qs[this._qs.length - 1];
 
@@ -238,7 +238,7 @@ export default class DomControl{
         }
     }
     
-    removeVirtual(name){
+    removeVirtual(name : string) : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
 
@@ -265,7 +265,7 @@ export default class DomControl{
         return this;
     }
 
-    style(options){
+    style(options : object) : DomControl{
 
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
@@ -280,7 +280,7 @@ export default class DomControl{
         return this;
     }
 
-    getStyle(name){
+    getStyle(name : string = null) : string{
         var qs = this._qs[this._qs.length - 1];
         
         if(name){
@@ -295,7 +295,7 @@ export default class DomControl{
         }
     }
 
-    addClass(className){
+    addClass(className : string | Array<string>) : DomControl{
 
         if(typeof className == "string"){
             className = [ className ];
@@ -311,7 +311,7 @@ export default class DomControl{
         return this;
     }
 
-    removeClass(className){
+    removeClass(className : string) : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.classList.remove(className);
@@ -319,12 +319,12 @@ export default class DomControl{
         return this;
     }
 
-    isClass(className){
+    isClass(className : string) : boolean{
         var qs = this._qs[this._qs.length - 1];
         return qs.classList.contains(className);
     }
 
-    value(value){
+    value(value = null){
         if(value == undefined){
             return this.#_get_value_default(0);
         }
@@ -333,7 +333,7 @@ export default class DomControl{
         }
     }
 
-    default(value){
+    default(value = null){
         if(value == undefined){
             return this.#_get_value_default(1);
         }
@@ -430,7 +430,7 @@ export default class DomControl{
         return this;
     }
 
-    click(){
+    click() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.click();
@@ -438,7 +438,7 @@ export default class DomControl{
         return this;
     }
 
-    dblclick(){
+    dblclick() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.dblclick();
@@ -446,7 +446,7 @@ export default class DomControl{
         return this;
     }
 
-    submit(){
+    submit() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.dblclick();
@@ -454,7 +454,7 @@ export default class DomControl{
         return this;
     }
 
-    focus(){
+    focus() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.focus();

@@ -3,9 +3,9 @@ import Dom from "Dom";
 
 export default class Dialog{
 
-    open(contents, option){
+    open(contents : string, option = null){
 
-        if(!option){
+        if(option == null){
             option = {};
         }
 
@@ -25,7 +25,7 @@ export default class Dialog{
         return v;
     }
 
-    loading(message, option){
+    loading(message : string = null, option = null){
 
         if(!option){
             option = {};
@@ -46,9 +46,9 @@ export default class Dialog{
         return v;
     }
 
-    alert(message, title, option){
+    alert(message : string, title : string = null, option = null){
 
-        if(!option){
+        if(option == null){
             option = {};
         }
 

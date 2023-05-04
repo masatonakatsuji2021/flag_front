@@ -1,28 +1,28 @@
 import Util from "Util";
-import Routes from "Routes";
 import Dom from "Dom";
 import Data from "Data";
 
 export default new class Response{
 
-    __before_controller = null;
-    __page_status = true;
+    __before_controller : string = null;
+    
+    __page_status : boolean = true;
 
-    pageDisable(){
+    pageDisable() : Response{
         this.__page_status = false;
         return this;
     }
 
-    pageEnable(){
+    pageEnable() : Response{
         this.__page_status = true;
         return this;
     }
 
-    setPageStatus(){
+    setPageStatus() : boolean{
         return this.__page_status;
     }
 
-    redirect(url, sliented){
+    redirect(url : string, sliented : boolean = false) : void{
 
         if(!url){
             url = "/";
@@ -36,7 +36,7 @@ export default new class Response{
         }
     }
 
-    rendering(routes){
+    rendering(routes) : void{
 
         (async function(){
 
@@ -153,7 +153,7 @@ export default new class Response{
         }).bind(this)();
     }
 
-    view(viewName){
+    view(viewName : string) : string{
 
         var viewPath = "View/" + viewName + ".html";
         if(!useExists(viewPath)){
@@ -168,7 +168,7 @@ export default new class Response{
         return content;
     }
 
-    template(templateName){
+    template(templateName : string) : string{
 
         var templatePath = "Template/" + templateName + ".html";
 
@@ -184,7 +184,7 @@ export default new class Response{
         return content;
     }
 
-    viewPart(viewPartName){
+    viewPart(viewPartName : string) : string{
 
         var viewPartPath = "ViewPart/" + viewPartName + ".html";
         if(!useExists(viewPartPath)){
@@ -198,17 +198,17 @@ export default new class Response{
         return content;
     }
 
-    bindView(selector, viewName){
+    bindView(selector : string, viewName : string) : void{
         var content = this.view(viewName);
         Dom(selector).html(content);
     }
 
-    bindTemplate(selector, templateName){
+    bindTemplate(selector : string, templateName : string) : void{
         var content = this.template(templateName);
         Dom(selector).html(content);
     }
 
-    bindViewPart(selector, viewPartName){
+    bindViewPart(selector : string, viewPartName : string) : void{
         var content = this.viewPart(viewPartName);
         Dom(selector).html(content);
     }

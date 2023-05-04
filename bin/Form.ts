@@ -3,10 +3,17 @@ import Data from "Data";
 import Dom from "Dom";
 import Request from "Request";
 
+
 export default class Form{
     
     formName: string = null;
 
+    /**
+     * Form
+     * 
+     * Installation of each input field of the input form and setting of the initial value,
+     * Class object for setting Submit/Reset event handlers, etc.
+     */
     constructor(formName: string){
 
         if(this.constructor.name == "Form"){
@@ -34,9 +41,30 @@ export default class Form{
         }
     }
 
-    handleSubmit(){}
-    handleReset(){}
-    handleSetting(){}
+    /**
+     * handleSubmit
+     * 
+     * Event handler executed when the submit button is pressed.
+     * @param {object} postData Input data
+     */
+    handleSubmit(postData : object){}
+
+    
+    /**
+     * handleSubmit
+     * 
+     * Event handler executed when the reset button is pressed.
+     * @param {object} postData Input data
+     */
+    handleReset(postData : object){}
+
+    /**
+     * handleSetting
+     * 
+     * Event handler for input form initialization
+     * @param {any} args Arguments for pass-by-value
+     */
+    handleSetting(...args){}
 
     // @ts-ignore
     setting(...argv){
@@ -48,7 +76,16 @@ export default class Form{
         return Data.__form[this.formName];
     }
 
-    tagInput(name, option){
+    /**
+     * tagInput
+     * 
+     * Generate Input tag for input form
+     * 
+     * @param {string} name input name
+     * @param {object} option = null Option setting
+     * @returns {Form} Form Class Object (method chain)
+    */
+    tagInput(name : string, option : object= null) : Form{
 
         var str = this.#_tagInput(name, option);
 
@@ -61,9 +98,9 @@ export default class Form{
         return this;
     }
 
-    #_tagInput(name, option){
+    #_tagInput(name : string, option) : string{
 
-        if(option == undefined){
+        if(option == null){
             option = {};
         }
 
@@ -73,12 +110,23 @@ export default class Form{
 
         var optionStr = this.#_setOptionString(option);
 
-        var str = "<input name=\"" + name + "\" " + optionStr + ">";
+        if(
+            option.type == "submit" || 
+            option.type == "button" || 
+            option.type == "image" || 
+            option.type == "reset" 
+        ){
+            var str = "<input " + optionStr + ">";
+        }
+        else{
+            var str = "<input name=\"" + name + "\" " + optionStr + ">";
+        }
+
 
         return str;
     }
 
-    tagHidden(name, value, option){
+    tagHidden(name : string, value : any, option = null) : Form{
 
         if(option == undefined){
             option = {};
@@ -91,7 +139,7 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
-    tagNumber(name, option){
+    tagNumber(name : string, option = null) : Form{
 
         if(option == undefined){
             option = {};
@@ -102,7 +150,7 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
-    tagPassword(name, option){
+    tagPassword(name : string, option = null) : Form{
 
         if(option == undefined){
             option = {};
@@ -113,7 +161,7 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
-    tagFile(name, option){
+    tagFile(name : string, option = null) : Form{
 
         if(option == undefined){
             option = {};
@@ -124,7 +172,7 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
-    tagSelect(name, selects, option){
+    tagSelect(name : string, selects : Object, option = null) : Form{
 
         if(option == undefined){
             option = {};
@@ -156,7 +204,7 @@ export default class Form{
         return this;
     }
 
-    tagTextarea(name, option){
+    tagTextarea(name : string, option = null) : Form{
 
         if(option == undefined){
             option = {};
@@ -175,7 +223,7 @@ export default class Form{
         return this;
     }
 
-    tagRadio(name, selects, option){
+    tagRadio(name : string, selects : object, option = null) : Form{
 
         if(option == undefined){
             option = {};
@@ -203,7 +251,7 @@ export default class Form{
         return this;
     }
 
-    tagCheckbox(name, selects, option){
+    tagCheckbox(name : string, selects : object, option = null) : Form{
 
         if(option == undefined){
             option = {};
@@ -231,23 +279,76 @@ export default class Form{
         return this;
     }
 
-    tagSubmit(value, option){
+    tagButton(name : string, value: string, option = null) : Form{
 
+        if(option == null){
+            option = {};
+        }
+
+        option.type = "button";
+        option.default = value;
+
+        return this.tagInput(name, option);
     }
 
-    tagReset(value, option){
+    tagSubmit(name : string, value : string, option = null) : Form{
 
+        if(option == null){
+            option = {};
+        }
+
+        option.type = "submit";
+        option.default = value;
+
+        return this.tagInput(name, option);
+    }
+
+    tagReset(name : string, value : string, option = null) : Form{
         
+        if(option == null){
+            option = {};
+        }
+
+        option.type = "reset";
+        option.default = value;
+
+        return this.tagInput(name, option);
     }
 
-    setValues(data){
-
-
-
+    setValues(data : object) : Form{
+        return this.#_setDefaultsAndValues(data, 0);
     }
     
+    setDefaults(data : object) : Form{
+        return this.#_setDefaultsAndValues(data, 1);
+    }
 
-    #_setOptionString(option){
+    #_setDefaultsAndValues(data: object , type : number) : Form{
+
+        let columns = Object.keys(data);
+
+        for(var n = 0 ; n < columns.length ; n++){
+            let name = columns[n];
+            let value = data[name];
+
+            var dom = Dom("#" + this.formName).child("[name=\"" + name + "\"]");
+
+            if(dom){
+
+                if(type == 0){
+                    dom.value(value);
+                }
+                else if(type == 1){
+                    dom.attr("value", value);
+                }
+
+            }
+        }
+
+        return this;
+    }
+
+    #_setOptionString(option) : string{
 
         var str = "";
 
@@ -267,7 +368,7 @@ export default class Form{
         return str;
     }
 
-    existSubmitEvent(){
+    existSubmitEvent() : boolean{
 
         if(this.constructor.name == "Form"){
             if(this.#_getData().eventSubmit){
@@ -284,7 +385,7 @@ export default class Form{
         return false;
     }
 
-    existResetEvent(){
+    existResetEvent() : boolean{
 
         if(this.constructor.name == "Form"){
             if(this.#_getData().eventReset){
@@ -300,7 +401,7 @@ export default class Form{
         return false;
     }
 
-    getSubmitEvent(){
+    getSubmitEvent() : Function{
         if(this.constructor.name == "Form"){
             return this.#_getData().eventSubmit;
         }
@@ -309,11 +410,16 @@ export default class Form{
         }
     }
 
-    getResetEvent(){
-        return this.#_getData().eventReset;
+    getResetEvent() : Function{
+        if(this.constructor.name == "Form"){
+            return this.#_getData().eventReset;
+        }
+        else{
+            return this.handleReset;
+        }
     }
 
-    submit(){
+    submit() : Form{
 
         var dom = Dom("#" + this.formName);
 
@@ -324,8 +430,6 @@ export default class Form{
         }
 
         var getChild = dom.child("[name]");
-
-        console.log(getChild);
 
         Request.refresh(getChild);
 
@@ -338,7 +442,7 @@ export default class Form{
         return this;
     }
 
-    reset(){
+    reset() : Form{
 
         var dom = Dom("#" + this.formName);
 
@@ -355,12 +459,12 @@ export default class Form{
         return this;
     }
 
-    onSubmit(callback){
+    onSubmit(callback : Function) : Form{
         Data.__form[this.formName].eventSubmit = callback;
         return this;
     }
 
-    onReset(callback){
+    onReset(callback : Function) : Form{
         Data.__form[this.formName].eventReset = callback;
          return this;
     }

@@ -76,7 +76,7 @@ class DomControl {
         }
         return new DomControl(qss);
     }
-    child(selector) {
+    child(selector = null) {
         if (!selector) {
             selector = "*";
         }
@@ -90,7 +90,7 @@ class DomControl {
         }
         return new DomControl(qss);
     }
-    text(string) {
+    text(string = null) {
         if (string == undefined) {
             return this._qs[this._qs.length - 1].innerText;
         }
@@ -102,7 +102,7 @@ class DomControl {
             return this;
         }
     }
-    html(string) {
+    html(string = null) {
         if (string == undefined) {
             return this._qs[this._qs.length - 1].innerHTML;
         }
@@ -149,7 +149,7 @@ class DomControl {
         }
         return this;
     }
-    attribute(name, value) {
+    attribute(name, value = null) {
         if (value == undefined) {
             return this._qs[this._qs.length - 1].attributes[name].value;
         }
@@ -174,7 +174,7 @@ class DomControl {
     removeAttr(name) {
         return this.removeAttribute(name);
     }
-    virtual(name, value) {
+    virtual(name, value = null) {
         if (value == undefined) {
             var qs = this._qs[this._qs.length - 1];
             if (!DomStatic_1.default.__uids[qs.uid]) {
@@ -236,7 +236,7 @@ class DomControl {
         }
         return this;
     }
-    getStyle(name) {
+    getStyle(name = null) {
         var qs = this._qs[this._qs.length - 1];
         if (name) {
             if (!qs.style[name]) {
@@ -272,7 +272,7 @@ class DomControl {
         var qs = this._qs[this._qs.length - 1];
         return qs.classList.contains(className);
     }
-    value(value) {
+    value(value = null) {
         if (value == undefined) {
             return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__get_value_default).call(this, 0);
         }
@@ -280,7 +280,7 @@ class DomControl {
             return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__set_value_Default).call(this, 0, value);
         }
     }
-    default(value) {
+    default(value = null) {
         if (value == undefined) {
             return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__get_value_default).call(this, 1);
         }

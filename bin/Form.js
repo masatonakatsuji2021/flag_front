@@ -4,13 +4,19 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _Form_instances, _Form__getData, _Form__tagInput, _Form__setOptionString;
+var _Form_instances, _Form__getData, _Form__tagInput, _Form__setDefaultsAndValues, _Form__setOptionString;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const Data_1 = require("Data");
 const Dom_1 = require("Dom");
 const Request_1 = require("Request");
 class Form {
+    /**
+     * Form
+     *
+     * Installation of each input field of the input form and setting of the initial value,
+     * Class object for setting Submit/Reset event handlers, etc.
+     */
     constructor(formName) {
         _Form_instances.add(this);
         this.formName = null;
@@ -36,15 +42,42 @@ class Form {
             };
         }
     }
-    handleSubmit() { }
-    handleReset() { }
-    handleSetting() { }
+    /**
+     * handleSubmit
+     *
+     * Event handler executed when the submit button is pressed.
+     * @param {object} postData Input data
+     */
+    handleSubmit(postData) { }
+    /**
+     * handleSubmit
+     *
+     * Event handler executed when the reset button is pressed.
+     * @param {object} postData Input data
+     */
+    handleReset(postData) { }
+    /**
+     * handleSetting
+     *
+     * Event handler for input form initialization
+     * @param {any} args Arguments for pass-by-value
+     */
+    handleSetting(...args) { }
     // @ts-ignore
     setting(...argv) {
         // @ts-ignore
         this.handleSetting(...argv);
     }
-    tagInput(name, option) {
+    /**
+     * tagInput
+     *
+     * Generate Input tag for input form
+     *
+     * @param {string} name input name
+     * @param {object} option = null Option setting
+     * @returns {Form} Form Class Object (method chain)
+    */
+    tagInput(name, option = null) {
         var str = __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option);
         var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
         if (dom) {
@@ -52,7 +85,7 @@ class Form {
         }
         return this;
     }
-    tagHidden(name, value, option) {
+    tagHidden(name, value, option = null) {
         if (option == undefined) {
             option = {};
         }
@@ -60,28 +93,28 @@ class Form {
         option.value = value;
         return this.tagInput(name, option);
     }
-    tagNumber(name, option) {
+    tagNumber(name, option = null) {
         if (option == undefined) {
             option = {};
         }
         option.type = "number";
         return this.tagInput(name, option);
     }
-    tagPassword(name, option) {
+    tagPassword(name, option = null) {
         if (option == undefined) {
             option = {};
         }
         option.type = "password";
         return this.tagInput(name, option);
     }
-    tagFile(name, option) {
+    tagFile(name, option = null) {
         if (option == undefined) {
             option = {};
         }
         option.type = "file";
         return this.tagInput(name, option);
     }
-    tagSelect(name, selects, option) {
+    tagSelect(name, selects, option = null) {
         if (option == undefined) {
             option = {};
         }
@@ -103,7 +136,7 @@ class Form {
         }
         return this;
     }
-    tagTextarea(name, option) {
+    tagTextarea(name, option = null) {
         if (option == undefined) {
             option = {};
         }
@@ -115,7 +148,7 @@ class Form {
         }
         return this;
     }
-    tagRadio(name, selects, option) {
+    tagRadio(name, selects, option = null) {
         if (option == undefined) {
             option = {};
         }
@@ -134,7 +167,7 @@ class Form {
         }
         return this;
     }
-    tagCheckbox(name, selects, option) {
+    tagCheckbox(name, selects, option = null) {
         if (option == undefined) {
             option = {};
         }
@@ -153,11 +186,35 @@ class Form {
         }
         return this;
     }
-    tagSubmit(value, option) {
+    tagButton(name, value, option = null) {
+        if (option == null) {
+            option = {};
+        }
+        option.type = "button";
+        option.default = value;
+        return this.tagInput(name, option);
     }
-    tagReset(value, option) {
+    tagSubmit(name, value, option = null) {
+        if (option == null) {
+            option = {};
+        }
+        option.type = "submit";
+        option.default = value;
+        return this.tagInput(name, option);
+    }
+    tagReset(name, value, option = null) {
+        if (option == null) {
+            option = {};
+        }
+        option.type = "reset";
+        option.default = value;
+        return this.tagInput(name, option);
     }
     setValues(data) {
+        return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setDefaultsAndValues).call(this, data, 0);
+    }
+    setDefaults(data) {
+        return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setDefaultsAndValues).call(this, data, 1);
     }
     existSubmitEvent() {
         if (this.constructor.name == "Form") {
@@ -194,7 +251,12 @@ class Form {
         }
     }
     getResetEvent() {
-        return __classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventReset;
+        if (this.constructor.name == "Form") {
+            return __classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventReset;
+        }
+        else {
+            return this.handleReset;
+        }
     }
     submit() {
         var dom = (0, Dom_1.default)("#" + this.formName);
@@ -204,7 +266,6 @@ class Form {
             gce.html("");
         }
         var getChild = dom.child("[name]");
-        console.log(getChild);
         Request_1.default.refresh(getChild);
         var post = Request_1.default.get();
         if (this.existSubmitEvent()) {
@@ -246,15 +307,39 @@ exports.default = Form;
 _Form_instances = new WeakSet(), _Form__getData = function _Form__getData() {
     return Data_1.default.__form[this.formName];
 }, _Form__tagInput = function _Form__tagInput(name, option) {
-    if (option == undefined) {
+    if (option == null) {
         option = {};
     }
     if (!option.type) {
         option.type = "text";
     }
     var optionStr = __classPrivateFieldGet(this, _Form_instances, "m", _Form__setOptionString).call(this, option);
-    var str = "<input name=\"" + name + "\" " + optionStr + ">";
+    if (option.type == "submit" ||
+        option.type == "button" ||
+        option.type == "image" ||
+        option.type == "reset") {
+        var str = "<input " + optionStr + ">";
+    }
+    else {
+        var str = "<input name=\"" + name + "\" " + optionStr + ">";
+    }
     return str;
+}, _Form__setDefaultsAndValues = function _Form__setDefaultsAndValues(data, type) {
+    let columns = Object.keys(data);
+    for (var n = 0; n < columns.length; n++) {
+        let name = columns[n];
+        let value = data[name];
+        var dom = (0, Dom_1.default)("#" + this.formName).child("[name=\"" + name + "\"]");
+        if (dom) {
+            if (type == 0) {
+                dom.value(value);
+            }
+            else if (type == 1) {
+                dom.attr("value", value);
+            }
+        }
+    }
+    return this;
 }, _Form__setOptionString = function _Form__setOptionString(option) {
     var str = "";
     if (option.default) {
