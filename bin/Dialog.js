@@ -2,6 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const Dom_1 = require("Dom");
+/**
+ * Dialog :
+ * A class object for displaying the dialog by default.
+ */
 class Dialog {
     open(contents, option = null) {
         if (option == null) {
@@ -55,6 +59,7 @@ class Dialog {
             }
             v.remove();
         });
+        return v;
     }
 }
 exports.default = Dialog;

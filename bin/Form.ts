@@ -3,14 +3,12 @@ import Data from "Data";
 import Dom from "Dom";
 import Request from "Request";
 
-
 export default class Form{
     
     formName: string = null;
 
     /**
-     * Form
-     * 
+     * Form : 
      * Installation of each input field of the input form and setting of the initial value,
      * Class object for setting Submit/Reset event handlers, etc.
      */
@@ -43,7 +41,6 @@ export default class Form{
 
     /**
      * handleSubmit
-     * 
      * Event handler executed when the submit button is pressed.
      * @param {object} postData Input data
      */
@@ -52,7 +49,6 @@ export default class Form{
     
     /**
      * handleSubmit
-     * 
      * Event handler executed when the reset button is pressed.
      * @param {object} postData Input data
      */
@@ -60,7 +56,6 @@ export default class Form{
 
     /**
      * handleSetting
-     * 
      * Event handler for input form initialization
      * @param {any} args Arguments for pass-by-value
      */
@@ -78,14 +73,22 @@ export default class Form{
 
     /**
      * tagInput
-     * 
      * Generate Input tag for input form
-     * 
+     * @param {string} name input name
+     * @returns {Form} Form Class Object (method chain)
+    */
+    tagInput(name : string): Form;
+
+    /**
+     * tagInput
+     * Generate Input tag for input form
      * @param {string} name input name
      * @param {object} option = null Option setting
      * @returns {Form} Form Class Object (method chain)
     */
-    tagInput(name : string, option : object= null) : Form{
+    tagInput(name : string, option : object): Form;
+
+    tagInput(name : string, option : object = null) : Form{
 
         var str = this.#_tagInput(name, option);
 
@@ -126,9 +129,28 @@ export default class Form{
         return str;
     }
 
+    /**
+     * tagHidden
+     * Generates an input tag for hidden attributes
+     * @param {string} name input name
+     * @param {any} value input value
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagHidden(name : string, value : any) : Form;
+
+    /**
+     * tagHidden
+     * Generates an input tag for hidden attributes
+     * @param {string} name input name
+     * @param {any} value input value
+     * @param {object} option = null Option setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagHidden(name : string, value : any, option : object) : Form;
+
     tagHidden(name : string, value : any, option = null) : Form{
 
-        if(option == undefined){
+        if(option == null){
             option = {};
         }
 
@@ -138,6 +160,23 @@ export default class Form{
 
         return this.tagInput(name, option);
     }
+
+    /**
+     * tagNumber
+     * Generates a numeric input field
+     * @param {string} name input name
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagNumber(name : string) : Form;
+
+    /**
+     * tagNumber
+     * Generates a numeric input field
+     * @param {string} name input name
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagNumber(name : string, option : object) : Form;
 
     tagNumber(name : string, option = null) : Form{
 
@@ -150,6 +189,23 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
+    /**
+     * tagPassword
+     * Generate a password input field
+     * @param {string} name input name
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagPassword(name : string) : Form;
+
+    /**
+     * tagPassword
+     * Generate a password input field
+     * @param {string} name input name
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagPassword(name : string, option : object) : Form;
+
     tagPassword(name : string, option = null) : Form{
 
         if(option == undefined){
@@ -160,6 +216,107 @@ export default class Form{
 
         return this.tagInput(name, option);
     }
+
+    /**
+     * tagDate
+     * Generate a date input field.
+     * @param {string} name input name
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagDate(name : string) : Form;
+
+    /**
+     * tagDate
+     * Generate a date input field.
+     * @param {string} name input name
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagDate(name : string , option : object) : Form;
+
+    tagDate(name: string, option = null) : Form{
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "date";
+
+        return this.tagInput(name, option);
+    }
+
+    /**
+     * tagTime
+     * Generate a time input field
+     * @param {string} name input name
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagTime(name : string) : Form;
+
+    /**
+     * tagTime
+     * Generate a time input field
+     * @param {string} name input name
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagTime(name : string , option : object) : Form;
+
+    tagTime(name: string, option = null) : Form{
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "time";
+
+        return this.tagInput(name, option);
+    }
+
+    /**
+     * tagColor
+     * Generates a color picker input field
+     * @param {string} name input name
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagColor(name: string) : Form;
+
+    /**
+     * tagColor
+     * Generates a color picker input field
+     * @param {string} name input name
+     * @param {object} option =null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagColor(name: string, option : object) : Form;
+
+    tagColor(name: string, option = null) : Form{
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "color";
+
+        return this.tagInput(name, option);
+    }
+
+    /**
+     * tagFile
+     * Generate input fields for attachments
+     * @param {string} name input name
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagFile(name : string) : Form;
+
+    /**
+     * tagFile
+     * Generate input fields for attachments
+     * @param {string} name input name
+     * @param {object} option Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagFile(name : string, option : object) : Form;
 
     tagFile(name : string, option = null) : Form{
 
@@ -172,7 +329,26 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
-    tagSelect(name : string, selects : Object, option = null) : Form{
+    /**
+     * tagSelect
+     * Generates selection fields for pull-down menus
+     * @param {string} name input name
+     * @param {object} selects pull-down information
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagSelect(name : string, selects : object) : Form;
+
+    /**
+     * tagSelect
+     * Generates selection fields for pull-down menus
+     * @param {string} name input name
+     * @param {object} selects pull-down information
+     * @param {object} option Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagSelect(name : string, selects : object, option : object) : Form;
+
+    tagSelect(name : string, selects : object, option = null) : Form{
 
         if(option == undefined){
             option = {};
@@ -204,6 +380,23 @@ export default class Form{
         return this;
     }
 
+    /**
+     * tagTextarea
+     * Generates a textarea input field
+     * @param {string} name input name
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagTextarea(name : string) : Form;
+
+    /**
+     * tagTextarea
+     * Generates a textarea input field
+     * @param {string} name input name
+     * @param {object} option Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagTextarea(name : string, option : object) : Form;
+
     tagTextarea(name : string, option = null) : Form{
 
         if(option == undefined){
@@ -222,6 +415,25 @@ export default class Form{
 
         return this;
     }
+
+    /**
+     * tagRadio
+     * Generates a radio button selection field
+     * @param {string} name input name
+     * @param {object} selects radio-buttons information
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagRadio(name : string, selects : object) : Form;
+    
+    /**
+     * tagRadio
+     * Generates a radio button selection field
+     * @param {string} name input name
+     * @param {object} selects radio-buttons information
+     * @param {object} option Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagRadio(name : string, selects : object, option : object) : Form;
 
     tagRadio(name : string, selects : object, option = null) : Form{
 
@@ -251,6 +463,27 @@ export default class Form{
         return this;
     }
 
+    /**
+     * tagCheckbox
+     * 
+     * Generates checkbox selection fields
+     * 
+     * @param {string} name input name
+     * @param {object} selects checkbox information
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagCheckbox(name : string, selects : object) : Form;
+
+    /**
+     * tagCheckbox
+     * Generates checkbox selection fields
+     * @param {string} name input name
+     * @param {object} selects checkbox information
+     * @param {object} option Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
+    tagCheckbox(name : string, selects : object, option : object) : Form;
+
     tagCheckbox(name : string, selects : object, option = null) : Form{
 
         if(option == undefined){
@@ -267,7 +500,7 @@ export default class Form{
             option.type = "checkbox";
             option.value = key;
 
-            str += "<label>" + this.#_tagInput(name + "[]", option) + val + "</label>";
+            str += "<label>" + this.#_tagInput(name, option) + val + "</label>";
         }
 
         var dom = Dom("#" + this.formName).child("[form-name=\"" + name + "\"]");
@@ -279,6 +512,16 @@ export default class Form{
         return this;
     }
 
+    /**
+     * tagButton
+     * 
+     * generate a button
+     * 
+     * @param {string} name button name
+     * @param {string} value display text
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
     tagButton(name : string, value: string, option = null) : Form{
 
         if(option == null){
@@ -291,6 +534,16 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
+    /**
+     * tagButton
+     * 
+     * Generate a Submit button
+     * 
+     * @param {string} name button name
+     * @param {string} value display text
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
     tagSubmit(name : string, value : string, option = null) : Form{
 
         if(option == null){
@@ -303,6 +556,16 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
+    /**
+     * tagButton
+     * 
+     * Generate a Reset button
+     * 
+     * @param {string} name button name
+     * @param {string} value display text
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
     tagReset(name : string, value : string, option = null) : Form{
         
         if(option == null){
@@ -315,10 +578,32 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
+    /**
+     * setValues
+     * 
+     * Set the initial value in the input field.
+     * If a reset event occurs, all values and selection values set here will be cleared.
+     * 
+     * After the reset event occurs, 
+     * if you want to return to the set value, 
+     * please use the "setDefaults" method instead
+     * 
+     * @param {object} data Setting data
+     * @returns {Form} Form Class Object (method chain)
+     */
     setValues(data : object) : Form{
         return this.#_setDefaultsAndValues(data, 0);
     }
     
+    /**
+     * setDefaults
+     * 
+     * Set the initial value in the input field.
+     * If a reset event occurs, revert to the set value.
+     * 
+     * @param {object} data Setting data
+     * @returns {Form} Form Class Object (method chain)
+     */
     setDefaults(data : object) : Form{
         return this.#_setDefaultsAndValues(data, 1);
     }
@@ -334,14 +619,12 @@ export default class Form{
             var dom = Dom("#" + this.formName).child("[name=\"" + name + "\"]");
 
             if(dom){
-
                 if(type == 0){
                     dom.value(value);
                 }
                 else if(type == 1){
-                    dom.attr("value", value);
+                    dom.default(value);
                 }
-
             }
         }
 
@@ -419,6 +702,13 @@ export default class Form{
         }
     }
 
+    /**
+     * submit
+     * 
+     * actively execute the submit event.
+     * 
+     * @returns {Form} Form Class Object (method chain)
+     */
     submit() : Form{
 
         var dom = Dom("#" + this.formName);
@@ -442,6 +732,13 @@ export default class Form{
         return this;
     }
 
+    /**
+     * reset
+     * 
+     * actively execute the reset event
+     * 
+     * @returns {Form} Form Class Object (method chain)
+     */
     reset() : Form{
 
         var dom = Dom("#" + this.formName);
@@ -459,16 +756,42 @@ export default class Form{
         return this;
     }
 
+    /**
+     * onSubmit
+     * 
+     * A method for setting the callback for the Submit event.
+     * When submitted, the callback function specified in this argument will be executed.
+     * 
+     * @param {Function} callback Submit runtime callback
+     * @returns {Form} Form Class Object (method chain)
+     */
     onSubmit(callback : Function) : Form{
         Data.__form[this.formName].eventSubmit = callback;
         return this;
     }
 
+    /**
+     * onReset
+     * 
+     * A method for setting the callback for the Reset event.
+     * When resetted, the callback function specified in this argument will be executed.
+     * 
+     * @param {Function} callback Reset runtime callback
+     * @returns {Form} Form Class Object (method chain)
+     */
     onReset(callback : Function) : Form{
         Data.__form[this.formName].eventReset = callback;
          return this;
     }
 
+    /**
+     * setError
+     * 
+     * display error results.
+     * 
+     * @param validates 
+     * @returns {Form} Form Class Object (method chain)
+     */
     setError(validates){
         var v = validates.get();
         var columns = Object.keys(v);

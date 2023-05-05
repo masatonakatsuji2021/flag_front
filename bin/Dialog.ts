@@ -1,9 +1,31 @@
 import Util from "Util";
 import Dom from "Dom";
+import DomControl from "DomControl";
 
+/**
+ * Dialog : 
+ * A class object for displaying the dialog by default.
+ */
 export default class Dialog{
 
-    open(contents : string, option = null){
+    /**
+     * open : 
+     * show a dialog
+     * @param {string} contents dialog window content
+     * @returns {DomControl} DomControl Class Object
+     */
+    open(contents : string) : DomControl;
+
+    /**
+     * open : 
+     * show a dialog
+     * @param {string} contents dialog window content
+     * @param {object} option Option Setting
+     * @returns {DomControl} DomControl Class Object
+     */
+    open(contents : string, option : object) : DomControl;
+
+    open(contents : string, option = null) : DomControl{
 
         if(option == null){
             option = {};
@@ -25,7 +47,31 @@ export default class Dialog{
         return v;
     }
 
-    loading(message : string = null, option = null){
+    /**
+     * loading : 
+     * Show loading dialog
+     * @returns {DomControl} DomControl Class Object
+     */
+    loading() : DomControl;
+
+    /**
+     * loading : 
+     * Show loading dialog
+     * @param {string} message text message
+     * @returns {DomControl} DomControl Class Object
+     */
+    loading(message : string) : DomControl;
+
+    /**
+     * loading : 
+     * Show loading dialog
+     * @param {string} message text message
+     * @param {object} option Option Setting
+     * @returns {DomControl} DomControl Class Object
+     */
+    loading(message : string, option: object) : DomControl;
+
+    loading(message : string = null, option = null) : DomControl{
 
         if(!option){
             option = {};
@@ -46,7 +92,34 @@ export default class Dialog{
         return v;
     }
 
-    alert(message : string, title : string = null, option = null){
+    /**
+     * alert : 
+     * Displays a dialog for displaying alerts
+     * @param {string} message alert message
+     * @returns {DomControl} DomControl Class Object
+     */
+    alert(message : string): DomControl;
+
+    /**
+     * alert : 
+     * Displays a dialog for displaying alerts
+     * @param {string} message alert message
+     * @param {string} title alert title
+     * @returns {DomControl} DomControl Class Object
+     */
+    alert(message : string, title : string): DomControl;
+
+    /**
+     * alert : 
+     * Displays a dialog for displaying alerts
+     * @param {string} message alert message
+     * @param {string} title alert title
+     * @param {object} option Option Setting
+     * @returns {DomControl} DomControl Class Object
+     */
+    alert(message : string, title : string, option : object): DomControl;
+
+    alert(message : string, title : string = null, option = null) : DomControl{
 
         if(option == null){
             option = {};
@@ -75,6 +148,7 @@ export default class Dialog{
             v.remove();
         });
 
+        return v;
     }
 
 };

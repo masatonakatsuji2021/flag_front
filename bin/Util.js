@@ -2,11 +2,23 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Data_1 = require("Data");
 exports.default = new class Util {
-    base64Encode(string) {
-        return btoa(unescape(encodeURIComponent(string)));
+    /**
+     * base64Encode :
+     * Encode the text to base64 format
+     * @param {string} content text content
+     * @returns {string} base64 encode content
+     */
+    base64Encode(content) {
+        return btoa(unescape(encodeURIComponent(content)));
     }
-    base64Decode(string) {
-        return decodeURIComponent(escape(atob(string)));
+    /**
+     * base64Decode :
+     * Decode base64 text to plaintext
+     * @param {string} b64text base64 text
+     * @returns {string} plain text content
+     */
+    base64Decode(b64text) {
+        return decodeURIComponent(escape(atob(b64text)));
     }
     uniqId(length = null) {
         if (!length) {
@@ -21,11 +33,23 @@ exports.default = new class Util {
         }
         return str;
     }
-    ucFirst(string) {
-        return string.substring(0, 1).toUpperCase() + string.substring(1);
+    /**
+     * ucFirst :
+     * Outputs text with the first letter converted to uppercase
+     * @param {string} content text content
+     * @returns {string} convert text content
+     */
+    ucFirst(content) {
+        return content.substring(0, 1).toUpperCase() + content.substring(1);
     }
-    lcFirst(string) {
-        return string.substring(0, 1).toLowerCase() + string.substring(1);
+    /**
+     * lcFirst :
+     * Outputs text with the first letter converted to lowercase
+     * @param {string} content text content
+     * @returns {string} convert text content
+     */
+    lcFirst(content) {
+        return content.substring(0, 1).toLowerCase() + content.substring(1);
     }
     getClassName(string, classType) {
         return string.substring(0, string.indexOf(classType));
@@ -35,7 +59,13 @@ exports.default = new class Util {
             return Data_1.default.__form[formName];
         }
     }
-    dt(datetime) {
+    /**
+     * dt
+     * Output date and time in specified format
+     * @param {string} datetime = null Specified date and time
+     * @returns {_DateTime} _DateTime Object
+     */
+    dt(datetime = null) {
         if (datetime) {
             var d = new Date(datetime);
         }
@@ -84,6 +114,18 @@ exports.default = new class Util {
         };
         return new _DateTime(d);
     }
+    /**
+     * sleep :
+     * Stop processing for a certain period of time.(Synchronous processing)
+     * This method is synchronized by executing it with await inside the asynced function.
+     *
+     * Example)
+     *
+     * await sleep(1000);        <= Stop processing for 1000ms
+     *
+     * @param {number} time Stop time
+     * @returns {promise<unknown>} Promise Object
+     */
     sleep(time) {
         return new Promise(function (resolve) {
             setTimeout(function () {

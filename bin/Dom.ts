@@ -1,5 +1,13 @@
 import DomControl from "DomControl";
 
+/**
+ * Dom
+ * 
+ * Get element information for DOM manipulation.
+ * 
+ * @param {string} selectName query selector
+ * @returns {DomControl} DomControl Class Object
+ */
 const Dom = function(selectName : string = null){
 
     if(selectName){

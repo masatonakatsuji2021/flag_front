@@ -8,20 +8,50 @@ export default new class Response{
     
     __page_status : boolean = true;
 
+    /**
+     * pageDisable
+     * 
+     * Temporarily suspend the page move operation.
+     * 
+     * @returns {Response} Response Class Object (method chain)
+     */
     pageDisable() : Response{
         this.__page_status = false;
         return this;
     }
 
+    /**
+     * pageEnable
+     * 
+     * unpause the page move operation
+     * 
+     * @returns {Response} Response Class Object (method chain)
+     */
     pageEnable() : Response{
         this.__page_status = true;
         return this;
     }
 
+    /**
+     * setPageStatus
+     * 
+     * Get the page navigation state.
+     * 
+     * @returns {boolean} page status
+     */
     setPageStatus() : boolean{
         return this.__page_status;
     }
 
+    /**
+     * redirect
+     * 
+     * redirect to another page
+     * 
+     * @param {string} url Destination page URL
+     * @param {boolean} sliented When set to true, page transition processing is not performed only by changing the page URL
+     * @returns {void}
+     */
     redirect(url : string, sliented : boolean = false) : void{
 
         if(!url){
@@ -153,6 +183,14 @@ export default new class Response{
         }).bind(this)();
     }
 
+    /**
+     * view
+     * 
+     * Get View's content information.
+     * 
+     * @param {string} viewName View Name
+     * @returns {string} view contents
+     */
     view(viewName : string) : string{
 
         var viewPath = "View/" + viewName + ".html";
@@ -168,6 +206,14 @@ export default new class Response{
         return content;
     }
 
+    /**
+     * template
+     * 
+     * Get template content information.
+     * 
+     * @param {string} templateName Template Name
+     * @returns {string} template contents
+     */
     template(templateName : string) : string{
 
         var templatePath = "Template/" + templateName + ".html";
@@ -184,6 +230,14 @@ export default new class Response{
         return content;
     }
 
+    /**
+     * viewPart
+     * 
+     * Get viewPart content information.
+     * 
+     * @param {string} viewPartName ViewPart Name
+     * @returns {string} viewPart contents
+     */
     viewPart(viewPartName : string) : string{
 
         var viewPartPath = "ViewPart/" + viewPartName + ".html";

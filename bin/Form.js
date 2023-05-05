@@ -12,8 +12,7 @@ const Dom_1 = require("Dom");
 const Request_1 = require("Request");
 class Form {
     /**
-     * Form
-     *
+     * Form :
      * Installation of each input field of the input form and setting of the initial value,
      * Class object for setting Submit/Reset event handlers, etc.
      */
@@ -44,21 +43,18 @@ class Form {
     }
     /**
      * handleSubmit
-     *
      * Event handler executed when the submit button is pressed.
      * @param {object} postData Input data
      */
     handleSubmit(postData) { }
     /**
      * handleSubmit
-     *
      * Event handler executed when the reset button is pressed.
      * @param {object} postData Input data
      */
     handleReset(postData) { }
     /**
      * handleSetting
-     *
      * Event handler for input form initialization
      * @param {any} args Arguments for pass-by-value
      */
@@ -68,15 +64,6 @@ class Form {
         // @ts-ignore
         this.handleSetting(...argv);
     }
-    /**
-     * tagInput
-     *
-     * Generate Input tag for input form
-     *
-     * @param {string} name input name
-     * @param {object} option = null Option setting
-     * @returns {Form} Form Class Object (method chain)
-    */
     tagInput(name, option = null) {
         var str = __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option);
         var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
@@ -86,7 +73,7 @@ class Form {
         return this;
     }
     tagHidden(name, value, option = null) {
-        if (option == undefined) {
+        if (option == null) {
             option = {};
         }
         option.type = "hidden";
@@ -105,6 +92,27 @@ class Form {
             option = {};
         }
         option.type = "password";
+        return this.tagInput(name, option);
+    }
+    tagDate(name, option = null) {
+        if (option == undefined) {
+            option = {};
+        }
+        option.type = "date";
+        return this.tagInput(name, option);
+    }
+    tagTime(name, option = null) {
+        if (option == undefined) {
+            option = {};
+        }
+        option.type = "time";
+        return this.tagInput(name, option);
+    }
+    tagColor(name, option = null) {
+        if (option == undefined) {
+            option = {};
+        }
+        option.type = "color";
         return this.tagInput(name, option);
     }
     tagFile(name, option = null) {
@@ -178,7 +186,7 @@ class Form {
             var val = selects[key];
             option.type = "checkbox";
             option.value = key;
-            str += "<label>" + __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name + "[]", option) + val + "</label>";
+            str += "<label>" + __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option) + val + "</label>";
         }
         var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
         if (dom) {
@@ -186,6 +194,16 @@ class Form {
         }
         return this;
     }
+    /**
+     * tagButton
+     *
+     * generate a button
+     *
+     * @param {string} name button name
+     * @param {string} value display text
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
     tagButton(name, value, option = null) {
         if (option == null) {
             option = {};
@@ -194,6 +212,16 @@ class Form {
         option.default = value;
         return this.tagInput(name, option);
     }
+    /**
+     * tagButton
+     *
+     * Generate a Submit button
+     *
+     * @param {string} name button name
+     * @param {string} value display text
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
     tagSubmit(name, value, option = null) {
         if (option == null) {
             option = {};
@@ -202,6 +230,16 @@ class Form {
         option.default = value;
         return this.tagInput(name, option);
     }
+    /**
+     * tagButton
+     *
+     * Generate a Reset button
+     *
+     * @param {string} name button name
+     * @param {string} value display text
+     * @param {object} option = null Option Setting
+     * @returns {Form} Form Class Object (method chain)
+     */
     tagReset(name, value, option = null) {
         if (option == null) {
             option = {};
@@ -210,9 +248,31 @@ class Form {
         option.default = value;
         return this.tagInput(name, option);
     }
+    /**
+     * setValues
+     *
+     * Set the initial value in the input field.
+     * If a reset event occurs, all values and selection values set here will be cleared.
+     *
+     * After the reset event occurs,
+     * if you want to return to the set value,
+     * please use the "setDefaults" method instead
+     *
+     * @param {object} data Setting data
+     * @returns {Form} Form Class Object (method chain)
+     */
     setValues(data) {
         return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setDefaultsAndValues).call(this, data, 0);
     }
+    /**
+     * setDefaults
+     *
+     * Set the initial value in the input field.
+     * If a reset event occurs, revert to the set value.
+     *
+     * @param {object} data Setting data
+     * @returns {Form} Form Class Object (method chain)
+     */
     setDefaults(data) {
         return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setDefaultsAndValues).call(this, data, 1);
     }
@@ -258,6 +318,13 @@ class Form {
             return this.handleReset;
         }
     }
+    /**
+     * submit
+     *
+     * actively execute the submit event.
+     *
+     * @returns {Form} Form Class Object (method chain)
+     */
     submit() {
         var dom = (0, Dom_1.default)("#" + this.formName);
         var getChildError = dom.child("[data-name]");
@@ -273,6 +340,13 @@ class Form {
         }
         return this;
     }
+    /**
+     * reset
+     *
+     * actively execute the reset event
+     *
+     * @returns {Form} Form Class Object (method chain)
+     */
     reset() {
         var dom = (0, Dom_1.default)("#" + this.formName);
         var getChild = dom.child("[name]");
@@ -283,14 +357,40 @@ class Form {
         }
         return this;
     }
+    /**
+     * onSubmit
+     *
+     * A method for setting the callback for the Submit event.
+     * When submitted, the callback function specified in this argument will be executed.
+     *
+     * @param {Function} callback Submit runtime callback
+     * @returns {Form} Form Class Object (method chain)
+     */
     onSubmit(callback) {
         Data_1.default.__form[this.formName].eventSubmit = callback;
         return this;
     }
+    /**
+     * onReset
+     *
+     * A method for setting the callback for the Reset event.
+     * When resetted, the callback function specified in this argument will be executed.
+     *
+     * @param {Function} callback Reset runtime callback
+     * @returns {Form} Form Class Object (method chain)
+     */
     onReset(callback) {
         Data_1.default.__form[this.formName].eventReset = callback;
         return this;
     }
+    /**
+     * setError
+     *
+     * display error results.
+     *
+     * @param validates
+     * @returns {Form} Form Class Object (method chain)
+     */
     setError(validates) {
         var v = validates.get();
         var columns = Object.keys(v);
@@ -335,7 +435,7 @@ _Form_instances = new WeakSet(), _Form__getData = function _Form__getData() {
                 dom.value(value);
             }
             else if (type == 1) {
-                dom.attr("value", value);
+                dom.default(value);
             }
         }
     }

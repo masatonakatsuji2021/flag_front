@@ -15,53 +15,49 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Data_1 = require("Data");
 const Routes_1 = require("Routes");
 const Response_1 = require("Response");
+/**
+ * Controller :
+ * Core class for page display.
+ */
 class Controller {
     constructor() {
         /**
-         * view
-         *
+         * view :
          * Set the page view path to display
          * If not specified, automatically determined by "{Controller Name}/{action name}"
          * If you use it, place the HTML file in the path "rendering/View/{Controller Name}/{action Name}.html".
          */
         this.view = null;
         /**
-         * template
-         *
+         * template :
          * Specifies the template name to use on the displayed page.
          * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.
-         *
          */
         this.template = null;
     }
     /**
-     * handleBefore
-     *
+     * handleBefore :
      * Event handler executed just before transitioning to the page.
      */
     handleBefore() { }
     /**
-     * handleAfter
-     *
+     * handleAfter :
      * Event handler executed immediately after transitioning to the page
      */
     handleAfter() { }
     /**
-     * handleRenderBefore
-     *
+     * handleRenderBefore :
      * Event handler executed immediately after page transition and rendering process to the screen is completed
      */
     handleRenderBefore() { }
     /**
-     * handleRenderAfter
-     *
+     * handleRenderAfter :
      * Event handler that is executed after page transition, after rendering process to the screen is completed,
      * and after the event for each action is completed.
      */
     handleRenderAfter() { }
     /**
-     * handleLeave
-     *
+     * handleLeave :
      * Event handler executed when leaving the page
      */
     handleLeave() { }

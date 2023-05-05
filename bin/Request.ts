@@ -3,11 +3,23 @@ export default new class Request{
     __file_uploads = {};
     _post = null;
 
+    /**
+     * clear
+     * 
+     * clear request data.
+     */
     clear(){
         this.__file_uploads = {};
         this._post = null;
     }
 
+    /**
+     * get
+     * 
+     * get request data.
+     * 
+     * @returns post data
+     */
     get(){
         return this._post;
     }

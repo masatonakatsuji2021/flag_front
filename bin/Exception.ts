@@ -10,7 +10,22 @@ export default class Exception extends Controller{
         this.view = "error/index";
     }
 
-    handle(exception : Exception = null){}
+    /**
+     * handle : 
+     * Event handler when an error occurs.
+     * @returns {void}
+     */
+    handle() : void;
+
+    /**
+     * handle : 
+     * Event handler when an error occurs.
+     * @param {Exception} exception Error Exception
+     * @returns {void}
+     */
+    handle(exception : Exception) : void;
+    
+    handle(exception : Exception = null) : void{}
 
     before_handle(){}
 };

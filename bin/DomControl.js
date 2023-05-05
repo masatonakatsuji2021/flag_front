@@ -21,24 +21,61 @@ class DomControl {
             }
         }
     }
+    /**
+     * get get
+     * Get the document information of the get DOM.
+     */
     get get() {
         return this._qs;
     }
+    /**
+     * get length
+     * Get the number of elements in the get DOM.
+     * @returns {number} length
+     */
     get length() {
         return this._qs.length;
     }
+    /**
+     * first
+     * Specifies the first element.
+     * @returns {DomControl} DomControl Class Object
+     */
     first() {
         return new DomControl([this._qs[0]]);
     }
+    /**
+     * last
+     * Specifies the last element.
+     * @returns {DomControl} DomControl Class Object
+     */
     last() {
         return new DomControl([this._qs[this._qs.length - 1]]);
     }
+    /**
+     * parent
+     * Specifies the parent element one level above.
+     * @returns {DomControl} DomControl Class Object
+     */
     parent() {
         return new DomControl([this._qs[this._qs.length - 1].parentNode]);
     }
+    /**
+     * index
+     * Specifies the element at the index specified by the argument
+     * @param {number} index element index
+     * @returns {DomControl} DomControl Class Object
+     */
     index(index) {
         return new DomControl([this._qs[index]]);
     }
+    /**
+     * findOnAttr
+     * Specifies only elements that contain attribute information that matches the conditions of the argument.
+     * @param {string} name attribute name
+     * @param {string|number} value attribute value
+     * @returns {DomControl} DomControl Class Object
+     */
     findOnAttr(name, value) {
         var qss = [];
         for (var n = 0; n < this._qs.length; n++) {
@@ -52,6 +89,13 @@ class DomControl {
         }
         return new DomControl(qss);
     }
+    /**
+     * findOnVirtual
+     * Specify only elements that contain Virtual attribute information that matches the argument conditions.
+     * @param {string} name virtual attribute name
+     * @param {string|number} value virtual attribute value
+     * @returns {DomControl} DomControl Class Object
+     */
     findOnVirtual(name, value) {
         var qss = [];
         for (var n = 0; n < this._qs.length; n++) {
@@ -76,6 +120,13 @@ class DomControl {
         }
         return new DomControl(qss);
     }
+    /**
+     * child
+     * Specifies the child element of the argument selector,
+     * If no selector is specified, all child elements are included
+     * @param {string} selector = null selector
+     * @returns {DomControl} DomControl Class Object
+     */
     child(selector = null) {
         if (!selector) {
             selector = "*";
@@ -114,24 +165,47 @@ class DomControl {
             return this;
         }
     }
-    append(string) {
+    /**
+     * append
+     * add element tag.
+     * @param {string} contents add contents
+     * @returns {DomControl} DomControl Class Object
+     */
+    append(contents) {
         this._qs.forEach(function (qs) {
-            qs.insertAdjacentHTML("beforeend", string);
+            qs.insertAdjacentHTML("beforeend", contents);
         });
         return this;
     }
-    before(string) {
+    /**
+     * append
+     * Append just before the element tag
+     * @param {string} contents add contents
+     * @returns {DomControl} DomControl Class Object
+     */
+    before(contents) {
         this._qs.forEach(function (qs) {
-            qs.insertAdjacentHTML("beforebegin", string);
+            qs.insertAdjacentHTML("beforebegin", contents);
         });
         return this;
     }
-    after(string) {
+    /**
+     * after
+     * Append right after the element tag
+     * @param {string} contents add contents
+     * @returns {DomControl} DomControl Class Object
+     */
+    after(contents) {
         this._qs.forEach(function (qs) {
-            qs.insertAdjacentHTML("afterend", string);
+            qs.insertAdjacentHTML("afterend", contents);
         });
         return this;
     }
+    /**
+     * remove
+     * remove the element
+     * @returns {DomControl} DomControl Class Object
+     */
     remove() {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
@@ -139,9 +213,21 @@ class DomControl {
         }
         return this;
     }
+    /**
+     * empty
+     * clear inside element
+     * @returns {DomControl} DomControl Class Object
+     */
     empty() {
         return this.html("");
     }
+    /**
+     * on
+     * set the event handler
+     * @param {string} eventName event name
+     * @param {Function} callback callback function
+     * @returns {DomControl} DomControl Class Object
+     */
     on(eventName, callback) {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
@@ -161,9 +247,15 @@ class DomControl {
             return this;
         }
     }
-    attr(name, value) {
+    attr(name, value = null) {
         return this.attribute(name, value);
     }
+    /**
+     * removeAttribute
+     * Delete attribute information
+     * @param {string} name attribute name
+     * @returns {DomControl} DomControl Class Object
+     */
     removeAttribute(name) {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
@@ -171,6 +263,12 @@ class DomControl {
         }
         return this;
     }
+    /**
+     * removeAttr
+     * Delete attribute information
+     * @param {string} name attribute name
+     * @returns {DomControl} DomControl Class Object
+     */
     removeAttr(name) {
         return this.removeAttribute(name);
     }
@@ -203,6 +301,12 @@ class DomControl {
             return this;
         }
     }
+    /**
+     * removeVirtual
+     * Delete virtual attribute information
+     * @param {string} name virtual attribute name
+     * @returns {DomControl} DomControl Class Object
+     */
     removeVirtual(name) {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
@@ -224,6 +328,12 @@ class DomControl {
         }
         return this;
     }
+    /**
+     * style
+     * Sets stylesheet information.
+     * @param {object} options stylesheet attribute information
+     * @returns {DomControl} DomControl Class Object
+     */
     style(options) {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
@@ -261,6 +371,12 @@ class DomControl {
         }
         return this;
     }
+    /**
+     * removeClass
+     * remove the class attribute
+     * @param {string} className Delete class name
+     * @returns {DomControl} DomControl Class Object
+     */
     removeClass(className) {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
@@ -268,6 +384,12 @@ class DomControl {
         }
         return this;
     }
+    /**
+     * isClass
+     * Checks if the specified class exists in the element
+     * @param {string} className Delete class name
+     * @returns {boolean} exists status
+     */
     isClass(className) {
         var qs = this._qs[this._qs.length - 1];
         return qs.classList.contains(className);
@@ -288,6 +410,28 @@ class DomControl {
             return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__set_value_Default).call(this, 1, value);
         }
     }
+    /**
+     * getNodeName
+     * get the node name of an element
+     * @returns {string} node name
+     */
+    getNodeName() {
+        var qs = this._qs[this._qs.length - 1];
+        return qs.localName;
+    }
+    /**
+     * getType
+     * get the type attribute
+     * @returns {string} type
+     */
+    getType() {
+        return this.attr("type");
+    }
+    /**
+     * click
+     * click on element.
+     * @returns {DomControl} DomControl Class Object
+     */
     click() {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
@@ -295,6 +439,11 @@ class DomControl {
         }
         return this;
     }
+    /**
+     * dblclick
+     * double click on element.
+     * @returns {DomControl} DomControl Class Object
+     */
     dblclick() {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
@@ -302,6 +451,11 @@ class DomControl {
         }
         return this;
     }
+    /**
+     * submit
+     * submit on element.
+     * @returns {DomControl} DomControl Class Object
+     */
     submit() {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
@@ -309,6 +463,11 @@ class DomControl {
         }
         return this;
     }
+    /**
+     * focus
+     * focus on element.
+     * @returns {DomControl} DomControl Class Object
+     */
     focus() {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
