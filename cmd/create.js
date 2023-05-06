@@ -4,8 +4,6 @@ const cli = require("@flag/cli");
 const { execSync } = require("child_process");
 
 module.exports = async function(args){
-
-    console.log(args);
     
     const deepSearch = function(path){
 
@@ -40,7 +38,7 @@ module.exports = async function(args){
     cli
         .indent(2)
         .outn()
-        .outn("=== Flag Front Build ========================")
+        .outn("* SPA Create-Project")
         .outn()
 
     var create = {};
@@ -80,20 +78,32 @@ module.exports = async function(args){
     if(args.root){
         create.root =  "./" + create.name + "/" + args.root;
     }
+    if(args.r){
+        create.root =  "./" + create.name + "/" + args.r;
+    }
 
     create.build = "./" + create.name + "/__build";
     if(args.build){
         create.build =  "./" + create.name + "/" + args.build;
+    }
+    if(args.b){
+        create.root =  "./" + create.name + "/" + args.b;
     }
 
     create.uncomponent = false;
     if(args.uncomponent){
         create.uncomponent = args.uncomponent;
     }
+    if(args.uc){
+        create.uncomponent = args.uc;
+    }
 
     create.soursemap = false;
     if(args.soursemap){
         create.soursemap = args.soursemap;
+    }
+    if(args.sm){
+        create.soursemap = args.sm;
     }
 
     var padEnd = 15;
@@ -171,6 +181,53 @@ module.exports = async function(args){
         cli.green("# ").outn("Mkdir " + rootPath);    
     }
 
+    var templatePath = path.dirname(__dirname) + "/source/default";
+
+    if(create.typeScript){
+        fs.copyFileSync(path.dirname(__dirname) + "/source/_ts/init.d.ts", "./" + create.name + "/init.d.ts");
+        cli.green("#").outn("SourceCopy ./" + create.name + "/init.d.ts");
+        fs.copyFileSync(path.dirname(__dirname) + "/source/_ts/tsconfig.json", "./" + create.name + "/tsconfig.json");
+        cli.green("#").outn("SourceCopy ./" + create.name + "/tsconfig.json");
+
+        templatePath = path.dirname(__dirname) + "/source/default_ts";
+    }
+
+    var fileList = deepSearch(templatePath);
+
+    for(var n = 0 ; n < fileList.dir.length ; n++){
+        var dir = fileList.dir[n];
+        dir = create.root + "/" + dir.substring(templatePath.length);
+        dir = dir.split("//").join("/");
+
+        fs.mkdirSync(dir,{
+            recursive: true,
+        });
+        cli.green("# ").outn("Mkdir " + dir);
+    }
+
+    for(var n = 0 ; n < fileList.file.length ; n++){
+        var inputFile = fileList.file[n];
+        var outputFile = create.root + "/" + inputFile.substring(templatePath.length);
+        outputFile = outputFile.split("//").join("/");
+
+        fs.copyFileSync(inputFile, outputFile);
+
+        cli.green("# ").outn("SourceCopy " + outputFile);
+    }
+
+
+
+
+
+    if(create.format == "electron"){
+
+    }
+    else if(create.format == "nwjs"){
+
+
+    }
+
+
     packageJson.flagFront.push({
         name: create.name,
         format: create.format.split(","),
@@ -185,49 +242,6 @@ module.exports = async function(args){
 
     cli.green("# ").outn("Refresh package.json");
 
-    var fileList = deepSearch(path.dirname(__dirname) + "/source/default");
-
-    for(var n = 0 ; n < fileList.dir.length ; n++){
-        var dir = fileList.dir[n];
-        dir = create.root + "/" + dir.substring((path.dirname(__dirname) + "/source/default").length);
-        dir = dir.split("//").join("/");
-
-        fs.mkdirSync(dir,{
-            recursive: true,
-        });
-        cli.green("# ").outn("Mkdir " + dir);
-    }
-
-    for(var n = 0 ; n < fileList.file.length ; n++){
-        var inputFile = fileList.file[n];
-        var outputFile = create.root + "/" + inputFile.substring((path.dirname(__dirname) + "/source/default").length);
-        outputFile = outputFile.split("//").join("/");
-
-        fs.copyFileSync(inputFile, outputFile);
-
-        cli.green("# ").outn("SourceCopy " + outputFile);
-    }
-
-    if(create.typeScript){
-
-        var tsJson = {
-            compilerOptions: {
-                paths: {
-                    "*" : "./node_modules/@flag/front/bin/*",
-                },
-            },
-        };
-
-        fs.writeFileSync(create.directory + "/tsconfig.json", JSON.stringify(tsJson,null,"  "));
-    }
-
-    if(create.format == "electron"){
-
-    }
-    else if(create.format == "nwjs"){
-
-
-    }
 
     cli
         .outn()

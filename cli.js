@@ -23,6 +23,10 @@ const cli = require("@flag/cli");
         const build = require("./cmd/build.js");
         await build(args);
     }
+    else if(args._any[0] == "init"){
+        const inits = require("./cmd/init.js");
+        await inits(args);
+    }
     else if(args._any[0] == "build"){
         const build = require("./cmd/build.js");
         await build(args);
