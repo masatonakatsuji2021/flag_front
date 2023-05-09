@@ -101,12 +101,6 @@ module.exports = async function(args){
     ;
 
     var rootPath = create.directory + "/" + create.name;
-
-    /*
-    if(create.format.indexOf("cordova") > -1){
- 
-    }
-    */
    
     fs.mkdirSync(rootPath, {
         recursive: true,
@@ -146,19 +140,6 @@ module.exports = async function(args){
 
         cli.green("# ").outn("SourceCopy " + outputFile);
     }
-
-
-/*
-
-
-    if(create.format == "electron"){
-
-    }
-    else if(create.format == "nwjs"){
-
-
-    }
-*/
 
     var packageJson ={
         flagFront :{
