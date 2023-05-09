@@ -8,37 +8,32 @@ module.exports = function(args){
 
     __dirname = path.dirname(__dirname);
 
-    var projectName = args._any[1];
-
-    if(!projectName){
-        cli.red("[ERROR]").outn("package name not found.");
-        return;
+    if(args._any[1]){
+        var projectName = args._any[1];
+        var packageJsonPath = process.cwd() + "/" + projectName + "/package.json";
+    }
+    else{
+        var packageJsonPath = process.cwd() + "/package.json";
     }
 
+
     try{
-        packageJson = require(process.cwd() + "/package.json");
+        var packageJson = require(packageJsonPath);
     }catch(error){
         cli.red("[ERROR]").outn("Package.json not found. ")
         return;
     }
+
 
     if(!packageJson.flagFront){
         cli.red("[ERROR]").outn("Option information of \"flatFront\" is not set in \"package.json\".");
         return;
     }
 
-    var option = null;
-
-    for(var n = 0 ; n < packageJson.flagFront.length ; n++){
-        var buff = packageJson.flagFront[n];
-        if(buff.name == projectName){
-            option = buff;
-            break;
-        }
-    }
+    var option = packageJson.flagFront;
 
     if(!option){
-        cli.red("[ERROR]").outn("Project information \"" + projectName + "\" is not set in \"flatFront\" of \"package.json\".");
+        cli.red("[ERROR]").outn("Project information is not set in \"flatFront\" of \"package.json\".");
         return;
     }
 
@@ -139,6 +134,23 @@ module.exports = function(args){
 
     option.startCallback = "function(){\nlet exports = {} ;\n" + Startor + "}";
 
+    if(projectName){
+        option.rootPath = process.cwd() + "/" + projectName + "/src";
+        option.buildPath = process.cwd() + "/" + projectName + "/platforms/web";    
+    }
+    else{
+        option.rootPath = process.cwd() + "/src";
+        option.buildPath = process.cwd() + "/platforms/web";
+    }
+
     build(option);
+
+    if(option.platform){
+        cli.outn().outn();
+        if(option.platform.indexOf("cordova") > -1){
+            cli.outn("# Corodova Build ....");
+            
+        }
+    }
 
 };

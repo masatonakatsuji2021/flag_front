@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const cli = require("@flag/cli");
-const { execSync } = require("child_process");
 
 module.exports = async function(args){
     
@@ -58,14 +57,6 @@ module.exports = async function(args){
         create.directory = args.d;
     }
 
-    create.format = "web";
-    if(args.format){
-        create.format = args.format;
-    }
-    if(args.f){
-        create.format = args.f;
-    }
-
     create.typeScript = false;
     if(args.typescript){
         create.typeScript = args.typescript;
@@ -80,14 +71,6 @@ module.exports = async function(args){
     }
     if(args.r){
         create.root =  "./" + create.name + "/" + args.r;
-    }
-
-    create.build = "./" + create.name + "/__build";
-    if(args.build){
-        create.build =  "./" + create.name + "/" + args.build;
-    }
-    if(args.b){
-        create.root =  "./" + create.name + "/" + args.b;
     }
 
     create.uncomponent = false;
@@ -108,78 +91,27 @@ module.exports = async function(args){
 
     var padEnd = 15;
 
-    if(create.format.indexOf("cordova")>-1){
-        create.build = "./" + create.name + "/www";
-        cli.yellow("#").yellow("[WARN] The build directory will be the default path \"www\" for cordova projects");
-        cli.outn();
-    }
-
     cli
         .outn("Project Name".padEnd(padEnd) + "= " + create.name)
-        .outn("Format".padEnd(padEnd) + "= " + create.format)
         .outn("directory".padEnd(padEnd) + "= " + create.directory)
-        .outn("root".padEnd(padEnd) + "= " + create.root)
-        .outn("build".padEnd(padEnd) + "= " + create.build)
         .outn("TypeScript".padEnd(padEnd) + "= " + create.typeScript)
         .outn("uncomponent".padEnd(padEnd) + "= " + create.uncomponent)
         .outn("soursemap".padEnd(padEnd) + "= " + create.soursemap)
         .outn()
     ;
 
-    // start
-
-    var packageJson = {};
-    try{
-        packageJson = require(create.directory + "/package.json");
-    }catch(error){}
-
-    if(!packageJson.flagFront){
-        packageJson.flagFront = [];
-    }
-
-    var alreadyIndex = null;
-    for(var n = 0 ; n < packageJson.flagFront.length ; n++){
-        var buff = packageJson.flagFront[n];
-
-        if(buff.name == create.name){
-            alreadyIndex = n;
-            break;
-        }
-    }
-
-    if(alreadyIndex !== null){
-        cli.yellow("[WARM] Project \"" + create.name + "\" already exists.");
-
-        create.name = create.name + "_1";
-
-        var judge = await cli.in("Would you like to create it as a different project name \""+ create.name + "\"? [n]");
-
-        if(!judge){
-            return false;
-        }
-    }
-
     var rootPath = create.directory + "/" + create.name;
 
-    if(create.format.indexOf("cordova") !== -1){
-        // create cordova project..
-        cli.green("#").outn("cordova create " + create.name);
-        res = execSync("cordova create " + create.name, {cwd: create.directory});
-        cli.outn("#" + res.toString());
-
-        var buildPath = create.directory + "/" + create.name + "/www";
-
-        fs.rmdirSync(buildPath, {
-            recursive: true
-        });
-        cli.green("#").outn("Rmdir " + create.build);
+    /*
+    if(create.format.indexOf("cordova") > -1){
+ 
     }
-    else{
-        fs.mkdirSync(rootPath, {
-            recursive: true,
-        });
-        cli.green("# ").outn("Mkdir " + rootPath);    
-    }
+    */
+   
+    fs.mkdirSync(rootPath, {
+        recursive: true,
+    });
+    cli.green("# ").outn("Mkdir " + rootPath);
 
     var templatePath = path.dirname(__dirname) + "/source/default";
 
@@ -216,7 +148,7 @@ module.exports = async function(args){
     }
 
 
-
+/*
 
 
     if(create.format == "electron"){
@@ -226,22 +158,20 @@ module.exports = async function(args){
 
 
     }
+*/
 
+    var packageJson ={
+        flagFront :{
+            name: create.name,
+            typeScript: create.typeScript,
+            uncompressed: create.uncomponent,
+            sourceMap: create.soursemap,
+        },
+    };
 
-    packageJson.flagFront.push({
-        name: create.name,
-        format: create.format.split(","),
-        rootPath:create.root,
-        buildPath: create.build,
-        typeScript: create.typeScript,
-        uncompressed: create.uncomponent,
-        sourceMap: create.soursemap,
-    });
-
-    fs.writeFileSync(create.directory + "/package.json", JSON.stringify(packageJson, null, "   "));
+    fs.writeFileSync(rootPath + "/package.json", JSON.stringify(packageJson, null, "   "));
 
     cli.green("# ").outn("Refresh package.json");
-
 
     cli
         .outn()

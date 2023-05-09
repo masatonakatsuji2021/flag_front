@@ -5,7 +5,7 @@ const cli = require("@flag/cli");
 
     cli
         .outn()
-        .outn("=== FLAG - SPA Fontend Applicaiton Console ==================")
+        .outn("* FLAG - SPA Fontend Applicaiton Console")
         .outn()
     ;
 
@@ -26,6 +26,10 @@ const cli = require("@flag/cli");
     else if(args._any[0] == "init"){
         const inits = require("./cmd/init.js");
         await inits(args);
+    }
+    else if(args._any[0] == "add_platform"){
+        const add_platform = require("./cmd/add_platform.js");
+        await add_platform(args);
     }
     else if(args._any[0] == "build"){
         const build = require("./cmd/build.js");
