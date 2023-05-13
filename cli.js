@@ -13,34 +13,34 @@ const cli = require("@flag/cli");
 
     if(args._any[0] == "create"){
 
-        const create = require("./cmd/create.js");
+        const create = require("./cmd/create");
         var juge = await create(args);
 
         if(!juge){
             return;
         }
 
-        const build = require("./cmd/build.js");
+        const build = require("./cmd/build");
         await build(args);
     }
     else if(args._any[0] == "init"){
-        const inits = require("./cmd/init.js");
+        const inits = require("./cmd/init");
         await inits(args);
     }
-    else if(args._any[0] == "add_platform"){
-        const add_platform = require("./cmd/add_platform.js");
-        await add_platform(args);
+    else if(args._any[0] == "add_framework"){
+        const add_framework = require("./cmd/add_framework.js");
+        await add_framework(args);
     }
     else if(args._any[0] == "build"){
-        const build = require("./cmd/build.js");
+        const build = require("./cmd/build");
         await build(args);
     }
     else if(args._any[0] == "remove"){
-        const remove = require("./cmd/remove.js");
+        const remove = require("./cmd/remove");
         await remove(args);
     }
     else{
-        const info = require("./cmd/info.js");
+        const info = require("./cmd/info");
         info();
     }
 

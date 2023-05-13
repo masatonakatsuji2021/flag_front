@@ -1,4 +1,5 @@
 import Data from "Data";
+import FgDateTime from "FgDateTime";
 
 export default new class Util{
 
@@ -87,73 +88,23 @@ export default new class Util{
 
     /**
      * dt
-     * Output date and time in specified format
-     * @param {string} datetime = null Specified date and time
-     * @returns {_DateTime} _DateTime Object
+     * prints the current date and time
+     * Output as fgDateTime class object
+     * @returns {FgDateTime} FgDateTime class Object
      */
-    dt(datetime : string = null){
+    dt() : FgDateTime;
 
-        if(datetime){
-            var d = new Date(datetime);
-        }
-        else{
-            var d = new Date();
-        }
+    /**
+     * dt
+     * Get date and time from given datetime
+     * Output as fgDateTime class object
+     * @param {string} datetime Specified date and time
+     * @returns {FgDateTime} FgDateTime class Object
+     */
+    dt(datetime : string) : FgDateTime;
 
-        const _DateTime = function(dt){
-
-            this.format = function(format){
-
-                if(format == undefined){
-                    format = "YYYY/MM/DD HH:II:SS";
-                }
-
-                format = format.split("YYYY").join(this.getYear());
-                format = format.split("MM").join(this.getMonth());
-                format = format.split("DD").join(this.getDate());
-                format = format.split("W").join(this.getDay());
-                format = format.split("HH").join(this.getHours());
-                format = format.split("II").join(this.getMinutes());
-                format = format.split("SS").join(this.getSeconds());
-                format = format.split("U").join(this.getTime());
-                
-                return format;
-            };
-
-            this.getYear = function(){
-                return dt.getFullYear();
-            };
-
-            this.getMonth = function(){
-                return ("00" + (dt.getMonth() + 1)).slice(-2);
-            };
-
-            this.getDate = function(){
-                return ("00" + dt.getDate()).slice(-2);
-            };
-
-            this.getDay = function(){
-                return dt.getDay();
-            };
-
-            this.getHours = function(){
-                return ("00" + dt.getHours()).slice(-2);
-            };
-
-            this.getMinutes = function(){
-                return ("00" + dt.getMinutes()).slice(-2);
-            };
-
-            this.getSeconds = function(){
-                return ("00" + dt.getSeconds()).slice(-2);
-            };
-
-            this.getTime = function(){
-                return dt.getTime();
-            };
-        };
-
-        return new _DateTime(d);
+    dt(datetime? : string) : FgDateTime{
+        return new FgDateTime(datetime);
     }
 
     /**

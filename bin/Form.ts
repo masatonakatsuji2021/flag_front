@@ -12,7 +12,7 @@ export default class Form{
      * Installation of each input field of the input form and setting of the initial value,
      * Class object for setting Submit/Reset event handlers, etc.
      */
-    constructor(formName: string){
+    constructor(formName?: string){
 
         if(this.constructor.name == "Form"){
             this.formName = formName;
