@@ -9,7 +9,7 @@ const DomControl_1 = require("DomControl");
  * @param {string} selectName query selector
  * @returns {DomControl} DomControl Class Object
  */
-const Dom = function (selectName = null) {
+const Dom = function (selectName) {
     if (selectName) {
         var selector = "html " + selectName;
     }

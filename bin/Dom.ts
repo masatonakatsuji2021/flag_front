@@ -8,7 +8,7 @@ import DomControl from "DomControl";
  * @param {string} selectName query selector
  * @returns {DomControl} DomControl Class Object
  */
-const Dom = function(selectName : string = null){
+const Dom = function(selectName? : string){
 
     if(selectName){
         var selector = "html " + selectName;    

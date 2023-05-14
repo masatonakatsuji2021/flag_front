@@ -124,11 +124,7 @@ module.exports = async function(args, cliOption){
     option.core.DomControl = getLib("DomControl");
     option.core.DomStatic = getLib("DomStatic");
     option.core.VDom = getLib("VDom");
-
-    /*
-    option.core.VDomControl = fs.readFileSync(__dirname + "/bin/VDomControl.js").toString();
-    */
-
+    option.core.VDomControl = getLib("VDomControl");
     option.core.Routes = getLib("Routes");
     option.core.Controller = getLib("Controller");
     option.core.Exception = getLib("Exception");

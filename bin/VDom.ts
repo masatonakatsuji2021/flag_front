@@ -1,37 +1,24 @@
+import VDomControl from "VDomControl";
 import Dom from "Dom";
+import DomControl from "DomControl";
 
 const VDom = function(refName, qs = null){
 
+    let v : DomControl;
+
     if(qs){
-//        var v = Dom(null , qs).findOnVirtual("__ref", refName);
+        v = new DomControl(qs).findOnVirtual("__ref", refName);
     }
     else{
-        var v = Dom().findOnVirtual("__ref", refName);
+        v = Dom().findOnVirtual("__ref", refName);
     }
 
     if(!v.length){
-        var v = Dom("[ref=\"" + refName + "\"]");
+        v = Dom("[ref=\"" + refName + "\"]");
         v.virtual("__ref", refName);
-        v.removeAttr("ref");
     }
 
-    // @ts-ignore
-    v.find = (refName)=>{
+    return new VDomControl(v._qs);
 
-        if(refName){
-            return VDom(refName, )
-
-
-        }
-        else{
-
-
-
-        }
-
-
-    };
-
-    return v;
 };
 export default VDom;
