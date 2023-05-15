@@ -280,9 +280,12 @@ export default class DomControl{
      * @returns {DomControl} DomControl Class Object
      */
     on(eventName : string, callback : Function) : DomControl{
+        var cont = this;
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
-            qs.addEventListener(eventName, callback.bind(this));
+            qs.addEventListener(eventName, function(e){
+                callback.bind(cont)(e, cont);
+            });
         }
         return this;
     }

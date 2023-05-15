@@ -2,19 +2,27 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const VDomControl_1 = require("VDomControl");
 const Dom_1 = require("Dom");
-const DomControl_1 = require("DomControl");
-const VDom = function (refName, qs = null) {
-    let v;
-    if (qs) {
-        v = new DomControl_1.default(qs).findOnVirtual("__ref", refName);
+/**
+ * VDom
+ * @param refName ref name
+ * @returns {VDomControl} VDomControl Class Object
+ */
+const VDom = function (refName) {
+    let v = [];
+    let v1;
+    let v2;
+    v1 = (0, Dom_1.default)().findOnVirtual("__ref", refName);
+    for (var n = 0; n < v1._qs.length; n++) {
+        var q_ = v1._qs[n];
+        v.push(q_);
     }
-    else {
-        v = (0, Dom_1.default)().findOnVirtual("__ref", refName);
+    v2 = (0, Dom_1.default)("[ref=\"" + refName + "\"]");
+    v2.virtual("__ref", refName);
+    v2.removeAttr("ref");
+    for (var n = 0; n < v2._qs.length; n++) {
+        var q_ = v2._qs[n];
+        v.push(q_);
     }
-    if (!v.length) {
-        v = (0, Dom_1.default)("[ref=\"" + refName + "\"]");
-        v.virtual("__ref", refName);
-    }
-    return new VDomControl_1.default(v._qs);
+    return new VDomControl_1.default(v);
 };
 exports.default = VDom;

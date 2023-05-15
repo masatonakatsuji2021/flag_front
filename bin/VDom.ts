@@ -2,23 +2,31 @@ import VDomControl from "VDomControl";
 import Dom from "Dom";
 import DomControl from "DomControl";
 
-const VDom = function(refName, qs = null){
+/**
+ * VDom
+ * @param refName ref name
+ * @returns {VDomControl} VDomControl Class Object
+ */
+const VDom = function(refName){
 
-    let v : DomControl;
+    let v = [];
+    let v1 : DomControl;
+    let v2 : DomControl;
 
-    if(qs){
-        v = new DomControl(qs).findOnVirtual("__ref", refName);
+    v1 = Dom().findOnVirtual("__ref", refName);
+    for(var n = 0 ; n < v1._qs.length ; n++){
+        var q_ = v1._qs[n];
+        v.push(q_);
     }
-    else{
-        v = Dom().findOnVirtual("__ref", refName);
+
+    v2 = Dom("[ref=\"" + refName + "\"]");
+    v2.virtual("__ref", refName);
+    v2.removeAttr("ref");
+    for(var n = 0 ; n < v2._qs.length ; n++){
+        var q_ = v2._qs[n];
+        v.push(q_);
     }
 
-    if(!v.length){
-        v = Dom("[ref=\"" + refName + "\"]");
-        v.virtual("__ref", refName);
-    }
-
-    return new VDomControl(v._qs);
-
+    return new VDomControl(v);
 };
 export default VDom;
