@@ -135,6 +135,7 @@ module.exports = async function(args, cliOption){
     option.core.LocalStorage = getLib("LocalStorage");
     option.core.SessionStorage = getLib("SessionStorage");
     option.core.Dialog = getLib("Dialog");
+    option.core.Crypto = getLib("Crypto");
 
     option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
     option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
