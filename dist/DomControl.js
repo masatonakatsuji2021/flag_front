@@ -298,6 +298,7 @@ class DomControl {
                 }
                 if (!DomStatic_1.default.__uids[qs.uid].virtual) {
                     DomStatic_1.default.__uids[qs.uid].virtual = {};
+                    DomStatic_1.default.__uids[qs.uid].target = qs;
                 }
                 DomStatic_1.default.__uids[qs.uid].virtual[name] = value;
             }

@@ -411,6 +411,7 @@ export default class DomControl{
 
                 if(!DomStatic.__uids[qs.uid].virtual){
                     DomStatic.__uids[qs.uid].virtual = {};
+                    DomStatic.__uids[qs.uid].target = qs;
                 }
                 
                 DomStatic.__uids[qs.uid].virtual[name] = value;

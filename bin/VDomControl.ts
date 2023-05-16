@@ -1,7 +1,31 @@
 import DomControl from "DomControl";
+import DomStatic from "DomStatic";
 
 export default class VDomControl extends DomControl{
 
+    /**
+     * refresh
+     * @returns {VDomControl} VDomCOntrol Class Object 
+     */
+    refresh(){
+
+        const refCheckCode = "__refcheck__";
+
+        let c = Object.keys(DomStatic.__uids);
+        for(var n = 0 ; n < c.length ; n++){
+            var uid = c[n];
+            var obj = DomStatic.__uids[uid];
+
+            obj.target.setAttribute(refCheckCode, uid);
+            if(!document.querySelector("[" + refCheckCode + "=\"" + uid + "\"]")){
+                delete DomStatic.__uids[uid];
+            }
+            obj.target.removeAttribute(refCheckCode);
+        }
+
+        return this;
+    }
+    
     /**
      * child
      * Specifies the child element of the argument selector,
@@ -48,7 +72,7 @@ export default class VDomControl extends DomControl{
      * @returns {VDomControl} VDomControl Class Object
      */
     last() : VDomControl{
-        let v : VDomControl = super.last();
+        let v : DomControl = super.last();
         return new VDomControl(v._qs);
     }
 
@@ -58,7 +82,7 @@ export default class VDomControl extends DomControl{
      * @returns {VDomControl} VDomControl Class Object
      */
     parent() : VDomControl{
-        let v : VDomControl =super.parent();
+        let v : DomControl =super.parent();
         return new VDomControl(v._qs);
     }
 
@@ -69,7 +93,7 @@ export default class VDomControl extends DomControl{
      * @returns {VDomControl} VDomControl Class Object
      */
     index(index : number) : VDomControl{
-        let v : VDomControl = super.index(index);
+        let v : DomControl = super.index(index);
         return new VDomControl(v._qs);
     }
 
@@ -81,7 +105,7 @@ export default class VDomControl extends DomControl{
      * @returns {VDomControl} VDomControl Class Object
      */
     findOnAttr(name : string, value) : VDomControl{
-        let v : VDomControl = super.findOnAttr(name, value);
+        let v : DomControl = super.findOnAttr(name, value);
         return new VDomControl(v._qs);
     }
 
@@ -93,7 +117,7 @@ export default class VDomControl extends DomControl{
      * @returns {VDomControl} VDomControl Class Object
      */
     findOnVirtual(name : string, value) : VDomControl{
-        let v : VDomControl = super.findOnVirtual(name, value);
+        let v : DomControl = super.findOnVirtual(name, value);
         return new VDomControl(v._qs);
     }
 
