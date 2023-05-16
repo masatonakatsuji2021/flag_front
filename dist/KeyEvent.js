@@ -4,9 +4,18 @@ exports.default = new class KeyEvent {
     constructor() {
         this._callback_down = {};
         this._callback_up = {};
-        window.addEventListener("keydown", function (e) {
+        const cont = this;
+        document.addEventListener("keydown", function (e) {
+            let keyCode = e.code;
+            if (cont._callback_down[keyCode]) {
+                cont._callback_down[keyCode](e);
+            }
         });
-        window.addEventListener("keyup", function (e) {
+        document.addEventListener("keyup", function (e) {
+            let keyCode = e.code;
+            if (cont._callback_up[keyCode]) {
+                cont._callback_up[keyCode](e);
+            }
         });
     }
     on(fullKeyName, keyDownCallback, keyUpCallback) {
@@ -17,8 +26,10 @@ exports.default = new class KeyEvent {
         return this;
     }
     onArrowUp(keyDownCallback, keyUpCallback) {
+        return this.on("ArrowUp", keyDownCallback, keyUpCallback);
     }
     onArrowDown(keyDownCallback, keyUpCallback) {
+        return this.on("ArrowDown", keyDownCallback, keyUpCallback);
     }
     onArrowLeft(keyDownCallback, keyUpCallback) {
         return this.on("ArrowLeft", keyDownCallback, keyUpCallback);

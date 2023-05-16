@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const DomControl_1 = require("DomControl");
 const DomStatic_1 = require("DomStatic");
 class VDomControl extends DomControl_1.default {
+    /**
+     * refresh
+     * @returns {VDomControl} VDomCOntrol Class Object
+     */
     refresh() {
         const refCheckCode = "__refcheck__";
         let c = Object.keys(DomStatic_1.default.__uids);
@@ -15,7 +19,6 @@ class VDomControl extends DomControl_1.default {
             }
             obj.target.removeAttribute(refCheckCode);
         }
-        console.log(DomStatic_1.default);
         return this;
     }
     /**
