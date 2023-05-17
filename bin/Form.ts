@@ -1,17 +1,28 @@
 import Util from "Util";
 import Data from "Data";
 import Dom from "Dom";
+import VDom from "VDom";
 import Request from "Request";
 
 export default class Form{
     
-    formName: string = null;
+    formName : string = null;
 
     /**
      * Form : 
      * Installation of each input field of the input form and setting of the initial value,
      * Class object for setting Submit/Reset event handlers, etc.
      */
+    constructor();
+
+    /**
+     * Form : 
+     * Installation of each input field of the input form and setting of the initial value,
+     * Class object for setting Submit/Reset event handlers, etc.
+     * @param {string} formName form name
+     */
+    constructor(formName : string);
+
     constructor(formName?: string){
 
         if(this.constructor.name == "Form"){
@@ -26,31 +37,21 @@ export default class Form{
                 };
             }
         }
-        else{           
-            var className : string = Util.getClassName(this.constructor.name,"Form");
-            this.formName = Util.lcFirst(className);
-            if(formName){
-                this.formName = formName;                
-            }
-
-            Data.__form[this.formName] = {
-                class: className,
-            };
-        }
     }
 
     /**
      * handleSubmit
      * Event handler executed when the submit button is pressed.
      * @param {object} postData Input data
+     * @returns {void}
      */
     handleSubmit(postData : object){}
 
-    
     /**
      * handleSubmit
      * Event handler executed when the reset button is pressed.
      * @param {object} postData Input data
+     * @returns {void}
      */
     handleReset(postData : object){}
 
@@ -58,13 +59,38 @@ export default class Form{
      * handleSetting
      * Event handler for input form initialization
      * @param {any} args Arguments for pass-by-value
+     * @returns {void}
      */
     handleSetting(...args){}
 
-    // @ts-ignore
-    setting(...argv){
+    /**
+     * setting
+     * A method to start preparing the form for installation.
+     * @returns {void}
+     */
+    setting() : void;
+
+    /**
+     * setting
+     * A method to start preparing the form for installation.
+     * @param {any} arvg argument
+     * @returns {void}
+     */
+    setting(argv : any) : void;
+
+    setting(argv? : any){
         // @ts-ignore
-        this.handleSetting(...argv);
+        this.handleSetting(argv);
+
+        var className : string = Util.getClassName(this.constructor.name,"Form");
+
+        if(!this.formName){
+            this.formName = Util.lcFirst(className);
+        }
+
+        Data.__form[this.formName] = {
+            class: className,
+        };
     }
 
     #_getData(){
@@ -92,10 +118,10 @@ export default class Form{
 
         var str = this.#_tagInput(name, option);
 
-        var dom = Dom("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        let vd = VDom(this.formName).child("form-" + name);
 
-        if(dom){
-            dom.html(str);
+        if(vd){
+            vd.html(str);
         }
 
         return this;
@@ -371,10 +397,10 @@ export default class Form{
 
         var str = "<select name=\"" + name + "\" " + optionStr + ">" + selectStr + "</select>";
 
-        var dom = Dom("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        let vd = VDom(this.formName).child("form-" + name);
 
-        if(dom){
-            dom.html(str);
+        if(vd){
+            vd.html(str);
         }
 
         return this;
@@ -407,10 +433,10 @@ export default class Form{
 
         var str = "<textarea name=\"" + name + "\" " + optionStr + "></textarea>";
 
-        var dom = Dom("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        let vd = VDom(this.formName).child("form-" + name);
 
-        if(dom){
-            dom.html(str);
+        if(vd){
+            vd.html(str);
         }
 
         return this;
@@ -454,10 +480,10 @@ export default class Form{
             str += "<label>" + this.#_tagInput(name, option) + val + "</label>";
         }
 
-        var dom = Dom("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        let vd = VDom(this.formName).child("form-" + name);
 
-        if(dom){
-            dom.html(str);
+        if(vd){
+            vd.html(str);
         }
 
         return this;
@@ -503,10 +529,10 @@ export default class Form{
             str += "<label>" + this.#_tagInput(name, option) + val + "</label>";
         }
 
-        var dom = Dom("#" + this.formName).child("[form-name=\"" + name + "\"]");
+        let vd = VDom(this.formName).child("form-" + name);
 
-        if(dom){
-            dom.html(str);
+        if(vd){
+            vd.html(str);
         }
 
         return this;
@@ -711,15 +737,15 @@ export default class Form{
      */
     submit() : Form{
 
-        var dom = Dom("#" + this.formName);
+        var vd = VDom(this.formName);
 
-        var getChildError = dom.child("[data-name]");
+        var getChildError = vd.child("error-*");
         for(var n = 0 ; n <getChildError.length ; n++){
             var gce = getChildError[n];
             gce.html("");
         }
 
-        var getChild = dom.child("[name]");
+        var getChild = vd.childDom("[name]");
 
         Request.refresh(getChild);
 
@@ -796,13 +822,14 @@ export default class Form{
         var v = validates.get();
         var columns = Object.keys(v);
 
-        Dom("#" + this.formName + " [data-name]").html("");
+        VDom(this.formName).child("error-*").html("");
 
         for(var n = 0 ; n < columns.length ; n++){
             var key = columns[n];
             var val = v[key].join("\n");
-            Dom("#" + this.formName + " [data-name=" + key + "]").html(val);
+            VDom(this.formName).child("error-" + key).html(val);
         }
+
         return this;
     }
 };

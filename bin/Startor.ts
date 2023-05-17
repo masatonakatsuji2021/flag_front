@@ -4,6 +4,7 @@ import Form from "Form";
 import Routes from "Routes";
 import Request from "Request";
 import Response from "Response";
+import VDomControl from "VDomControl";
 
 export default (async function(){
 
@@ -38,27 +39,31 @@ export default (async function(){
             e.stopPropagation();
             e.preventDefault();
 
-            // @ts-ignore
-            var targetId = e.target.id;
+            let vd = new VDomControl([e.target]);
 
-            var formBuffer = Util.searchForm(targetId);
+            var targetRef = vd.ref;
+
+            var formBuffer = Util.searchForm(targetRef);
 
             if(formBuffer){
 
+                let tf;
+                
                 if(formBuffer.class == "Form"){
-                    var tf = new Form(targetId);
+                    tf = new Form(targetRef);
                 }
                 else{
                     var className = Util.ucFirst(formBuffer.class) + "Form";
-                    var classPath = "app/Form/" + className + ".js";
+                    var classPath = "app/Form/" + className;
                     if(useExists(classPath)){
                         let t = use(classPath);
-                        let tf = new t();
+                        tf = new t();
                     }
                     else{
-                        let tf = new Form(targetId);
+                        tf = new Form(targetRef);
                     }
                 }
+
                 tf.submit();
             }
 

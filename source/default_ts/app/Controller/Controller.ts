@@ -1,5 +1,6 @@
 import _Controller from "Controller";
 import v from "VDom";
+import DomStatic from "DomStatic";
 
 export default class Controller extends _Controller{
 
@@ -12,9 +13,6 @@ export default class Controller extends _Controller{
     }
 
     handleRenderBefore(): void {
-        
-        v().refresh();
-
         v("htitle").text(this.title);
     }
 

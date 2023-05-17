@@ -3,6 +3,10 @@ import DomStatic from "DomStatic";
 
 export default class VDomControl extends DomControl{
 
+    get ref() : string{
+        return this.virtual("__ref");
+    }
+
     /**
      * refresh
      * @returns {VDomControl} VDomCOntrol Class Object 
@@ -27,7 +31,18 @@ export default class VDomControl extends DomControl{
     }
     
     /**
-     * child
+     * childDom
+     * Specifies the child element of the argument selector,
+     * @param {string} selector 
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    childDom(selector : string) : VDomControl{
+        let v : DomControl = super.child(selector);
+        return new VDomControl(v._qs);
+    }
+
+    /**
+     * child : 
      * Specifies the child element of the argument selector,
      * If no selector is specified, all child elements are included
      * @param {string} refName ref name
@@ -96,6 +111,27 @@ export default class VDomControl extends DomControl{
         let v : DomControl = super.index(index);
         return new VDomControl(v._qs);
     }
+    
+    /**
+     * even
+     * Extract even element information only.
+     * @param {number} index element index
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    even() : VDomControl{
+        let v : DomControl = super.even();
+        return new VDomControl(v._qs);
+    }
+
+    /**
+     * odd : 
+     * Extract only odd element information
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    odd() : VDomControl{
+        let v : DomControl = super.odd();
+        return new VDomControl(v._qs);
+    }
 
     /**
      * findOnAttr
@@ -119,7 +155,5 @@ export default class VDomControl extends DomControl{
     findOnVirtual(name : string, value) : VDomControl{
         let v : DomControl = super.findOnVirtual(name, value);
         return new VDomControl(v._qs);
-    }
-
-    
+    }    
 }

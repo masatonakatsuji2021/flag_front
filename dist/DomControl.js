@@ -70,6 +70,36 @@ class DomControl {
         return new DomControl([this._qs[index]]);
     }
     /**
+     * even :
+     * Extract even element information only.
+     * @returns {DomControl} DomControl Class Object
+     */
+    even() {
+        var qs_ = [];
+        for (var n = 0; n < this._qs.length; n++) {
+            var q_ = this._qs[n];
+            if (n % 2 == 0) {
+                qs_.push(q_);
+            }
+        }
+        return new DomControl(qs_);
+    }
+    /**
+     * odd :
+     * Extract only odd element information
+     * @returns {DomControl} DomControl Class Object
+     */
+    odd() {
+        var qs_ = [];
+        for (var n = 0; n < this._qs.length; n++) {
+            var q_ = this._qs[n];
+            if (n % 2 == 1) {
+                qs_.push(q_);
+            }
+        }
+        return new DomControl(qs_);
+    }
+    /**
      * findOnAttr
      * Specifies only elements that contain attribute information that matches the conditions of the argument.
      * @param {string} name attribute name
@@ -113,8 +143,28 @@ class DomControl {
             if (!uids.virtual[name]) {
                 continue;
             }
-            if (uids.virtual[name] != value) {
-                continue;
+            let targetValue = uids.virtual[name].toString();
+            if (value.toString().indexOf("*") > -1) {
+                let vns = value.split("*");
+                let judge = false;
+                if (!vns[0].trim()) {
+                    if (targetValue.indexOf(vns[1]) > 0) {
+                        judge = true;
+                    }
+                }
+                else {
+                    if (targetValue.indexOf(vns[0]) === 0) {
+                        judge = true;
+                    }
+                }
+                if (!judge) {
+                    continue;
+                }
+            }
+            else {
+                if (uids.virtual[name] != value) {
+                    continue;
+                }
             }
             qss.push(qs);
         }

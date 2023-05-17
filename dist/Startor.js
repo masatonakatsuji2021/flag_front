@@ -15,6 +15,7 @@ const Form_1 = require("Form");
 const Routes_1 = require("Routes");
 const Request_1 = require("Request");
 const Response_1 = require("Response");
+const VDomControl_1 = require("VDomControl");
 exports.default = (function () {
     return __awaiter(this, void 0, void 0, function* () {
         window.addEventListener("load", function () {
@@ -39,22 +40,23 @@ exports.default = (function () {
                 window.addEventListener("submit", function (e) {
                     e.stopPropagation();
                     e.preventDefault();
-                    // @ts-ignore
-                    var targetId = e.target.id;
-                    var formBuffer = Util_1.default.searchForm(targetId);
+                    let vd = new VDomControl_1.default([e.target]);
+                    var targetRef = vd.ref;
+                    var formBuffer = Util_1.default.searchForm(targetRef);
                     if (formBuffer) {
+                        let tf;
                         if (formBuffer.class == "Form") {
-                            var tf = new Form_1.default(targetId);
+                            tf = new Form_1.default(targetRef);
                         }
                         else {
                             var className = Util_1.default.ucFirst(formBuffer.class) + "Form";
-                            var classPath = "app/Form/" + className + ".js";
+                            var classPath = "app/Form/" + className;
                             if (useExists(classPath)) {
                                 let t = use(classPath);
-                                let tf = new t();
+                                tf = new t();
                             }
                             else {
-                                let tf = new Form_1.default(targetId);
+                                tf = new Form_1.default(targetRef);
                             }
                         }
                         tf.submit();

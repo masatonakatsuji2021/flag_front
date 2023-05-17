@@ -14,6 +14,7 @@
 import Data from "Data";
 import Routes from "Routes";
 import Response from "Response";
+import VDom from "VDom";
 
 /**
  * Controller : 
@@ -93,5 +94,7 @@ export default class Controller{
             Data.before_template = null;
             Response.bindView("body", this.view);
         }
+
+        VDom().refresh();
     }
 };

@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const DomControl_1 = require("DomControl");
 const DomStatic_1 = require("DomStatic");
 class VDomControl extends DomControl_1.default {
+    get ref() {
+        return this.virtual("__ref");
+    }
     /**
      * refresh
      * @returns {VDomControl} VDomCOntrol Class Object
@@ -22,7 +25,17 @@ class VDomControl extends DomControl_1.default {
         return this;
     }
     /**
-     * child
+     * childDom
+     * Specifies the child element of the argument selector,
+     * @param {string} selector
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    childDom(selector) {
+        let v = super.child(selector);
+        return new VDomControl(v._qs);
+    }
+    /**
+     * child :
      * Specifies the child element of the argument selector,
      * If no selector is specified, all child elements are included
      * @param {string} refName ref name
@@ -81,6 +94,25 @@ class VDomControl extends DomControl_1.default {
      */
     index(index) {
         let v = super.index(index);
+        return new VDomControl(v._qs);
+    }
+    /**
+     * even
+     * Extract even element information only.
+     * @param {number} index element index
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    even() {
+        let v = super.even();
+        return new VDomControl(v._qs);
+    }
+    /**
+     * odd :
+     * Extract only odd element information
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    odd() {
+        let v = super.odd();
         return new VDomControl(v._qs);
     }
     /**

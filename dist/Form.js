@@ -9,13 +9,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const Data_1 = require("Data");
 const Dom_1 = require("Dom");
+const VDom_1 = require("VDom");
 const Request_1 = require("Request");
 class Form {
-    /**
-     * Form :
-     * Installation of each input field of the input form and setting of the initial value,
-     * Class object for setting Submit/Reset event handlers, etc.
-     */
     constructor(formName) {
         _Form_instances.add(this);
         this.formName = null;
@@ -30,45 +26,44 @@ class Form {
                 };
             }
         }
-        else {
-            var className = Util_1.default.getClassName(this.constructor.name, "Form");
-            this.formName = Util_1.default.lcFirst(className);
-            if (formName) {
-                this.formName = formName;
-            }
-            Data_1.default.__form[this.formName] = {
-                class: className,
-            };
-        }
     }
     /**
      * handleSubmit
      * Event handler executed when the submit button is pressed.
      * @param {object} postData Input data
+     * @returns {void}
      */
     handleSubmit(postData) { }
     /**
      * handleSubmit
      * Event handler executed when the reset button is pressed.
      * @param {object} postData Input data
+     * @returns {void}
      */
     handleReset(postData) { }
     /**
      * handleSetting
      * Event handler for input form initialization
      * @param {any} args Arguments for pass-by-value
+     * @returns {void}
      */
     handleSetting(...args) { }
-    // @ts-ignore
-    setting(...argv) {
+    setting(argv) {
         // @ts-ignore
-        this.handleSetting(...argv);
+        this.handleSetting(argv);
+        var className = Util_1.default.getClassName(this.constructor.name, "Form");
+        if (!this.formName) {
+            this.formName = Util_1.default.lcFirst(className);
+        }
+        Data_1.default.__form[this.formName] = {
+            class: className,
+        };
     }
     tagInput(name, option = null) {
         var str = __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option);
-        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
-        if (dom) {
-            dom.html(str);
+        let vd = (0, VDom_1.default)(this.formName).child("form-" + name);
+        if (vd) {
+            vd.html(str);
         }
         return this;
     }
@@ -138,9 +133,9 @@ class Form {
             selectStr += "<option value=\"" + key + "\">" + val + "</option>";
         }
         var str = "<select name=\"" + name + "\" " + optionStr + ">" + selectStr + "</select>";
-        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
-        if (dom) {
-            dom.html(str);
+        let vd = (0, VDom_1.default)(this.formName).child("form-" + name);
+        if (vd) {
+            vd.html(str);
         }
         return this;
     }
@@ -150,9 +145,9 @@ class Form {
         }
         var optionStr = __classPrivateFieldGet(this, _Form_instances, "m", _Form__setOptionString).call(this, option);
         var str = "<textarea name=\"" + name + "\" " + optionStr + "></textarea>";
-        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
-        if (dom) {
-            dom.html(str);
+        let vd = (0, VDom_1.default)(this.formName).child("form-" + name);
+        if (vd) {
+            vd.html(str);
         }
         return this;
     }
@@ -169,9 +164,9 @@ class Form {
             option.value = key;
             str += "<label>" + __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option) + val + "</label>";
         }
-        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
-        if (dom) {
-            dom.html(str);
+        let vd = (0, VDom_1.default)(this.formName).child("form-" + name);
+        if (vd) {
+            vd.html(str);
         }
         return this;
     }
@@ -188,9 +183,9 @@ class Form {
             option.value = key;
             str += "<label>" + __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option) + val + "</label>";
         }
-        var dom = (0, Dom_1.default)("#" + this.formName).child("[form-name=\"" + name + "\"]");
-        if (dom) {
-            dom.html(str);
+        let vd = (0, VDom_1.default)(this.formName).child("form-" + name);
+        if (vd) {
+            vd.html(str);
         }
         return this;
     }
@@ -326,13 +321,13 @@ class Form {
      * @returns {Form} Form Class Object (method chain)
      */
     submit() {
-        var dom = (0, Dom_1.default)("#" + this.formName);
-        var getChildError = dom.child("[data-name]");
+        var vd = (0, VDom_1.default)(this.formName);
+        var getChildError = vd.child("error-*");
         for (var n = 0; n < getChildError.length; n++) {
             var gce = getChildError[n];
             gce.html("");
         }
-        var getChild = dom.child("[name]");
+        var getChild = vd.childDom("[name]");
         Request_1.default.refresh(getChild);
         var post = Request_1.default.get();
         if (this.existSubmitEvent()) {
@@ -394,11 +389,11 @@ class Form {
     setError(validates) {
         var v = validates.get();
         var columns = Object.keys(v);
-        (0, Dom_1.default)("#" + this.formName + " [data-name]").html("");
+        (0, VDom_1.default)(this.formName).child("error-*").html("");
         for (var n = 0; n < columns.length; n++) {
             var key = columns[n];
             var val = v[key].join("\n");
-            (0, Dom_1.default)("#" + this.formName + " [data-name=" + key + "]").html(val);
+            (0, VDom_1.default)(this.formName).child("error-" + key).html(val);
         }
         return this;
     }

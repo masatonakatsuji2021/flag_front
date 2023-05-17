@@ -71,6 +71,38 @@ export default class DomControl{
     }
 
     /**
+     * even : 
+     * Extract even element information only.
+     * @returns {DomControl} DomControl Class Object
+     */
+    even() : DomControl{
+        var qs_ = [];
+        for(var n = 0 ; n < this._qs.length ; n++){
+            var q_ = this._qs[n];
+            if(n % 2 == 0){
+                qs_.push(q_);
+            }
+        }
+        return new DomControl(qs_);
+    }
+
+    /**
+     * odd : 
+     * Extract only odd element information
+     * @returns {DomControl} DomControl Class Object
+     */
+    odd() : DomControl{
+        var qs_ = [];
+        for(var n = 0 ; n < this._qs.length ; n++){
+            var q_ = this._qs[n];
+            if(n % 2 == 1){
+                qs_.push(q_);
+            }
+        }
+        return new DomControl(qs_);
+    }
+
+    /**
      * findOnAttr
      * Specifies only elements that contain attribute information that matches the conditions of the argument.
      * @param {string} name attribute name
@@ -123,8 +155,33 @@ export default class DomControl{
                 continue;
             }
 
-            if(uids.virtual[name] != value){
-                continue;
+            let targetValue : string = uids.virtual[name].toString();
+
+            if(value.toString().indexOf("*") > -1){
+
+                let vns : string[] = value.split("*");
+
+                let judge : boolean = false;
+
+                if(!vns[0].trim()){
+                    if(targetValue.indexOf(vns[1]) > 0){
+                        judge = true;
+                    }
+                }
+                else{
+                    if(targetValue.indexOf(vns[0]) === 0){
+                        judge = true;
+                    }
+                }
+
+                if(!judge){
+                    continue;
+                }
+            }
+            else{
+                if(uids.virtual[name] != value){
+                    continue;
+                }
             }
 
             qss.push(qs);
@@ -144,7 +201,6 @@ export default class DomControl{
         if(!selector){
             selector = "*";
         }
-
         var qss = [];
         for(var n = 0 ; n < this._qs.length ;n ++){
             var qs = this._qs[n];
@@ -153,6 +209,7 @@ export default class DomControl{
                 qss.push(b_);
             })
         }
+
         return new DomControl(qss);
     }
 
