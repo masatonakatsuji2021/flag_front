@@ -16,7 +16,6 @@ const Data_1 = require("Data");
 const Routes_1 = require("Routes");
 const Response_1 = require("Response");
 const VDom_1 = require("VDom");
-const DomStatic_1 = require("DomStatic");
 /**
  * Controller :
  * Core class for page display.
@@ -83,7 +82,6 @@ class Controller {
             Response_1.default.bindView("body", this.view);
         }
         (0, VDom_1.default)().refresh();
-        console.log(DomStatic_1.default);
     }
 }
 exports.default = Controller;
