@@ -60,8 +60,28 @@ export default class VDomControl extends DomControl{
             v.push(q_);
         }
             
-        v2 = super.child("[ref=\"" + refName + "\"]");
-        v2.virtual("__ref", refName);
+
+        if(refName.indexOf("*") > -1){
+            var rns = refName.split("*");
+
+            if(!rns[0].trim()){
+                v2 = super.child("[ref$=\"" + rns[1] + "\"]");                
+            }
+            else{
+                v2 = super.child("[ref^=\"" + rns[0] + "\"]");
+            }
+
+            for(var n = 0 ; n < v2.length ; n++){
+                var v2_ = v2.index(n);
+                var ref = v2_.attr("ref");
+                v2_.virtual("__ref", ref);
+            }
+        }
+        else{
+            v2 = super.child("[ref=\"" + refName + "\"]");
+            v2.virtual("__ref", refName); 
+        }
+
         v2.removeAttr("ref");
         for(var n = 0 ; n < v2._qs.length ; n++){
             var q_ = v2._qs[n];

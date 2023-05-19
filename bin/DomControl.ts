@@ -755,6 +755,68 @@ export default class DomControl{
         return this;
     }
 
+    valueIncrement() : DomControl;
+    
+    valueIncrement(step : number) : DomControl;
+
+    valueIncrement(step? : number) : DomControl{
+        let value = this.value();
+
+        if(!step){
+            step = parseInt(this.attr("step"));
+        }
+
+        let min = this.attr("min");
+        let max = this.attr("max");
+
+        value++;
+
+        if(min){
+            if(value < min){
+                value = min;
+            }
+        }
+
+        if(max){
+            if(value > max){
+                value = max;
+            }
+        }
+
+        return this.value(value);
+    }
+
+    valueDecrement() : DomControl;
+    
+    valueDecrement(step : number) : DomControl;
+
+    valueDecrement(step? : number) : DomControl{
+        let value = this.value();
+
+        if(!step){
+            step = parseInt(this.attr("step"));
+        }
+
+        let min = this.attr("min");
+        let max = this.attr("max");
+
+        value--;
+
+        if(min){
+            if(value < min){
+                value = min;
+            }
+        }
+
+        if(max){
+            if(value > max){
+                value = max;
+            }
+        }
+
+        return this.value(value);
+    }
+
     /**
      * getNodeName
      * get the node name of an element

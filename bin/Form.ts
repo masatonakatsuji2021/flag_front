@@ -642,14 +642,14 @@ export default class Form{
             let name = columns[n];
             let value = data[name];
 
-            var dom = Dom("#" + this.formName).child("[name=\"" + name + "\"]");
+            var vd = VDom(this.formName).childDom("[name=\"" + name + "\"]");
 
-            if(dom){
+            if(vd){
                 if(type == 0){
-                    dom.value(value);
+                    vd.value(value);
                 }
                 else if(type == 1){
-                    dom.default(value);
+                    vd.default(value);
                 }
             }
         }
@@ -741,7 +741,7 @@ export default class Form{
 
         var getChildError = vd.child("error-*");
         for(var n = 0 ; n <getChildError.length ; n++){
-            var gce = getChildError[n];
+            var gce = getChildError.index(n);
             gce.html("");
         }
 
@@ -767,9 +767,7 @@ export default class Form{
      */
     reset() : Form{
 
-        var dom = Dom("#" + this.formName);
-
-        var getChild = dom.child("[name]");
+        var getChild = VDom(this.formName).childDom("[name]");
 
         Request.refresh(getChild);
     
@@ -819,14 +817,25 @@ export default class Form{
      * @returns {Form} Form Class Object (method chain)
      */
     setError(validates){
-        var v = validates.get();
+
+        if(validates.constructor.name == "ValidateResult"){
+            var v = validates.get();
+        }
+        else{
+            var v = validates;
+        }
         var columns = Object.keys(v);
 
         VDom(this.formName).child("error-*").html("");
 
         for(var n = 0 ; n < columns.length ; n++){
             var key = columns[n];
-            var val = v[key].join("\n");
+            var val = v[key];
+            
+            if(typeof val == "string"){
+                val = [ val ];
+            }
+            val = val.join("\n");
             VDom(this.formName).child("error-" + key).html(val);
         }
 

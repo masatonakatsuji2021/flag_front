@@ -464,6 +464,46 @@ class DomControl {
             return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__set_value_Default).call(this, 1, value);
         }
     }
+    valueIncrement(step) {
+        let value = this.value();
+        if (!step) {
+            step = parseInt(this.attr("step"));
+        }
+        let min = this.attr("min");
+        let max = this.attr("max");
+        value++;
+        if (min) {
+            if (value < min) {
+                value = min;
+            }
+        }
+        if (max) {
+            if (value > max) {
+                value = max;
+            }
+        }
+        return this.value(value);
+    }
+    valueDecrement(step) {
+        let value = this.value();
+        if (!step) {
+            step = parseInt(this.attr("step"));
+        }
+        let min = this.attr("min");
+        let max = this.attr("max");
+        value--;
+        if (min) {
+            if (value < min) {
+                value = min;
+            }
+        }
+        if (max) {
+            if (value > max) {
+                value = max;
+            }
+        }
+        return this.value(value);
+    }
     /**
      * getNodeName
      * get the node name of an element

@@ -8,7 +8,6 @@ var _Form_instances, _Form__getData, _Form__tagInput, _Form__setDefaultsAndValue
 Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const Data_1 = require("Data");
-const Dom_1 = require("Dom");
 const VDom_1 = require("VDom");
 const Request_1 = require("Request");
 class Form {
@@ -324,7 +323,7 @@ class Form {
         var vd = (0, VDom_1.default)(this.formName);
         var getChildError = vd.child("error-*");
         for (var n = 0; n < getChildError.length; n++) {
-            var gce = getChildError[n];
+            var gce = getChildError.index(n);
             gce.html("");
         }
         var getChild = vd.childDom("[name]");
@@ -343,8 +342,7 @@ class Form {
      * @returns {Form} Form Class Object (method chain)
      */
     reset() {
-        var dom = (0, Dom_1.default)("#" + this.formName);
-        var getChild = dom.child("[name]");
+        var getChild = (0, VDom_1.default)(this.formName).childDom("[name]");
         Request_1.default.refresh(getChild);
         var post = Request_1.default.get();
         if (this.existResetEvent()) {
@@ -387,12 +385,21 @@ class Form {
      * @returns {Form} Form Class Object (method chain)
      */
     setError(validates) {
-        var v = validates.get();
+        if (validates.constructor.name == "ValidateResult") {
+            var v = validates.get();
+        }
+        else {
+            var v = validates;
+        }
         var columns = Object.keys(v);
         (0, VDom_1.default)(this.formName).child("error-*").html("");
         for (var n = 0; n < columns.length; n++) {
             var key = columns[n];
-            var val = v[key].join("\n");
+            var val = v[key];
+            if (typeof val == "string") {
+                val = [val];
+            }
+            val = val.join("\n");
             (0, VDom_1.default)(this.formName).child("error-" + key).html(val);
         }
         return this;
@@ -424,13 +431,13 @@ _Form_instances = new WeakSet(), _Form__getData = function _Form__getData() {
     for (var n = 0; n < columns.length; n++) {
         let name = columns[n];
         let value = data[name];
-        var dom = (0, Dom_1.default)("#" + this.formName).child("[name=\"" + name + "\"]");
-        if (dom) {
+        var vd = (0, VDom_1.default)(this.formName).childDom("[name=\"" + name + "\"]");
+        if (vd) {
             if (type == 0) {
-                dom.value(value);
+                vd.value(value);
             }
             else if (type == 1) {
-                dom.default(value);
+                vd.default(value);
             }
         }
     }
