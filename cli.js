@@ -11,24 +11,16 @@ const cli = require("@flag/cli");
 
     var args = cli.getArgsOption();
 
-    if(args._any[0] == "create"){
-
-        const create = require("./cmd/create");
-        var juge = await create(args);
-
-        if(!juge){
-            return;
-        }
-
-        const build = require("./cmd/build");
-        await build(args);
-    }
-    else if(args._any[0] == "init"){
+    if(args._any[0] == "init"){
         const inits = require("./cmd/init");
         await inits(args);
     }
+    else if(args._any[0] == "add_plugin"){
+        const add_plugin = require("./cmd/add_plugin/");
+        await add_plugin(args);
+    }
     else if(args._any[0] == "add_framework"){
-        const add_framework = require("./cmd/add_framework.js");
+        const add_framework = require("./cmd/add_framework/");
         await add_framework(args);
     }
     else if(args._any[0] == "build"){
