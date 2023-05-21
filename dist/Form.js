@@ -404,6 +404,9 @@ class Form {
         }
         return this;
     }
+    getDom(name) {
+        return (0, VDom_1.default)(this.formName).childDom("[name=" + name + "]");
+    }
 }
 exports.default = Form;
 _Form_instances = new WeakSet(), _Form__getData = function _Form__getData() {

@@ -149,7 +149,34 @@ module.exports = async function(args, cliOption){
         option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateResponse.js").toString();
     }
 
-    // option.contents = "rendering";
+    if(option.plugin){
+        for(var n = 0 ; n < option.plugin.length ; n++){
+            var plugin = option.plugin[n];
+
+            if(plugin.indexOf("@flag/plugin-") > -1){
+                var pluginName = plugin.substring("@flag/plugin-".length);
+            }
+            else{
+                var pluginName = plugin;
+            }
+
+            var pluginClassList = fs.readdirSync(path.dirname(require.resolve(plugin)) + "/dist/");
+            for(var n2 = 0 ; n2 < pluginClassList.length ; n2++){
+                var p_ = path.dirname(require.resolve(plugin)) + "/dist/" + pluginClassList[n2];
+
+                if(fs.statSync(p_).isDirectory()){
+                    continue;
+                }
+
+                if(path.extname(p_) != ".js"){
+                    continue;
+                }
+
+                option.core["plugin-" + pluginName + "/" + path.basename(p_).split(".js").join("")] = fs.readFileSync(p_).toString();
+            }
+
+        }
+    }
 
     if(option.compress == undefined){
         option.compress = false;

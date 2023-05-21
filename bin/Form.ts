@@ -841,4 +841,8 @@ export default class Form{
 
         return this;
     }
+
+    getDom(name : string){
+        return VDom(this.formName).childDom("[name=" + name + "]");
+    }
 };
