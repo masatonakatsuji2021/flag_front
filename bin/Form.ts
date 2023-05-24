@@ -927,8 +927,13 @@ export default class Form{
      * @param {object} data Setting data
      * @returns {Form} Form Class Object (method chain)
      */
-    setValues(data : object) : Form{
-        return this.#_setDefaultsAndValues(data, 0);
+    setValues(data? : object) : Form{
+        if(data){
+            return this.#_setDefaultsAndValues(data, 0);
+        }
+        else{
+            return this.#_setClearValues();
+        }
     }
     
     /**
@@ -940,8 +945,13 @@ export default class Form{
      * @param {object} data Setting data
      * @returns {Form} Form Class Object (method chain)
      */
-    setDefaults(data : object) : Form{
-        return this.#_setDefaultsAndValues(data, 1);
+    setDefaults(data? : object) : Form{
+        if(data){
+            return this.#_setDefaultsAndValues(data, 1);
+        }
+        else{
+            return this.#_setClearValues();
+        }
     }
 
     #_setDefaultsAndValues(data: object , type : number) : Form{
@@ -962,6 +972,17 @@ export default class Form{
                     vd.default(value);
                 }
             }
+        }
+
+        return this;
+    }
+
+    #_setClearValues(){
+
+        var vd = VDom(this.formName).childDom("[name]");
+
+        if(vd){
+            vd.value("");
         }
 
         return this;
@@ -1153,6 +1174,14 @@ export default class Form{
     }
 
     getDom(name : string){
-        return VDom(this.formName).childDom("[name=" + name + "]");
+
+        let res = VDom(this.formName).childDom("[name=" + name + "]");
+
+        if(res.length){
+            return res;
+        }
+
+        res = VDom(this.formName).child("form-" + name).childDom("input");
+        return res;
     }
 };

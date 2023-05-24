@@ -4,7 +4,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _Form_instances, _Form__getData, _Form__tagInput, _Form__setDefaultsAndValues, _Form__setOptionString;
+var _Form_instances, _Form__getData, _Form__tagInput, _Form__setDefaultsAndValues, _Form__setClearValues, _Form__setOptionString;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const Data_1 = require("Data");
@@ -424,7 +424,12 @@ class Form {
      * @returns {Form} Form Class Object (method chain)
      */
     setValues(data) {
-        return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setDefaultsAndValues).call(this, data, 0);
+        if (data) {
+            return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setDefaultsAndValues).call(this, data, 0);
+        }
+        else {
+            return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setClearValues).call(this);
+        }
     }
     /**
      * setDefaults
@@ -436,7 +441,12 @@ class Form {
      * @returns {Form} Form Class Object (method chain)
      */
     setDefaults(data) {
-        return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setDefaultsAndValues).call(this, data, 1);
+        if (data) {
+            return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setDefaultsAndValues).call(this, data, 1);
+        }
+        else {
+            return __classPrivateFieldGet(this, _Form_instances, "m", _Form__setClearValues).call(this);
+        }
     }
     existSubmitEvent() {
         if (this.constructor.name == "Form") {
@@ -573,7 +583,12 @@ class Form {
         return this;
     }
     getDom(name) {
-        return (0, VDom_1.default)(this.formName).childDom("[name=" + name + "]");
+        let res = (0, VDom_1.default)(this.formName).childDom("[name=" + name + "]");
+        if (res.length) {
+            return res;
+        }
+        res = (0, VDom_1.default)(this.formName).child("form-" + name).childDom("input");
+        return res;
     }
 }
 exports.default = Form;
@@ -611,6 +626,12 @@ _Form_instances = new WeakSet(), _Form__getData = function _Form__getData() {
                 vd.default(value);
             }
         }
+    }
+    return this;
+}, _Form__setClearValues = function _Form__setClearValues() {
+    var vd = (0, VDom_1.default)(this.formName).childDom("[name]");
+    if (vd) {
+        vd.value("");
     }
     return this;
 }, _Form__setOptionString = function _Form__setOptionString(option) {
