@@ -97,6 +97,13 @@ export default class Form{
         return Data.__form[this.formName];
     }
 
+    tagNone(name : string) : Form{
+
+
+
+        return this;
+    }
+
     /**
      * tagInput
      * Generate Input tag for input form
@@ -114,7 +121,7 @@ export default class Form{
     */
     tagInput(name : string, option : object): Form;
 
-    tagInput(name : string, option : object = null) : Form{
+    tagInput(name : string, option? : object) : Form{
 
         var str = this.#_tagInput(name, option);
 
@@ -155,6 +162,56 @@ export default class Form{
         return str;
     }
 
+    private _getMultiName(name : string, index: number){
+
+        let targetName = "form";
+        let baseName = name;
+
+        if(name.indexOf("*") > -1){
+
+            let buffer = name.split(".");
+
+            for(let n = 0 ; n < buffer.length ; n++){
+                let b_ = buffer[n];
+
+                if(b_ == "*"){
+                    continue;
+                }
+
+                targetName += "-" + b_;
+            }
+
+            baseName = baseName.split("*").join(index.toString());
+        }
+        else{
+            targetName += name;
+        }
+
+        return {
+            targetName : targetName,
+            baseName : baseName,
+        };
+    }
+
+    tagInputM(name : string, index : number) : Form;
+
+    tagInputM(name : string, index : number, option : object) : Form;
+
+    tagInputM(name : string, index : number, option?) : Form{
+
+        let buffer = this._getMultiName(name, index);
+
+        var str = this.#_tagInput(buffer.baseName, option);
+
+        let vd = VDom(this.formName).child(buffer.targetName).last();
+
+        if(vd){
+            vd.html(str);
+        }
+
+        return this;
+    }
+
     /**
      * tagHidden
      * Generates an input tag for hidden attributes
@@ -187,6 +244,23 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
+    tagHiddenM(name : string, index : number, value : any) : Form;
+
+    tagHiddenM(name : string, index : number, value : any, option : object) : Form;
+
+    tagHiddenM(name : string, index : number, value : any, option?) : Form{
+
+        if(option == null){
+            option = {};
+        }
+
+        option.type = "hidden";
+
+        option.value = value;
+
+        return this.tagInputM(name, index, option);
+    }
+
     /**
      * tagNumber
      * Generates a numeric input field
@@ -204,7 +278,7 @@ export default class Form{
      */
     tagNumber(name : string, option : object) : Form;
 
-    tagNumber(name : string, option = null) : Form{
+    tagNumber(name : string, option?) : Form{
 
         if(option == undefined){
             option = {};
@@ -213,6 +287,21 @@ export default class Form{
         option.type = "number";
 
         return this.tagInput(name, option);
+    }
+
+    tagNumberM(name : string, index: number) : Form;
+
+    tagNumberM(name : string, index: number, option : object) : Form;
+
+    tagNumberM(name : string, index: number, option?) : Form{
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "number";
+
+        return this.tagInputM(name, index, option);
     }
 
     /**
@@ -243,6 +332,21 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
+    tagPasswordM(name : string, index : number) : Form;
+
+    tagPasswordM(name : string, index : number, option : object) : Form;
+
+    tagPasswordM(name : string, index : number, option?) : Form{
+        
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "password";
+
+        return this.tagInputM(name, index, option);
+    }
+
     /**
      * tagDate
      * Generate a date input field.
@@ -269,6 +373,21 @@ export default class Form{
         option.type = "date";
 
         return this.tagInput(name, option);
+    }
+
+    tagDateM(name: string, index : number) : Form;
+
+    tagDateM(name: string, index : number, option : object) : Form;
+
+    tagDateM(name: string, index : number, option?) : Form{
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "date";
+
+        return this.tagInputM(name, index, option);
     }
 
     /**
@@ -299,6 +418,21 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
+    tagTimeM(name: string, index : number) : Form;
+
+    tagTimeM(name: string, index : number, option : object) : Form;
+        
+    tagTimeM(name: string, index : number, option?) : Form{
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "time";
+
+        return this.tagInputM(name, index, option);
+    }
+
     /**
      * tagColor
      * Generates a color picker input field
@@ -327,6 +461,21 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
+    tagColorM(name: string, index : number) : Form;
+
+    tagColorM(name: string, index : number, option : object) : Form;
+
+    tagColorM(name: string, index : number, option?) : Form{
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "color";
+
+        return this.tagInputM(name, index, option);
+    }
+
     /**
      * tagFile
      * Generate input fields for attachments
@@ -353,6 +502,21 @@ export default class Form{
         option.type = "file";
 
         return this.tagInput(name, option);
+    }
+
+    tagFileM(name : string, index : number) : Form;
+
+    tagFileM(name : string, index : number, option : object) : Form;
+
+    tagFileM(name : string, index : number, option?) : Form{
+
+        if(option == undefined){
+            option = {};
+        }
+
+        option.type = "file";
+
+        return this.tagInputM(name, index, option);
     }
 
     /**
@@ -406,6 +570,46 @@ export default class Form{
         return this;
     }
 
+    tagSelectM(name : string, index : number, selects : object) : Form;
+
+    tagSelectM(name : string, index : number, selects : object, option : object) : Form;
+
+    tagSelectM(name : string, index : number, selects : object, option?) : Form{
+
+        let buffer = this._getMultiName(name, index);
+
+        if(option == undefined){
+            option = {};
+        }
+
+        var optionStr = this.#_setOptionString(option);
+
+        var selectStr = "";
+
+        if(option.empty){
+            selectStr += "<option value=\"\">" + option.empty + "</option>";
+        }
+
+        var columns = Object.keys(selects);
+        for(var n = 0 ; n < columns.length ; n++){
+            var key = columns[n];
+            var val = selects[key];
+            selectStr += "<option value=\"" + key + "\">" + val + "</option>";
+        }
+
+        var str = "<select name=\"" + buffer.baseName + "\" " + optionStr + ">" + selectStr + "</select>";
+
+        let vd = VDom(this.formName).child(buffer.targetName).last();
+
+        if(vd){
+            vd.html(str);
+        }
+
+        return this;
+    }
+
+
+
     /**
      * tagTextarea
      * Generates a textarea input field
@@ -434,6 +638,31 @@ export default class Form{
         var str = "<textarea name=\"" + name + "\" " + optionStr + "></textarea>";
 
         let vd = VDom(this.formName).child("form-" + name);
+
+        if(vd){
+            vd.html(str);
+        }
+
+        return this;
+    }
+
+    tagTextareaM(name : string, index : number) : Form;
+
+    tagTextareaM(name : string, index : number, option : object) : Form;
+
+    tagTextareaM(name : string, index : number, option?) : Form{
+
+        let buffer = this._getMultiName(name, index);
+
+        if(option == undefined){
+            option = {};
+        }
+
+        var optionStr = this.#_setOptionString(option);
+
+        var str = "<textarea name=\"" + buffer.baseName + "\" " + optionStr + "></textarea>";
+
+        let vd = VDom(this.formName).child(buffer.targetName).last();
 
         if(vd){
             vd.html(str);
@@ -481,6 +710,40 @@ export default class Form{
         }
 
         let vd = VDom(this.formName).child("form-" + name);
+
+        if(vd){
+            vd.html(str);
+        }
+
+        return this;
+    }
+
+    tagRadioM(name : string, index : number, selects : object) : Form;
+
+    tagRadioM(name : string, index : number, selects : object, option : object) : Form;
+
+    tagRadioM(name : string, index : number, selects : object, option?) : Form{
+
+        let buffer = this._getMultiName(name, index);
+
+        if(option == undefined){
+            option = {};
+        }
+
+        var str = "";
+
+        var columns = Object.keys(selects);
+        for(var n = 0 ; n < columns.length ; n++){
+            var key = columns[n];
+            var val = selects[key];
+
+            option.type = "radio";
+            option.value = key;
+
+            str += "<label>" + this.#_tagInput(buffer.baseName, option) + val + "</label>";
+        }
+
+        let vd = VDom(this.formName).child(buffer.targetName).last();
 
         if(vd){
             vd.html(str);
@@ -538,6 +801,41 @@ export default class Form{
         return this;
     }
 
+    tagCheckboxM(name : string, index : number, selects : object) : Form;
+
+    tagCheckboxM(name : string, index : number, selects : object, option : object) : Form;
+
+    tagCheckboxM(name : string, index : number, selects : object, option?) : Form{
+
+        let buffer = this._getMultiName(name, index);
+
+        if(option == undefined){
+            option = {};
+        }
+
+        var str = "";
+
+        var columns = Object.keys(selects);
+        for(var n = 0 ; n < columns.length ; n++){
+            var key = columns[n];
+            var val = selects[key];
+
+            option.type = "checkbox";
+            option.value = key;
+
+            str += "<label>" + this.#_tagInput(buffer.baseName, option) + val + "</label>";
+        }
+
+        let vd = VDom(this.formName).child(buffer.targetName).last();
+
+        if(vd){
+            vd.html(str);
+        }
+
+        return this;
+    }
+
+
     /**
      * tagButton
      * 
@@ -560,6 +858,18 @@ export default class Form{
         return this.tagInput(name, option);
     }
 
+    tagButtonM(name : string, index : number, value: string, option = null) : Form{
+
+        if(option == null){
+            option = {};
+        }
+
+        option.type = "button";
+        option.default = value;
+
+        return this.tagInputM(name, index, option);
+    }
+    
     /**
      * tagButton
      * 

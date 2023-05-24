@@ -24,6 +24,42 @@ exports.default = new class Request {
     get() {
         return this._post;
     }
+    _getData(data, name, callback) {
+        if (name.indexOf(".") > -1) {
+            let names = name.split(".");
+            if (!data[names[0]]) {
+                data[names[0]] = {};
+            }
+            if (names.length == 2) {
+                callback(data[names[0]], names[1]);
+                return;
+            }
+            if (!data[names[0]][names[1]]) {
+                data[names[0]][names[1]] = {};
+            }
+            if (names.length == 3) {
+                callback(data[names[0]][names[1]], names[2]);
+                return;
+            }
+            if (!data[names[0]][names[1]][names[2]]) {
+                data[names[0]][names[1]][names[2]] = {};
+            }
+            if (names.length == 4) {
+                callback(data[names[0]][names[1]][names[2]], names[3]);
+                return;
+            }
+            if (!data[names[0]][names[1]][names[2]][names[3]]) {
+                data[names[0]][names[1]][names[2]][names[3]] = {};
+            }
+            if (names.length == 5) {
+                callback(data[names[0]][names[1]][names[2]][names[3]], names[4]);
+                return;
+            }
+        }
+        else {
+            callback(data, name);
+        }
+    }
     refresh(targetForm) {
         var data = {};
         for (var n = 0; n < targetForm.get.length; n++) {
@@ -33,9 +69,11 @@ exports.default = new class Request {
                 continue;
             }
             var value = null;
-            if (data[name] == undefined) {
-                data[name] = null;
-            }
+            this._getData(data, name, (_data, target) => {
+                if (!_data[target]) {
+                    _data[target] = null;
+                }
+            });
             if (target.type == "submit" ||
                 target.type == "reset" ||
                 target.type == "button" ||
@@ -44,32 +82,43 @@ exports.default = new class Request {
             }
             else if (target.type == "radio") {
                 if (target.checked) {
-                    data[name] = target.value;
+                    let value = target.value;
+                    this._getData(data, name, (_data, target) => {
+                        _data[target] = value;
+                    });
                 }
             }
             else if (target.type == "checkbox") {
                 if (target.checked) {
-                    if (!data[name]) {
-                        data[name] = [];
-                    }
-                    data[name].push(target.value);
+                    let value = target.value;
+                    this._getData(data, name, (_data, target) => {
+                        // @ts-ignore
+                        if (!_data[target]) {
+                            _data[target] = [];
+                        }
+                        _data[target].push(value);
+                    });
                 }
             }
             else if (target.type == "file") {
                 if (!this.__file_uploads[name]) {
                     continue;
                 }
-                if (!data[name]) {
-                    data[name] = [];
-                }
-                for (var n2 = 0; n2 < this.__file_uploads[name].length; n2++) {
-                    var file = this.__file_uploads[name][n2];
-                    data[name].push(file);
-                }
+                this._getData(data, name, (_data, target) => {
+                    if (!_data[target]) {
+                        _data[target] = [];
+                    }
+                    for (var n2 = 0; n2 < this.__file_uploads[name].length; n2++) {
+                        var file = this.__file_uploads[name][n2];
+                        _data[target].push(file);
+                    }
+                });
             }
             else {
                 value = target.value;
-                data[name] = value;
+                this._getData(data, name, (_data, target) => {
+                    _data[target] = value;
+                });
             }
         }
         this._post = data;

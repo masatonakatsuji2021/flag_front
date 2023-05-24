@@ -58,9 +58,43 @@ class Form {
             class: className,
         };
     }
-    tagInput(name, option = null) {
+    tagNone(name) {
+        return this;
+    }
+    tagInput(name, option) {
         var str = __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option);
         let vd = (0, VDom_1.default)(this.formName).child("form-" + name);
+        if (vd) {
+            vd.html(str);
+        }
+        return this;
+    }
+    _getMultiName(name, index) {
+        let targetName = "form";
+        let baseName = name;
+        if (name.indexOf("*") > -1) {
+            let buffer = name.split(".");
+            for (let n = 0; n < buffer.length; n++) {
+                let b_ = buffer[n];
+                if (b_ == "*") {
+                    continue;
+                }
+                targetName += "-" + b_;
+            }
+            baseName = baseName.split("*").join(index.toString());
+        }
+        else {
+            targetName += name;
+        }
+        return {
+            targetName: targetName,
+            baseName: baseName,
+        };
+    }
+    tagInputM(name, index, option) {
+        let buffer = this._getMultiName(name, index);
+        var str = __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, buffer.baseName, option);
+        let vd = (0, VDom_1.default)(this.formName).child(buffer.targetName).last();
         if (vd) {
             vd.html(str);
         }
@@ -74,12 +108,27 @@ class Form {
         option.value = value;
         return this.tagInput(name, option);
     }
-    tagNumber(name, option = null) {
+    tagHiddenM(name, index, value, option) {
+        if (option == null) {
+            option = {};
+        }
+        option.type = "hidden";
+        option.value = value;
+        return this.tagInputM(name, index, option);
+    }
+    tagNumber(name, option) {
         if (option == undefined) {
             option = {};
         }
         option.type = "number";
         return this.tagInput(name, option);
+    }
+    tagNumberM(name, index, option) {
+        if (option == undefined) {
+            option = {};
+        }
+        option.type = "number";
+        return this.tagInputM(name, index, option);
     }
     tagPassword(name, option = null) {
         if (option == undefined) {
@@ -88,12 +137,26 @@ class Form {
         option.type = "password";
         return this.tagInput(name, option);
     }
+    tagPasswordM(name, index, option) {
+        if (option == undefined) {
+            option = {};
+        }
+        option.type = "password";
+        return this.tagInputM(name, index, option);
+    }
     tagDate(name, option = null) {
         if (option == undefined) {
             option = {};
         }
         option.type = "date";
         return this.tagInput(name, option);
+    }
+    tagDateM(name, index, option) {
+        if (option == undefined) {
+            option = {};
+        }
+        option.type = "date";
+        return this.tagInputM(name, index, option);
     }
     tagTime(name, option = null) {
         if (option == undefined) {
@@ -102,6 +165,13 @@ class Form {
         option.type = "time";
         return this.tagInput(name, option);
     }
+    tagTimeM(name, index, option) {
+        if (option == undefined) {
+            option = {};
+        }
+        option.type = "time";
+        return this.tagInputM(name, index, option);
+    }
     tagColor(name, option = null) {
         if (option == undefined) {
             option = {};
@@ -109,12 +179,26 @@ class Form {
         option.type = "color";
         return this.tagInput(name, option);
     }
+    tagColorM(name, index, option) {
+        if (option == undefined) {
+            option = {};
+        }
+        option.type = "color";
+        return this.tagInputM(name, index, option);
+    }
     tagFile(name, option = null) {
         if (option == undefined) {
             option = {};
         }
         option.type = "file";
         return this.tagInput(name, option);
+    }
+    tagFileM(name, index, option) {
+        if (option == undefined) {
+            option = {};
+        }
+        option.type = "file";
+        return this.tagInputM(name, index, option);
     }
     tagSelect(name, selects, option = null) {
         if (option == undefined) {
@@ -138,6 +222,29 @@ class Form {
         }
         return this;
     }
+    tagSelectM(name, index, selects, option) {
+        let buffer = this._getMultiName(name, index);
+        if (option == undefined) {
+            option = {};
+        }
+        var optionStr = __classPrivateFieldGet(this, _Form_instances, "m", _Form__setOptionString).call(this, option);
+        var selectStr = "";
+        if (option.empty) {
+            selectStr += "<option value=\"\">" + option.empty + "</option>";
+        }
+        var columns = Object.keys(selects);
+        for (var n = 0; n < columns.length; n++) {
+            var key = columns[n];
+            var val = selects[key];
+            selectStr += "<option value=\"" + key + "\">" + val + "</option>";
+        }
+        var str = "<select name=\"" + buffer.baseName + "\" " + optionStr + ">" + selectStr + "</select>";
+        let vd = (0, VDom_1.default)(this.formName).child(buffer.targetName).last();
+        if (vd) {
+            vd.html(str);
+        }
+        return this;
+    }
     tagTextarea(name, option = null) {
         if (option == undefined) {
             option = {};
@@ -145,6 +252,19 @@ class Form {
         var optionStr = __classPrivateFieldGet(this, _Form_instances, "m", _Form__setOptionString).call(this, option);
         var str = "<textarea name=\"" + name + "\" " + optionStr + "></textarea>";
         let vd = (0, VDom_1.default)(this.formName).child("form-" + name);
+        if (vd) {
+            vd.html(str);
+        }
+        return this;
+    }
+    tagTextareaM(name, index, option) {
+        let buffer = this._getMultiName(name, index);
+        if (option == undefined) {
+            option = {};
+        }
+        var optionStr = __classPrivateFieldGet(this, _Form_instances, "m", _Form__setOptionString).call(this, option);
+        var str = "<textarea name=\"" + buffer.baseName + "\" " + optionStr + "></textarea>";
+        let vd = (0, VDom_1.default)(this.formName).child(buffer.targetName).last();
         if (vd) {
             vd.html(str);
         }
@@ -169,6 +289,26 @@ class Form {
         }
         return this;
     }
+    tagRadioM(name, index, selects, option) {
+        let buffer = this._getMultiName(name, index);
+        if (option == undefined) {
+            option = {};
+        }
+        var str = "";
+        var columns = Object.keys(selects);
+        for (var n = 0; n < columns.length; n++) {
+            var key = columns[n];
+            var val = selects[key];
+            option.type = "radio";
+            option.value = key;
+            str += "<label>" + __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, buffer.baseName, option) + val + "</label>";
+        }
+        let vd = (0, VDom_1.default)(this.formName).child(buffer.targetName).last();
+        if (vd) {
+            vd.html(str);
+        }
+        return this;
+    }
     tagCheckbox(name, selects, option = null) {
         if (option == undefined) {
             option = {};
@@ -183,6 +323,26 @@ class Form {
             str += "<label>" + __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, name, option) + val + "</label>";
         }
         let vd = (0, VDom_1.default)(this.formName).child("form-" + name);
+        if (vd) {
+            vd.html(str);
+        }
+        return this;
+    }
+    tagCheckboxM(name, index, selects, option) {
+        let buffer = this._getMultiName(name, index);
+        if (option == undefined) {
+            option = {};
+        }
+        var str = "";
+        var columns = Object.keys(selects);
+        for (var n = 0; n < columns.length; n++) {
+            var key = columns[n];
+            var val = selects[key];
+            option.type = "checkbox";
+            option.value = key;
+            str += "<label>" + __classPrivateFieldGet(this, _Form_instances, "m", _Form__tagInput).call(this, buffer.baseName, option) + val + "</label>";
+        }
+        let vd = (0, VDom_1.default)(this.formName).child(buffer.targetName).last();
         if (vd) {
             vd.html(str);
         }
@@ -205,6 +365,14 @@ class Form {
         option.type = "button";
         option.default = value;
         return this.tagInput(name, option);
+    }
+    tagButtonM(name, index, value, option = null) {
+        if (option == null) {
+            option = {};
+        }
+        option.type = "button";
+        option.default = value;
+        return this.tagInputM(name, index, option);
     }
     /**
      * tagButton
