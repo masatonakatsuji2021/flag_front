@@ -612,12 +612,30 @@ _Form_instances = new WeakSet(), _Form__getData = function _Form__getData() {
         var str = "<input name=\"" + name + "\" " + optionStr + ">";
     }
     return str;
-}, _Form__setDefaultsAndValues = function _Form__setDefaultsAndValues(data, type) {
+}, _Form__setDefaultsAndValues = function _Form__setDefaultsAndValues(data, type, baforeName) {
+    if (!baforeName) {
+        baforeName = "";
+    }
     let columns = Object.keys(data);
     for (var n = 0; n < columns.length; n++) {
         let name = columns[n];
         let value = data[name];
-        var vd = (0, VDom_1.default)(this.formName).childDom("[name=\"" + name + "\"]");
+        if (typeof value == "object") {
+            if (!Array.isArray(value)) {
+                let beforeName_ = baforeName + name + ".";
+                __classPrivateFieldGet(this, _Form_instances, "m", _Form__setDefaultsAndValues).call(this, value, type, beforeName_);
+                continue;
+            }
+        }
+        let targetName = "";
+        if (baforeName) {
+            targetName = baforeName + name;
+        }
+        else {
+            targetName = name;
+        }
+        console.log(targetName);
+        var vd = (0, VDom_1.default)(this.formName).childDom("[name=\"" + targetName + "\"]");
         if (vd) {
             if (type == 0) {
                 vd.value(value);

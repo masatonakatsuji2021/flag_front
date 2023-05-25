@@ -954,7 +954,11 @@ export default class Form{
         }
     }
 
-    #_setDefaultsAndValues(data: object , type : number) : Form{
+    #_setDefaultsAndValues(data: object , type : number, baforeName? : string) : Form{
+
+        if(!baforeName){
+            baforeName = "";
+        }
 
         let columns = Object.keys(data);
 
@@ -962,7 +966,23 @@ export default class Form{
             let name = columns[n];
             let value = data[name];
 
-            var vd = VDom(this.formName).childDom("[name=\"" + name + "\"]");
+            if(typeof value == "object"){
+                if(!Array.isArray(value)){
+                    let beforeName_ = baforeName + name + ".";
+                    this.#_setDefaultsAndValues(value, type, beforeName_);
+                    continue;
+                }
+            }
+
+            let targetName = "";
+            if(baforeName){
+                targetName = baforeName + name;
+            }
+            else{
+                targetName = name;                
+            }
+
+            var vd = VDom(this.formName).childDom("[name=\"" + targetName + "\"]");
 
             if(vd){
                 if(type == 0){
