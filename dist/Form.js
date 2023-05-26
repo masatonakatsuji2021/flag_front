@@ -58,7 +58,29 @@ class Form {
             class: className,
         };
     }
+    /**
+     * tagNone
+     * @param {string} name
+     * @returns
+     */
     tagNone(name) {
+        let vd = (0, VDom_1.default)(this.formName).child("form-" + name);
+        if (vd) {
+            vd.html("");
+        }
+        return this;
+    }
+    /**
+     * tagNoneM
+     * @param {string} name
+     * @returns
+     */
+    tagNoneM(name, index) {
+        let buffer = this._getMultiName(name, index);
+        let vd = (0, VDom_1.default)(this.formName).child(buffer.targetName).last();
+        if (vd) {
+            vd.html("");
+        }
         return this;
     }
     tagInput(name, option) {
@@ -634,7 +656,6 @@ _Form_instances = new WeakSet(), _Form__getData = function _Form__getData() {
         else {
             targetName = name;
         }
-        console.log(targetName);
         var vd = (0, VDom_1.default)(this.formName).childDom("[name=\"" + targetName + "\"]");
         if (vd) {
             if (type == 0) {

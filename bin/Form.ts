@@ -97,9 +97,37 @@ export default class Form{
         return Data.__form[this.formName];
     }
 
+    /**
+     * tagNone
+     * @param {string} name 
+     * @returns 
+     */
     tagNone(name : string) : Form{
 
+        let vd = VDom(this.formName).child("form-" + name);
 
+        if(vd){
+            vd.html("");
+        }
+
+        return this;
+    }
+
+    /**
+     * tagNoneM
+     * @param {string} name 
+     * @returns 
+     */
+
+    tagNoneM(name : string, index : number) : Form{
+
+        let buffer = this._getMultiName(name, index);
+
+        let vd = VDom(this.formName).child(buffer.targetName).last();
+
+        if(vd){
+            vd.html("");
+        }
 
         return this;
     }
