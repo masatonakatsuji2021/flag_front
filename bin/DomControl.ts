@@ -34,6 +34,18 @@ export default class DomControl{
     }
 
     /**
+     * exists
+     * Determine whether an element exists.
+     * @returns {bolean} judgment result
+     */
+    exists() : boolean{
+        if(this._qs.length){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * first
      * Specifies the first element.
      * @returns {DomControl} DomControl Class Object
