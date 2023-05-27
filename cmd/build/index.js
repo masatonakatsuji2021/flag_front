@@ -149,6 +149,7 @@ module.exports = async function(args, cliOption){
         option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateResponse.js").toString();
     }
 
+    // plugin loadset...
     if(option.plugin){
         for(var n = 0 ; n < option.plugin.length ; n++){
             var plugin = option.plugin[n];
@@ -168,11 +169,12 @@ module.exports = async function(args, cliOption){
                     continue;
                 }
 
-                if(path.extname(p_) != ".js"){
-                    continue;
+                if(path.extname(p_) == ".js"){
+                    option.core["plugin-" + pluginName + "/" + path.basename(p_).split(".js").join("")] = fs.readFileSync(p_).toString();
                 }
-
-                option.core["plugin-" + pluginName + "/" + path.basename(p_).split(".js").join("")] = fs.readFileSync(p_).toString();
+                else if(path.extname(p_) == ".html"){
+                    option.coreHtml["plugin-" + pluginName + "/" + path.basename(p_).split(".html").join("") + "HTML"] = fs.readFileSync(p_).toString();
+                }
             }
 
         }
