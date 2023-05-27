@@ -22,6 +22,7 @@ exports.default = new (_a = class Response {
         constructor() {
             _Response_instances.add(this);
             this.__before_controller = null;
+            this.__before_action = null;
             this.__page_status = true;
         }
         /**
@@ -82,7 +83,7 @@ exports.default = new (_a = class Response {
                     try {
                         if (this.__before_controller) {
                             var befCont = this.__before_controller;
-                            yield befCont.handleLeave();
+                            yield befCont.handleLeave(this.__before_action);
                         }
                         if (routes.mode == "notfound") {
                             throw ("404 not found");
@@ -122,6 +123,7 @@ exports.default = new (_a = class Response {
                         }
                         yield cont.handleRenderAfter();
                         this.__before_controller = cont;
+                        this.__before_action = routes.action;
                     }
                     catch (error) {
                         console.error(error);

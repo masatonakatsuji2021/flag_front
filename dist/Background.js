@@ -5,7 +5,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * A class for controlling background processing.
  */
 class Background {
-    handle() { }
+    /**
+     * handleBegin :
+     * A handler that is executed immediately after the application starts.
+     */
+    handleBegin() { }
 }
 exports.default = Background;
 ;

@@ -85,4 +85,38 @@ exports.default = new class Util {
     promise(callback) {
         return new Promise(callback);
     }
+    addHeadTag(type, option) {
+        if (!option) {
+            option = {};
+        }
+        let el = document.createElement(type);
+        let c = Object.keys(option);
+        for (let n = 0; n < c.length; n++) {
+            let key = c[n];
+            let val = option[key];
+            el.setAttribute(key, val);
+        }
+        document.head.appendChild(el);
+        return {
+            _el: el,
+            remove: () => {
+                el.remove();
+            },
+        };
+    }
+    addHeadScript(path, option) {
+        if (!option) {
+            option = {};
+        }
+        option.src = path;
+        return this.addHeadTag("script", option);
+    }
+    addHeadStyle(path, option) {
+        if (!option) {
+            option = {};
+        }
+        option.rel = "stylesheet";
+        option.href = path;
+        return this.addHeadTag("link", option);
+    }
 };

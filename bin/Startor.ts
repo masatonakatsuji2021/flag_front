@@ -5,6 +5,8 @@ import Routes from "Routes";
 import Request from "Request";
 import Response from "Response";
 import VDomControl from "VDomControl";
+// @ts-ignore
+import Config from "app/config/app";
 
 export default (async function(){
 
@@ -140,10 +142,15 @@ export default (async function(){
             Request.__file_uploads[name].push(buffers);
         });
 
-        if(useExists(PATH_BACKGROUND + "/Background.js")){
-            const Background = use(PATH_BACKGROUND + "/Background.js");
-            const bg = new Background();
-            await bg.handle();
+        // background class method load.
+        if(Config.backgrounds){
+            for(let n = 0 ; n < Config.backgrounds.length ; n++){
+                let bgPath = PATH_BACKGROUND + "/" + Util.ucFirst(Config.backgrounds[n]);
+                if(useExists(bgPath)){
+                    const bg = use(bgPath);
+                    await bg.handleBegin();
+                }
+            }
         }
 
         var routes = Routes.searchRoute();

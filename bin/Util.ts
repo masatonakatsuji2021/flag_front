@@ -1,6 +1,15 @@
 import Data from "Data";
 import FgDateTime from "FgDateTime";
 
+interface HeadTags{
+    _el;
+    /**
+     * remove : 
+     * Delete the tag added inside the head tag
+     */
+    remove() : void;
+}
+
 export default new class Util{
 
     /**
@@ -66,6 +75,7 @@ export default new class Util{
     ucFirst(content : string) : string{
         return content.substring(0,1).toUpperCase() + content.substring(1);
     }
+
     /**
      * lcFirst : 
      * Outputs text with the first letter converted to lowercase
@@ -131,5 +141,96 @@ export default new class Util{
 
     promise(callback) : Promise<unknown>{
         return new Promise(callback);
-    }    
+    }
+
+    /**
+     * addHeadTag : 
+     * Add tags dynamically to head tag
+     * @param {string} type additional tag name
+     * @returns {HeadTags} HeadTags Class Object
+     */
+    addHeadTag(type : string) : HeadTags;
+
+    /**
+     * addHeadTag : 
+     * Add tags dynamically to head tag
+     * @param {string} type additional tag name
+     * @param {object} option Configuration options
+     * @returns {HeadTags} HeadTags Class Object
+     */
+    addHeadTag(type : string, option : object) : HeadTags;
+
+    addHeadTag(type : string, option?) : HeadTags{
+        if(!option){
+            option = {};
+        }
+        let el = document.createElement(type);
+        let c = Object.keys(option);
+        for(let n = 0 ; n < c.length ; n++){
+            let key = c[n];
+            let val = option[key];
+            el.setAttribute(key, val);
+        }
+        document.head.appendChild(el);
+
+        return {
+            _el: el,
+            remove: ()=>{
+                el.remove();
+            },
+        };
+        
+    }
+
+    /**
+     * addHeadScript : 
+     * .Add script tag dynamically in head tag
+     * @param {string} path Loading script path
+     * @returns {HeadTags} HeadTags Class Object
+     */
+    addHeadScript(path : string) : HeadTags;
+
+    /**
+     * addHeadScript : 
+     * .Add script tag dynamically in head tag
+     * @param {string} path Loading script path
+     * @param {object} option Configuration options
+     * @returns {HeadTags} HeadTags Class Object
+     */
+    addHeadScript(path : string, option : object) : HeadTags;
+
+    addHeadScript(path : string, option?) : HeadTags{
+        if(!option){
+            option = {};
+        }
+        option.src = path;
+        return this.addHeadTag("script", option);
+    }
+
+    /**
+     * addHeadStyle : 
+     * Add stylesheet loading tag dynamically in head tag
+     * @param {string} path Loading css file path
+     * @returns {HeadTags} HeadTags Class Object
+     */
+    addHeadStyle(path : string) : HeadTags;
+
+    /**
+     * addHeadStyle : 
+     * Add stylesheet loading tag dynamically in head tag
+     * @param {string} path Loading css file path    
+     * @param {object} option Configuration options
+     * @returns {HeadTags} HeadTags Class Object
+     */
+    addHeadStyle(path : string, option : object) : HeadTags;
+
+    addHeadStyle(path : string, option?) : HeadTags{
+        if(!option){
+            option = {};
+        }
+        option.rel = "stylesheet";
+        option.href = path;
+        return this.addHeadTag("link", option);
+    }
+
 };

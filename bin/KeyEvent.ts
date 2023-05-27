@@ -172,11 +172,49 @@ export default new class KeyEvent{
         return this.on("Space", keyDownCallback, keyUpCallback);
     }
 
-    onChar(keyword: string, keyDownCallback : Function , keyUpCallback? : Function){
+    /**
+     * onChar : 
+     * Method to implement event handler when character key is pressed
+     * @param {string} keyword input key character
+     * @param {Function} keyDownCallback Callback function for key presses
+     * @returns {KeyEvent} KeyEvent Class Object
+     */
+    onChar(keyword: string, keyDownCallback : Function) : KeyEvent;
+
+    /**
+     * onChar : 
+     * Method to implement event handler when character key is pressed
+     * @param {string} keyword input key character
+     * @param {Function} keyDownCallback Callback function for key presses
+     * @param {Function} keyUpCallback Callback function for key spoken
+     * @returns {KeyEvent} KeyEvent Class Object
+     */
+    onChar(keyword: string, keyDownCallback : Function , keyUpCallback? : Function) : KeyEvent;
+
+    onChar(keyword: string, keyDownCallback : Function , keyUpCallback? : Function) : KeyEvent{
         return this.on("Key" + keyword, keyDownCallback, keyUpCallback);
     }
 
-    onNumber(number : number, keyDownCallback : Function , keyUpCallback? : Function){
+    /**
+     * onNumber : 
+     * A method to implement an event handler when pressing a numeric key
+     * @param {number} number input digits
+     * @param {Function} keyDownCallback Callback function for key presses
+     * @returns {KeyEvent} KeyEvent Class Object
+     */
+    onNumber(number : number, keyDownCallback : Function) : KeyEvent;
+
+    /**
+     * onNumber : 
+     * A method to implement an event handler when pressing a numeric key
+     * @param {number} number input digits
+     * @param {Function} keyDownCallback Callback function for key presses
+     * @param {Function} keyUpCallback Callback function for key spoken
+     * @returns {KeyEvent} KeyEvent Class Object
+     */
+    onNumber(number : number, keyDownCallback : Function , keyUpCallback? : Function) : KeyEvent;
+
+    onNumber(number : number, keyDownCallback : Function , keyUpCallback? : Function) : KeyEvent{
         return this.on("Number" + number, keyDownCallback, keyUpCallback);
     }
 

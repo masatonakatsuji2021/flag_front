@@ -60,8 +60,9 @@ class Controller {
     /**
      * handleLeave :
      * Event handler executed when leaving the page
+     * @param {string} action before access controller action name
      */
-    handleLeave() { }
+    handleLeave(action) { }
     __rendering() {
         if (!this.view) {
             var routes = Routes_1.default.getRoute();

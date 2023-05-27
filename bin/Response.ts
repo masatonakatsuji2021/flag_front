@@ -5,6 +5,7 @@ import Data from "Data";
 export default new class Response{
 
     __before_controller : string = null;
+    __before_action : string = null;
     
     __page_status : boolean = true;
 
@@ -74,7 +75,7 @@ export default new class Response{
 
                 if(this.__before_controller){
                     var befCont = this.__before_controller;
-                    await befCont.handleLeave();
+                    await befCont.handleLeave(this.__before_action);
                 }
 
                 if(routes.mode == "notfound"){
@@ -132,6 +133,7 @@ export default new class Response{
                 await cont.handleRenderAfter(); 
 
                 this.__before_controller = cont;
+                this.__before_action = routes.action;
                 
             }catch(error){
                 console.error(error);

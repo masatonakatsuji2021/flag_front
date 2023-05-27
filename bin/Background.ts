@@ -5,6 +5,10 @@
  */
 export default class Background{
 
-    handle(){}
+    /**
+     * handleBegin :
+     * A handler that is executed immediately after the application starts.
+     */
+    handleBegin(){}
 
 };

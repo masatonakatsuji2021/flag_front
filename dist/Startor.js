@@ -16,6 +16,8 @@ const Routes_1 = require("Routes");
 const Request_1 = require("Request");
 const Response_1 = require("Response");
 const VDomControl_1 = require("VDomControl");
+// @ts-ignore
+const app_1 = require("app/config/app");
 exports.default = (function () {
     return __awaiter(this, void 0, void 0, function* () {
         window.addEventListener("load", function () {
@@ -115,10 +117,15 @@ exports.default = (function () {
                     }
                     Request_1.default.__file_uploads[name].push(buffers);
                 });
-                if (useExists(PATH_BACKGROUND + "/Background.js")) {
-                    const Background = use(PATH_BACKGROUND + "/Background.js");
-                    const bg = new Background();
-                    yield bg.handle();
+                // background class method load.
+                if (app_1.default.backgrounds) {
+                    for (let n = 0; n < app_1.default.backgrounds.length; n++) {
+                        let bgPath = PATH_BACKGROUND + "/" + Util_1.default.ucFirst(app_1.default.backgrounds[n]);
+                        if (useExists(bgPath)) {
+                            const bg = use(bgPath);
+                            yield bg.handleBegin();
+                        }
+                    }
                 }
                 var routes = Routes_1.default.searchRoute();
                 Response_1.default.rendering(routes);
