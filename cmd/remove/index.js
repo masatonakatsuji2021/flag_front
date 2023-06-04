@@ -21,7 +21,7 @@ module.exports = async function(args){
     }
 
     if(!packageJson.flagFront){
-        cli.red("[ERROR]").outn("Option information of \"flatFront\" is not set in \"package.json\".");
+        cli.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
         return;
     }
 
@@ -36,7 +36,7 @@ module.exports = async function(args){
     }
 
     if(!option){
-        cli.red("[ERROR]").outn("Project information \"" + projectName + "\" is not set in \"flatFront\" of \"package.json\".");
+        cli.red("[ERROR]").outn("Project information \"" + projectName + "\" is not set in \"flagFront\" of \"package.json\".");
         return;
     }
 

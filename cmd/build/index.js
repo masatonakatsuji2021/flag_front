@@ -19,8 +19,13 @@ module.exports = async function(args, cliOption){
     }
      
     var rootPath = process.cwd();
+    if(args._any[1]){
+        rootPath += "/" + args._any[1];
+    }
     var packageJsonPath = rootPath + "/package.json";
 
+    console.log(rootPath);
+    
     try{
         var packageJson = require(packageJsonPath);
     }catch(error){
@@ -29,7 +34,7 @@ module.exports = async function(args, cliOption){
     }
 
     if(!packageJson.flagFront){
-        cli.red("[ERROR]").outn("Option information of \"flatFront\" is not set in \"package.json\".");
+        cli.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
         return;
     }
 
