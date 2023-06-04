@@ -7,7 +7,6 @@ export default new class App{
         "/page":"controller:page|action:index",
         "/form":"controller:form|action:index",
         "/vdom":"controller:vdom|action:index",
-        "/validate":"controller:validate|action:index",
     };
 
 };
