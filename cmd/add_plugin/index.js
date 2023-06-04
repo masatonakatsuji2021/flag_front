@@ -1,4 +1,4 @@
-const cli = require("@flag/cli");
+const cli = require("@flagfw/cli");
 
 module.exports = async function(args){
 

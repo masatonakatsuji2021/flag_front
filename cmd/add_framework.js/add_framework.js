@@ -1,6 +1,6 @@
 const fs = require("fs");
-const cli = require("@flag/cli");
-const build = require("@flag/build");
+const cli = require("@flagfw/cli");
+const build = require("@flagfw/build");
 const path = require("path");
 const { execSync } = require("child_process");
 

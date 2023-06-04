@@ -1,9 +1,8 @@
 const fs = require("fs");
-const cli = require("@flag/cli");
-const build = require("@flag/build");
+const cli = require("@flagfw/cli");
+const build = require("@flagfw/build");
 const path = require("path");
 const deepCopy = require("../deepCopy.js");
-const { execSync } = require("child_process");
 
 __dirname = path.dirname(path.dirname(__dirname));
 
@@ -18,15 +17,8 @@ module.exports = async function(args, cliOption){
     if(!cliOption){
         cliOption = {};
     }
-
-    if(args._any[1]){
-        var projectName = args._any[1];
-        var rootPath = process.cwd() + "/" + projectName;
-    }
-    else{        
-        var rootPath = process.cwd();
-    }
-    
+     
+    var rootPath = process.cwd();
     var packageJsonPath = rootPath + "/package.json";
 
     try{
@@ -143,10 +135,10 @@ module.exports = async function(args, cliOption){
     option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
     option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
 
-    if(require.resolve("@flag/validate")){
-        option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/Validator.js").toString();
-        option.core.ValidateRule = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateRule.js").toString();
-        option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateResponse.js").toString();
+    if(require.resolve("@flagfw/validate")){
+        option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/Validator.js").toString();
+        option.core.ValidateRule = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/ValidateRule.js").toString();
+        option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/ValidateResponse.js").toString();
     }
 
     // plugin loadset...
@@ -154,8 +146,8 @@ module.exports = async function(args, cliOption){
         for(var n = 0 ; n < option.plugin.length ; n++){
             var plugin = option.plugin[n];
 
-            if(plugin.indexOf("@flag/plugin-") > -1){
-                var pluginName = plugin.substring("@flag/plugin-".length);
+            if(plugin.indexOf("@flagfw/plugin-") > -1){
+                var pluginName = plugin.substring("@flagfw/plugin-".length);
             }
             else{
                 var pluginName = plugin;

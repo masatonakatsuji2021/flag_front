@@ -1,4 +1,4 @@
-const cli = require("@flag/cli");
+const cli = require("@flagfw/cli");
 
 module.exports = async function(){
 
@@ -26,9 +26,7 @@ module.exports = async function(){
 
     var frameworkList = {
         "cordova":"Android app creation using \"cordova\".",
-        "ionic":"Android app creation using \"ionic\".",
         "electron":"Windows/Mac desktop application creation using \"Electron\"",
-        "nwjs":"Create Windows/Mac desktop apps using \"NW.js\"",
     };
 
     var frameworks = await cli.outn("- If there is a framework to create, please select from the following.")

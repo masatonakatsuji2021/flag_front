@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const cli = require("@flag/cli");
+const cli = require("@flagfw/cli");
 const deepCopy = require("../deepCopy.js");
 const build = require("../build");
 const { execSync } = require("child_process");
@@ -43,7 +43,7 @@ module.exports = async function(create){
 
         var tsConfig = require(tempDir + "/_ts/tsconfig.json");
 
-        tsConfig.compilerOptions.paths["*"] = [ path.dirname(require.resolve("@flag/front")) + "/bin/*" ];
+        tsConfig.compilerOptions.paths["*"] = [ path.dirname(require.resolve("@flagfw/front")) + "/bin/*" ];
         fs.writeFileSync(rootPathSrc + "/tsconfig.json", JSON.stringify(tsConfig, null, "   "));
         cli.green("#").outn("SourceCopy ".padEnd(padEnd) + "./" + create.name + "/tsconfig.json");
 
@@ -90,18 +90,6 @@ module.exports = async function(create){
 
             cli.outn("OK");
         }
-        else if(create.frameworks.indexOf("ionic") > -1){
-
-            // case ionic...
-            var rootPathionic = rootPathFw + "/ionic";
-            fs.mkdirSync(rootPathionic, {
-                recursive: true,
-            });
-            cli.greeen("#").outn("Mkdir ".padEnd(padEnd) + rootPathionic);
-
-
-
-        }
         else if(create.frameworks.indexOf("electron") > -1){
 
             // case electron...
@@ -110,16 +98,6 @@ module.exports = async function(create){
                 recursive: true,
             });
             cli.greeen("#").outn("Mkdir ".padEnd(padEnd) + rootPathElectron);
-
-        }
-        else if(create.frameworks.indexOf("nwjs") > -1){
-
-            // case nw.js...
-            var rootPathNwJs = rootPathFw + "/nwjs";
-            fs.mkdirSync(rootPathNwJs, {
-                recursive: true,
-            });
-            cli.greeen("#").outn("Mkdir ".padEnd(padEnd) + rootPathNwJs);
 
         }
     }

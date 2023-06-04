@@ -1,6 +1,6 @@
 const fs = require("fs");
-const cli = require("@flag/cli");
-const build = require("@flag/build");
+const cli = require("@flagfw/cli");
+const build = require("@flagfw/build");
 const path = require("path");
 const Startor = require("./bin/Startor.js");
 
@@ -135,10 +135,10 @@ module.exports = function(option){
     option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
     option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
 
-    if(require.resolve("@flag/validate")){
-        option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/Validator.ts").toString();
-        option.core.ValidateRule = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateRule.ts").toString();
-        option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flag/validate")) + "/bin/ValidateResponse.ts").toString();
+    if(require.resolve("@flagfw/validate")){
+        option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/Validator.ts").toString();
+        option.core.ValidateRule = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/ValidateRule.ts").toString();
+        option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/ValidateResponse.ts").toString();
     }
   */   
     option.contents = "rendering";

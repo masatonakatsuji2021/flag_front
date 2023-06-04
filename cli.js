@@ -1,5 +1,5 @@
 const fs = require("fs");
-const cli = require("@flag/cli");
+const cli = require("@flagfw/cli");
 
 (async function(){
 
