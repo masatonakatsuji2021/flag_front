@@ -1,89 +1,131 @@
 export default new class Ajax{
 
-    request(url, option){
+    baseUrl : string = "";
+    url : string = "";
+    method : string = "get";
+    data : object = {};
+    headers : object = {};
+    timeout : number = 30000;
+    contentType : string = "application/x-www-form-urlencoded;charset=UTF-8";
+    dataType : string = null;
+    handle(body, error, req) : void{}
+    handleBefore(req) : void{}
+    handleSuccess(body, req) : void{}
+    handleError(error, req) : void{}
+    handleProgress(event) : void{}
 
-        if(!option){
-            option = {};
-        }
-
-        if(!option.method){
-            option.method = "GET";
-        }      
-
-        if(!option.contentType){
-            option.contentType = "application/x-www-form-urlencoded;charset=UTF-8";
-        }
-
-        if(!option.data){
-            option.data = {};
-        }
+    private handleLongPolingSuccess;
+    private _poling_mode : number = 0;
+    private _spi;
+    private _req;
+    
+    que(){
 
         var req = new XMLHttpRequest();
-        req.open(option.method, url, true);
+        req.open(this.method, this.baseUrl + this.url, true);
 
-        if(option.timeout){
-            req.timeout = option.timeout;
+        if(this.timeout){
+            req.timeout = this.timeout;
         }
 
-        if(option.method.toUpperCase() != "GET"){    
-            req.setRequestHeader('content-type', option.contentType);    
+        if(this.method.toUpperCase() != "GET"){    
+            req.setRequestHeader('content-type', this.contentType);    
         }
 
-        if(option.headers){
-            var columns = Object.keys(option.headers);
+        if(this.headers){
+            const columns = Object.keys(this.headers);
             for(var n = 0 ; n < columns.length ; n++){
-                var key = columns[n];
-                var val = option.headers[key];
+                const key = columns[n];
+                const val = this.headers[key];
                 req.setRequestHeader(key, val);
             }
         }
 
-        if(option.method.toUpperCase() == "GET"){    
-            req.send(this.#setRequestData(option.data));
+        if(this.method.toUpperCase() == "GET"){    
+            req.send(this._setRequestData(this.data));
         }
         else{
             if(
-                option.contentType == "text/json" ||
-                option.contentType == "application/json"    
+                this.contentType == "text/json" ||
+                this.contentType == "application/json"    
             ){
-                req.send(JSON.stringify(option.data));
+                req.send(JSON.stringify(this.data));
             }
             else{
-                req.send(this.#setRequestData(option.data));
+                req.send(this._setRequestData(this.data));
             }
         }
 
-        var AjaxResponse = function(option, req){
+        this.handleBefore(req);
 
-            this.then = function(callback){
-
-                req.onload = function(e){
-
-                    var body = req.responseText;
-                    if(option.dataType == "json"){
-                        body = JSON.parse(req.responseText);
-                    }
-        
-                    callback(body, req);
-                };
-                
-                return this;
-            };
-
-            this.catch = function(callback){
-                
-                req.onerror = function(error){
-                    callback(error, req);
-                };
-
-                return this;
-            };
+        req.onload = (e)=>{
+            var body = req.responseText;
+            if(this.dataType == "json"){
+                body = JSON.parse(req.responseText);
+            }
+            this.handleSuccess(body, req);
+            this.handle(body, null, req);
+            if(this.handleLongPolingSuccess){
+                this.handleLongPolingSuccess();
+            }
         };
 
-        return new AjaxResponse(option, req);
+        req.onerror = (error)=>{
+            this.handleError(error, req);
+            this.handle(null, error, req);
+        };
+
+        req.onprogress = (event)=>{
+            this.handleProgress(event);
+        };
+
+        this._req = req;
+
+        return this;
     }
 
-    #setRequestData(data){
+    then(callback){
+        this.handleSuccess = callback;
+        return this;             
+    }
+
+    catch(callback){
+        this.handleError = callback;
+        return this;
+    }
+
+    progress(callback){
+        this.handleProgress = callback;
+        return this;
+    }
+
+    poling(interval : number){
+        this._poling_mode = 1;
+        this.que();
+        this._spi = setInterval(()=>{
+            this.que();
+        }, interval);
+        return this;
+    }
+
+    longPoling(){
+        this._poling_mode = 2;
+        this.handleLongPolingSuccess = ()=>{
+            this.que();
+        };
+        this.que();
+        return this;
+    }
+
+    abort(){
+        this._req.abort();
+        if(this._spi){
+            clearInterval(this._spi);
+        }
+        return this;
+    }
+
+    private _setRequestData(data){
 
         var str = "";
         var strList = [];

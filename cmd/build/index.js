@@ -12,47 +12,19 @@ const getLib = function(libName){
     return fs.readFileSync(__dirname + "/dist/" + libName + ".js").toString();
 };
 
-module.exports = async function(args, cliOption){
+const builds = (framework, option, rootPath) => {
 
-    if(!cliOption){
-        cliOption = {};
-    }
-     
-    var rootPath = process.cwd();
-    if(args._any[1]){
-        rootPath += "/" + args._any[1];
-    }
-    var packageJsonPath = rootPath + "/package.json";
-
-    console.log(rootPath);
-    
-    try{
-        var packageJson = require(packageJsonPath);
-    }catch(error){
-        cli.red("[ERROR]").outn("Package.json not found. ")
-        return;
-    }
-
-    if(!packageJson.flagFront){
-        cli.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
-        return;
-    }
-
-    var option = packageJson.flagFront;
-
-    if(!option){
-        cli.red("[ERROR]").outn("Project information is not set in \"flagFront\" of \"package.json\".");
-        return;
-    }
+    cli.green("#").outn("build framework = " + framework);
 
     option.rootPath = rootPath + "/src";
-
     option.appPath = option.rootPath + "/app";
-
-
     option.renderingPath = option.rootPath + "/rendering";
     option.commonPath = option.rootPath + "/common";
-    option.buildPath = rootPath + "/frameworks/web";
+
+    option.buildPath = rootPath + "/frameworks/" + framework;
+    if(framework != "web"){
+        option.buildPath += "/www";
+    }
 
     if(option.typeScript){
         try{
@@ -71,6 +43,8 @@ module.exports = async function(args, cliOption){
     if(!option.const){
         option.const = {};
     }
+
+    option.const.framework = framework;
 
     if(option.const.PATH_APP == undefined){
         option.const.PATH_APP = "app";
@@ -134,7 +108,6 @@ module.exports = async function(args, cliOption){
     option.core.Dialog = getLib("Dialog");
     option.core.Crypto = getLib("Crypto");
     option.core.Socket = getLib("Socket");
-    option.core.Poling = getLib("Poling");
     option.core.KeyEvent = getLib("KeyEvent");
 
     option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
@@ -187,38 +160,57 @@ module.exports = async function(args, cliOption){
         noExit: true,
     });
 
-    if(option.frameworks){
+};
+
+module.exports = async function(args, cliOption){
+
+    if(!cliOption){
+        cliOption = {};
+    }
+     
+    var rootPath = process.cwd();
+    if(args._any[1]){
+        rootPath += "/" + args._any[1];
+    }
+    var packageJsonPath = rootPath + "/package.json";
+    
+    try{
+        var packageJson = require(packageJsonPath);
+    }catch(error){
+        cli.red("[ERROR]").outn("Package.json not found. ")
+        return;
+    }
+
+    if(!packageJson.flagFront){
+        cli.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
+        return;
+    }
+
+    var option = packageJson.flagFront;
+
+    if(!option){
+        cli.red("[ERROR]").outn("Project information is not set in \"flagFront\" of \"package.json\".");
+        return;
+    }
+
+    if(!option.frameworks){
+        option.frameworks = [];
+    }
+
+    if(option.frameworks.indexOf("web") === -1){
+        option.frameworks.push("web");
+    }
         
-        if(option.frameworks.indexOf("cordova") > -1){
-            // refresh cordova 
-            var cordovaBuildPath = rootPath + "/frameworks/cordova/www";
+    for(let n = 0 ; n < option.frameworks.length ; n++){
+        const framework = option.frameworks[n];
 
-            fs.rmdirSync(cordovaBuildPath, {
-                recursive: true,
-            });
+        var buildPath = rootPath + "/frameworks/" + framework + "/www";
 
-            fs.mkdirSync(cordovaBuildPath, {
-                recursive: true,
-            });
+        fs.rmdirSync(buildPath, {
+            recursive: true,
+        });
 
-            deepCopy(option.buildPath, cordovaBuildPath);
-            cli.green("#").outn("cordova rootdir refresh");
-        }
-        if(option.frameworks.indexOf("electron") > -1){
-            // refresh electron 
-            var electronBuildpath = rootPath + "/frameworks/electron/www";
-
-            fs.rmdirSync(electronBuildpath, {
-                recursive: true,
-            });
-
-            fs.mkdirSync(electronBuildpath, {
-                recursive: true,
-            });
-
-            deepCopy(option.buildPath, electronBuildpath);
-            cli.green("#").outn("electron rootdir refresh");
-        }
+        builds(framework, option, rootPath);
     }
 
     if(!cliOption.noExit){

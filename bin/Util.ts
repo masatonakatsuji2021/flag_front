@@ -13,6 +13,15 @@ interface HeadTags{
 export default new class Util{
 
     /**
+     * getFramework : 
+     * @returns {string} framework
+     */
+    getFramework() : string{
+        // @ts-ignore
+        return FRAMEWORK;
+    }
+
+    /**
      * base64Encode : 
      * Encode the text to base64 format
      * @param {string} content text content
