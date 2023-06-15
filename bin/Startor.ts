@@ -48,25 +48,7 @@ export default (async function(){
             var formBuffer = Util.searchForm(targetRef);
 
             if(formBuffer){
-
-                let tf;
-                
-                if(formBuffer.class == "Form"){
-                    tf = new Form(targetRef);
-                }
-                else{
-                    var className = Util.ucFirst(formBuffer.class) + "Form";
-                    var classPath = "app/Form/" + className;
-                    if(useExists(classPath)){
-                        let t = use(classPath);
-                        tf = new t();
-                    }
-                    else{
-                        tf = new Form(targetRef);
-                    }
-                }
-
-                tf.submit();
+                formBuffer.submit();
             }
 
         });
@@ -79,22 +61,7 @@ export default (async function(){
             var formBuffer = Util.searchForm(targetId);
 
             if(formBuffer){
-
-                if(formBuffer.class == "Form"){
-                    var tf = new Form(targetId);
-                }
-                else{
-                    var className = Util.ucFirst(formBuffer.class) + "Form";
-                    var classPath = "app/Form/" + className + ".js";
-                    if(useExists(classPath)){
-                        let t = use(classPath);
-                        let tf = new t();
-                    }
-                    else{
-                        let tf = new Form(targetId);
-                    }
-                }
-                tf.reset();
+                formBuffer.reset();
             }
 
         });

@@ -6,6 +6,8 @@ import Request from "Request";
 
 export default class Form{
     
+    private _active : boolean = false;
+
     formName : string = null;
 
     /**
@@ -25,16 +27,12 @@ export default class Form{
 
     constructor(formName?: string){
 
-        if(this.constructor.name == "Form"){
+        if(formName){
+            this._active = true;
             this.formName = formName;
-            var className = "Form";
 
             if(!Data.__form[this.formName]){
-                Data.__form[this.formName] = {
-                    class: className,
-                    eventSubmit: null,
-                    eventReset: null,
-                };
+                Data.__form[this.formName] = this;
             }
         }
     }
@@ -82,15 +80,11 @@ export default class Form{
         // @ts-ignore
         this.handleSetting(argv);
 
-        var className : string = Util.getClassName(this.constructor.name,"Form");
-
         if(!this.formName){
-            this.formName = Util.lcFirst(className);
+            this.formName = this.constructor.name;
         }
 
-        Data.__form[this.formName] = {
-            class: className,
-        };
+        Data.__form[this.formName] = this;
     }
 
     #_getData(){
@@ -1058,7 +1052,7 @@ export default class Form{
 
     existSubmitEvent() : boolean{
 
-        if(this.constructor.name == "Form"){
+        if(this._active){
             if(this.#_getData().eventSubmit){
                 return true;
             }    
@@ -1075,7 +1069,7 @@ export default class Form{
 
     existResetEvent() : boolean{
 
-        if(this.constructor.name == "Form"){
+        if(this._active){
             if(this.#_getData().eventReset){
                 return true;
             }
@@ -1090,7 +1084,7 @@ export default class Form{
     }
 
     getSubmitEvent() : Function{
-        if(this.constructor.name == "Form"){
+        if(this._active){
             return this.#_getData().eventSubmit;
         }
         else{
@@ -1099,7 +1093,7 @@ export default class Form{
     }
 
     getResetEvent() : Function{
-        if(this.constructor.name == "Form"){
+        if(this._active){
             return this.#_getData().eventReset;
         }
         else{

@@ -4,6 +4,14 @@ const Data_1 = require("Data");
 const FgDateTime_1 = require("FgDateTime");
 exports.default = new class Util {
     /**
+     * getFramework :
+     * @returns {string} framework
+     */
+    getFramework() {
+        // @ts-ignore
+        return FRAMEWORK;
+    }
+    /**
      * base64Encode :
      * Encode the text to base64 format
      * @param {string} content text content

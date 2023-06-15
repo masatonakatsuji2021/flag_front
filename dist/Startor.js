@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const Data_1 = require("Data");
-const Form_1 = require("Form");
 const Routes_1 = require("Routes");
 const Request_1 = require("Request");
 const Response_1 = require("Response");
@@ -46,22 +45,7 @@ exports.default = (function () {
                     var targetRef = vd.ref;
                     var formBuffer = Util_1.default.searchForm(targetRef);
                     if (formBuffer) {
-                        let tf;
-                        if (formBuffer.class == "Form") {
-                            tf = new Form_1.default(targetRef);
-                        }
-                        else {
-                            var className = Util_1.default.ucFirst(formBuffer.class) + "Form";
-                            var classPath = "app/Form/" + className;
-                            if (useExists(classPath)) {
-                                let t = use(classPath);
-                                tf = new t();
-                            }
-                            else {
-                                tf = new Form_1.default(targetRef);
-                            }
-                        }
-                        tf.submit();
+                        formBuffer.submit();
                     }
                 });
                 window.addEventListener("reset", function (e) {
@@ -69,21 +53,7 @@ exports.default = (function () {
                     var targetId = e.target.id;
                     var formBuffer = Util_1.default.searchForm(targetId);
                     if (formBuffer) {
-                        if (formBuffer.class == "Form") {
-                            var tf = new Form_1.default(targetId);
-                        }
-                        else {
-                            var className = Util_1.default.ucFirst(formBuffer.class) + "Form";
-                            var classPath = "app/Form/" + className + ".js";
-                            if (useExists(classPath)) {
-                                let t = use(classPath);
-                                let tf = new t();
-                            }
-                            else {
-                                let tf = new Form_1.default(targetId);
-                            }
-                        }
-                        tf.reset();
+                        formBuffer.reset();
                     }
                 });
                 window.addEventListener('change', function (e) {

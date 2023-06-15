@@ -6,23 +6,19 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _Form_instances, _Form__getData, _Form__tagInput, _Form__setDefaultsAndValues, _Form__setClearValues, _Form__setOptionString;
 Object.defineProperty(exports, "__esModule", { value: true });
-const Util_1 = require("Util");
 const Data_1 = require("Data");
 const VDom_1 = require("VDom");
 const Request_1 = require("Request");
 class Form {
     constructor(formName) {
         _Form_instances.add(this);
+        this._active = false;
         this.formName = null;
-        if (this.constructor.name == "Form") {
+        if (formName) {
+            this._active = true;
             this.formName = formName;
-            var className = "Form";
             if (!Data_1.default.__form[this.formName]) {
-                Data_1.default.__form[this.formName] = {
-                    class: className,
-                    eventSubmit: null,
-                    eventReset: null,
-                };
+                Data_1.default.__form[this.formName] = this;
             }
         }
     }
@@ -50,13 +46,10 @@ class Form {
     setting(argv) {
         // @ts-ignore
         this.handleSetting(argv);
-        var className = Util_1.default.getClassName(this.constructor.name, "Form");
         if (!this.formName) {
-            this.formName = Util_1.default.lcFirst(className);
+            this.formName = this.constructor.name;
         }
-        Data_1.default.__form[this.formName] = {
-            class: className,
-        };
+        Data_1.default.__form[this.formName] = this;
     }
     /**
      * tagNone
@@ -471,7 +464,7 @@ class Form {
         }
     }
     existSubmitEvent() {
-        if (this.constructor.name == "Form") {
+        if (this._active) {
             if (__classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventSubmit) {
                 return true;
             }
@@ -484,7 +477,7 @@ class Form {
         return false;
     }
     existResetEvent() {
-        if (this.constructor.name == "Form") {
+        if (this._active) {
             if (__classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventReset) {
                 return true;
             }
@@ -497,7 +490,7 @@ class Form {
         return false;
     }
     getSubmitEvent() {
-        if (this.constructor.name == "Form") {
+        if (this._active) {
             return __classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventSubmit;
         }
         else {
@@ -505,7 +498,7 @@ class Form {
         }
     }
     getResetEvent() {
-        if (this.constructor.name == "Form") {
+        if (this._active) {
             return __classPrivateFieldGet(this, _Form_instances, "m", _Form__getData).call(this).eventReset;
         }
         else {
