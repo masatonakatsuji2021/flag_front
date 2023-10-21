@@ -452,6 +452,11 @@ export default class DomControl{
     virtual(name : string, value : any) : DomControl;
 
     virtual(name : string, value = null) : string | DomControl{
+
+        if(this._qs.length == 0){
+            return;
+        }
+
         if(value == undefined){
             var qs = this._qs[this._qs.length - 1];
 

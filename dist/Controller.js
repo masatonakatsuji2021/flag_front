@@ -22,20 +22,42 @@ const VDom_1 = require("VDom");
  */
 class Controller {
     constructor() {
-        /**
-         * view :
-         * Set the page view path to display
-         * If not specified, automatically determined by "{Controller Name}/{action name}"
-         * If you use it, place the HTML file in the path "rendering/View/{Controller Name}/{action Name}.html".
-         */
-        this.view = null;
-        /**
-         * template :
-         * Specifies the template name to use on the displayed page.
-         * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.
-         */
-        this.template = null;
+        this._view = null;
+        this._template = null;
     }
+    /**
+     * view
+     *
+     * Set the page view path to display.
+     * If not specified, automatically determined by "{Controller Name}/{action name}"
+     * If you use it, place the HTML file in the path "rendering/View/{Controller Name}/{action Name}.html".
+     */
+    get view() {
+        return this._view;
+    }
+    set view(value) {
+        this._view = value;
+        this.__rendering();
+    }
+    /**
+     * template
+     *
+     * Specifies the template name to use on the displayed page.
+     * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.
+     */
+    get template() {
+        return this._template;
+    }
+    set template(value) {
+        this._template = value;
+        this.__rendering();
+    }
+    /**
+     * handleBegin :
+     * Event handler that is executed when the controller is called for the first time during page transition.
+     * This event hand is not executed when the page transitions between the same Controllers..
+     */
+    handleBegin() { }
     /**
      * handleBefore :
      * Event handler executed just before transitioning to the page.

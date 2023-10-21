@@ -99,6 +99,9 @@ const builds = (framework, option, rootPath) => {
     option.core.Routes = getLib("Routes");
     option.core.Controller = getLib("Controller");
     option.core.Exception = getLib("Exception");
+    option.core.View = getLib("View");
+    option.core.ViewPart = getLib("ViewPart");
+    option.core.Template = getLib("Template");
     option.core.Background = getLib("Background");
     option.core.Form = getLib("Form");
     option.core.Request = getLib("Request");

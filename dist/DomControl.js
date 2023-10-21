@@ -337,6 +337,9 @@ class DomControl {
         return this.removeAttribute(name);
     }
     virtual(name, value = null) {
+        if (this._qs.length == 0) {
+            return;
+        }
         if (value == undefined) {
             var qs = this._qs[this._qs.length - 1];
             if (!DomStatic_1.default.__uids[qs.uid]) {

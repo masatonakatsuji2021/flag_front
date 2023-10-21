@@ -17,11 +17,13 @@ var _Response_instances, _Response__defautShowException, _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const Dom_1 = require("Dom");
+const VDom_1 = require("VDom");
 const Data_1 = require("Data");
 exports.default = new (_a = class Response {
         constructor() {
             _Response_instances.add(this);
             this.__before_controller = null;
+            this.__before_controller_path = null;
             this.__before_action = null;
             this.__page_status = true;
         }
@@ -57,24 +59,15 @@ exports.default = new (_a = class Response {
         setPageStatus() {
             return this.__page_status;
         }
-        /**
-         * redirect
-         *
-         * redirect to another page
-         *
-         * @param {string} url Destination page URL
-         * @param {boolean} sliented When set to true, page transition processing is not performed only by changing the page URL
-         * @returns {void}
-         */
-        redirect(url, sliented = false) {
+        redirect(url, sliented) {
             if (!url) {
                 url = "/";
             }
             if (sliented) {
-                location.replace("#" + url);
+                location.href = "#" + url;
             }
             else {
-                location.href = "#" + url;
+                location.replace("#" + url);
             }
         }
         rendering(routes) {
@@ -95,6 +88,12 @@ exports.default = new (_a = class Response {
                         }
                         const Controller = use(contPath);
                         var cont = new Controller();
+                        if (this.__before_controller_path != contPath) {
+                            this.__before_controller_path = contPath;
+                            if (cont.handleBegin) {
+                                yield cont.handleBegin();
+                            }
+                        }
                         if (!(cont[routes.action] ||
                             cont["before_" + routes.action])) {
                             throw ("\"" + routes.action + "\" method on \"" + controllerName + "\" class is not found.");
@@ -171,9 +170,7 @@ exports.default = new (_a = class Response {
         view(viewName) {
             var viewPath = "View/" + viewName + ".html";
             if (!useExists(viewPath)) {
-                var message = "[Rendering ERROR] View data does not exist. Check if source file \"" + viewPath + "\" exists.";
-                console.error(message);
-                return "<pre>" + message + "</pre>";
+                return "<div style=\"font-weight:bold;\">[Rendering ERROR] View data does not exist. Check if source file \"" + viewPath + "\" exists.</div>";
             }
             var content = use(viewPath);
             content = Util_1.default.base64Decode(content);
@@ -190,9 +187,7 @@ exports.default = new (_a = class Response {
         template(templateName) {
             var templatePath = "Template/" + templateName + ".html";
             if (!useExists(templatePath)) {
-                var message = "[Rendering ERROR] Template data does not exist. Check if source file \"" + templatePath + "\" exists.";
-                console.error(message);
-                return "<pre>" + message + "</pre>";
+                return "<div style=\"font-weight:bold;\">[Rendering ERROR] Template data does not exist. Check if source file \"" + templatePath + "\" exists.</div>";
             }
             var content = use(templatePath);
             content = Util_1.default.base64Decode(content);
@@ -209,31 +204,83 @@ exports.default = new (_a = class Response {
         viewPart(viewPartName) {
             var viewPartPath = "ViewPart/" + viewPartName + ".html";
             if (!useExists(viewPartPath)) {
-                console.error("ViewPart data does not exist. Check if source file \"" + viewPartPath + "\" exists.");
-                return;
+                return "<div style=\"font-weight:bold;\">ViewPart data does not exist. Check if source file \"" + viewPartPath + "\" exists.</div>";
             }
             var content = use(viewPartPath);
             content = Util_1.default.base64Decode(content);
             return content;
         }
-        bindView(selector, viewName) {
-            var content = this.view(viewName);
-            (0, Dom_1.default)(selector).html(content);
+        __bind(type, arg1, arg2, vdomFlg) {
+            let target = null;
+            let name = "";
+            if (arg2) {
+                name = arg2;
+                if (vdomFlg) {
+                    target = (0, VDom_1.default)(arg1);
+                }
+                else {
+                    target = (0, Dom_1.default)(arg1);
+                }
+            }
+            else {
+                name = arg1;
+                target = (0, VDom_1.default)(arg1);
+            }
+            if (target.virtual("__before_render__") == type + "-" + name) {
+                return {
+                    already: true,
+                    name: name,
+                };
+            }
+            target.virtual("__before_render__", type + "-" + name);
+            let methodName = type;
+            if (type == "viewpart") {
+                methodName = "viewPart";
+            }
+            var content = this[methodName](name);
+            target.html(content);
+            return {
+                already: false,
+                name: name,
+            };
         }
-        bindTemplate(selector, templateName) {
-            var content = this.template(templateName);
-            (0, Dom_1.default)(selector).html(content);
+        _loadRenderingClass(type, option) {
+            const classPath = "app/" + type + "/" + option.name;
+            if (!useExists(classPath)) {
+                return;
+            }
+            const _class = use(classPath);
+            const classObj = new _class();
+            if (!classObj) {
+                return;
+            }
+            if (!option.already) {
+                if (classObj.handle) {
+                    classObj.handle();
+                }
+            }
+            if (classObj.handleAlways) {
+                classObj.handleAlways();
+            }
         }
-        bindViewPart(selector, viewPartName) {
-            var content = this.viewPart(viewPartName);
-            (0, Dom_1.default)(selector).html(content);
+        bindView(arg1, arg2, vdomFlg) {
+            const res = this.__bind("view", arg1, arg2, vdomFlg);
+            this._loadRenderingClass("View", res);
+        }
+        bindTemplate(arg1, arg2, vdomFlg) {
+            const res = this.__bind("template", arg1, arg2, vdomFlg);
+            this._loadRenderingClass("Template", res);
+        }
+        bindViewPart(arg1, arg2, vdomFlg) {
+            const res = this.__bind("viewpart", arg1, arg2, vdomFlg);
+            this._loadRenderingClass("ViewPart", res);
         }
     },
     _Response_instances = new WeakSet(),
     _Response__defautShowException = function _Response__defautShowException() {
         var content = use("ExceptionHtml");
         content = Util_1.default.base64Decode(content);
-        (0, Dom_1.default)("body").html(content);
+        (0, Dom_1.default)("body").removeVirtual("__before_render__").html(content);
         this.__before_controller = null;
         Data_1.default.before_template = null;
     },

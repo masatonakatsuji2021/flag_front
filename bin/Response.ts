@@ -1,12 +1,14 @@
 import Util from "Util";
 import Dom from "Dom";
+import VDom from "VDom";
 import Data from "Data";
+import Controller from "Controller";
 
 export default new class Response{
 
-    __before_controller : string = null;
+    __before_controller : Controller = null;
+    __before_controller_path : string = null;
     __before_action : string = null;
-    
     __page_status : boolean = true;
 
     /**
@@ -47,23 +49,33 @@ export default new class Response{
     /**
      * redirect
      * 
-     * redirect to another page
+     * redirect to another page.  
+     * @param {string} url Destination page URL
+     * @returns {void}
+     */
+    redirect(url : string) : void;
+
+    /**
+     * redirect
      * 
+     * redirect to another page.  
      * @param {string} url Destination page URL
      * @param {boolean} sliented When set to true, page transition processing is not performed only by changing the page URL
      * @returns {void}
      */
-    redirect(url : string, sliented : boolean = false) : void{
+    redirect(url : string, sliented : boolean) : void;
+
+    redirect(url : string, sliented? : boolean) : void{
 
         if(!url){
             url = "/";
         }
         
         if(sliented){
-            location.replace("#" + url);
+            location.href = "#" + url;
         }
         else{
-            location.href = "#" + url;
+            location.replace("#" + url);
         }
     }
 
@@ -92,6 +104,13 @@ export default new class Response{
 
                 const Controller = use(contPath);
                 var cont = new Controller();
+
+                if(this.__before_controller_path != contPath){
+                    this.__before_controller_path = contPath;
+                    if(cont.handleBegin){
+                        await cont.handleBegin();
+                    }
+                }
         
                 if(!(
                     cont[routes.action] ||
@@ -197,9 +216,7 @@ export default new class Response{
 
         var viewPath = "View/" + viewName + ".html";
         if(!useExists(viewPath)){
-            var message = "[Rendering ERROR] View data does not exist. Check if source file \"" + viewPath + "\" exists.";
-            console.error(message);
-            return "<pre>" + message + "</pre>"; 
+            return "<div style=\"font-weight:bold;\">[Rendering ERROR] View data does not exist. Check if source file \"" + viewPath + "\" exists.</div>"; 
         }
         
         var content = use(viewPath);
@@ -221,9 +238,7 @@ export default new class Response{
         var templatePath = "Template/" + templateName + ".html";
 
         if(!useExists(templatePath)){
-            var message = "[Rendering ERROR] Template data does not exist. Check if source file \"" + templatePath + "\" exists.";
-            console.error(message);
-            return "<pre>" + message + "</pre>"; 
+            return "<div style=\"font-weight:bold;\">[Rendering ERROR] Template data does not exist. Check if source file \"" + templatePath + "\" exists.</div>"; 
         }
 
         var content = use(templatePath);
@@ -244,8 +259,7 @@ export default new class Response{
 
         var viewPartPath = "ViewPart/" + viewPartName + ".html";
         if(!useExists(viewPartPath)){
-            console.error("ViewPart data does not exist. Check if source file \"" + viewPartPath + "\" exists.");
-            return;
+            return "<div style=\"font-weight:bold;\">ViewPart data does not exist. Check if source file \"" + viewPartPath + "\" exists.</div>";
         }
         
         var content = use(viewPartPath);
@@ -254,25 +268,174 @@ export default new class Response{
         return content;
     }
 
-    bindView(selector : string, viewName : string) : void{
-        var content = this.view(viewName);
-        Dom(selector).html(content);
+    private __bind(type : string, arg1: string, arg2? : string, vdomFlg? : boolean) : object{
+        let target = null;
+        let name : string = "";
+        if(arg2){
+            name = arg2;
+            if(vdomFlg){
+                target = VDom(arg1);
+            }
+            else{
+                target = Dom(arg1);
+            }
+        }
+        else{
+            name = arg1;
+            target = VDom(arg1);
+        }
+        
+        if(target.virtual("__before_render__") == type + "-" + name){
+            return {
+                already: true,
+                name : name,
+            };
+        }
+
+        target.virtual("__before_render__", type + "-" + name);
+
+        let methodName : string = type;        
+        if(type == "viewpart"){
+            methodName = "viewPart";
+        }
+
+        var content = this[methodName](name);
+        target.html(content);
+
+        return {
+            already: false,
+            name : name,
+        };
     }
 
-    bindTemplate(selector : string, templateName : string) : void{
-        var content = this.template(templateName);
-        Dom(selector).html(content);
+    private _loadRenderingClass(type : string, option : any) : void{
+        const classPath = "app/" + type + "/" + option.name;
+
+        if(!useExists(classPath)){
+            return;
+        }
+
+        const _class = use(classPath);
+        const classObj = new _class();
+
+        if(!classObj){
+            return;
+        }
+
+        if(!option.already){
+            if(classObj.handle){
+                classObj.handle();
+            }
+        }
+
+        if(classObj.handleAlways){
+            classObj.handleAlways();
+        }
     }
 
-    bindViewPart(selector : string, viewPartName : string) : void{
-        var content = this.viewPart(viewPartName);
-        Dom(selector).html(content);
+    /**
+     * 
+     * bindView :
+     * 
+     * Binds the View content to the specified selector's element tag.  
+     * This method will execute the event handler at the same time if the View class is set.  
+     * (Requires handle method.)
+     * @param {string} viewName View content name and binding destination element tag VDom selector name (ref attribute).
+     * @returns {void}
+     */
+    bindView(viewName : string) : void;
+
+    /**
+     * 
+     * bindView :
+     * 
+     * Binds the View content to the specified selector's element tag.  
+     * This method will execute the event handler at the same time if the View class is set.  
+     * (Requires handle method.)
+     * @param {string} selector Element tag selector to bind to
+     * @param {string} viewName View content name
+     * @returns {void}
+     */
+    bindView(selector : string, viewName : string) : void;
+
+    /**
+     * 
+     * bindView :
+     * 
+     * Binds the View content to the specified selector's element tag.  
+     * This method will execute the event handler at the same time if the View class is set.  
+     * (Requires handle method.)
+     * @param {string} selector Element tag selector to bind to
+     * @param {string} viewName View content name
+     * @param {boolean} vdomFlg If specified as true, it will be bound by virtual Dom control.
+     * @returns {void}
+     */
+    bindView(selector : string, viewName : string, vdomFlg : boolean) : void;
+
+    bindView(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
+        const res = this.__bind("view", arg1, arg2, vdomFlg);
+        this._loadRenderingClass("View", res);
+    }
+
+    bindTemplate(templateName : string) : void;
+
+    bindTemplate(selector : string, templateName : string) : void;
+
+    bindTemplate(selector : string, templateName : string, vdomFlg : boolean) : void;
+
+    bindTemplate(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
+        const res = this.__bind("template", arg1, arg2, vdomFlg);
+        this._loadRenderingClass("Template", res);
+    }
+
+    /**
+     * 
+     * bindViewPart :
+     * 
+     * Binds the ViewPart content to the specified selector's element tag.  
+     * This method will execute the event handler at the same time if the ViewPart class is set.  
+     * (Requires handle method.)
+     * @param {string} viewPartName ViewPart content name and binding destination element tag VDom selector name (ref attribute).
+     * @returns {void}
+     */
+    bindViewPart(viewPartName : string) : void;
+
+    /**
+     * 
+     * bindViewPart :
+     * 
+     * Binds the ViewPart content to the specified selector's element tag.  
+     * This method will execute the event handler at the same time if the ViewPart class is set.  
+     * (Requires handle method.)
+     * @param {string} selector Element tag selector to bind to
+     * @param {string} viewPartName ViewPart content name
+     * @returns {void}
+     */
+    bindViewPart(selector : string, viewPartName : string) : void;
+
+    /**
+     * 
+     * bindViewPart :
+     * 
+     * Binds the ViewPart content to the specified selector's element tag.  
+     * This method will execute the event handler at the same time if the ViewPart class is set.  
+     * (Requires handle method.)
+     * @param {string} selector Element tag selector to bind to
+     * @param {string} viewPartName ViewPart content name
+     * @param {boolean} vdomFlg If specified as true, it will be bound by virtual Dom control.
+     * @returns {void}
+     */
+    bindViewPart(selector : string, viewPartName : string, vdomFlg : boolean) : void;
+
+    bindViewPart(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
+        const res = this.__bind("viewpart", arg1, arg2, vdomFlg);
+        this._loadRenderingClass("ViewPart", res);
     }
 
     #_defautShowException(){
         var content = use("ExceptionHtml");
         content = Util.base64Decode(content);
-        Dom("body").html(content);
+        Dom("body").removeVirtual("__before_render__").html(content);
         this.__before_controller = null;
         Data.before_template = null;
     }

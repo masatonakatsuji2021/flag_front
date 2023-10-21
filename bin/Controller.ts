@@ -15,6 +15,7 @@ import Data from "Data";
 import Routes from "Routes";
 import Response from "Response";
 import VDom from "VDom";
+import Dom from "Dom";
 
 /**
  * Controller : 
@@ -22,20 +23,47 @@ import VDom from "VDom";
  */
 export default class Controller{
 
+    private _view : string = null;
+
     /**
-     * view : 
-     * Set the page view path to display
-     * If not specified, automatically determined by "{Controller Name}/{action name}"
+     * view 
+     * 
+     * Set the page view path to display.  
+     * If not specified, automatically determined by "{Controller Name}/{action name}"  
      * If you use it, place the HTML file in the path "rendering/View/{Controller Name}/{action Name}.html".
      */
-    view: string = null;
+    get view() : string{
+        return this._view;
+    }
+
+    set view(value : string){
+        this._view = value;
+        this.__rendering();
+    }
     
+    private _template : string = null;
+
     /**
-     * template : 
-     * Specifies the template name to use on the displayed page.
-     * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.
+     * template
+     * 
+     * Specifies the template name to use on the displayed page.  
+     * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.  
      */
-    template: string = null;
+    get template() : string{
+        return this._template;
+    }
+
+    set template(value : string){
+        this._template = value;
+        this.__rendering();
+    }
+
+    /**
+     * handleBegin :  
+     * Event handler that is executed when the controller is called for the first time during page transition.  
+     * This event hand is not executed when the page transitions between the same Controllers..
+     */
+    handleBegin() : void{}
 
     /**
      * handleBefore : 
@@ -73,12 +101,11 @@ export default class Controller{
 
         if(!this.view){
             var routes = Routes.getRoute();
-
             this.view = routes.controller + "/" + routes.action;
         }
 
         if(this.template){
-            
+
             if(Data.before_template != this.template){
 
                 Data.before_template = this.template;
