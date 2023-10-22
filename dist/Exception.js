@@ -6,8 +6,16 @@ class Exception extends Controller_1.default {
         super();
         this.view = "error/index";
     }
-    handle(exception = null) { }
-    before_handle() { }
+    /**
+     * handle :
+     * Event handler when an error occurs.
+     * @param {Exception} exception Error Exception
+     * @returns {void}
+     *
+    handle(exception : Exception) : void;
+    */
+    handle(exception) { }
+    handleBefore() { }
 }
 exports.default = Exception;
 ;

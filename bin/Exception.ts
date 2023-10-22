@@ -11,19 +11,12 @@ export default class Exception extends Controller{
     /**
      * handle : 
      * Event handler when an error occurs.
-     * @returns {void}
-     */
-    handle() : void;
-
-    /**
-     * handle : 
-     * Event handler when an error occurs.
      * @param {Exception} exception Error Exception
      * @returns {void}
-     */
+     *
     handle(exception : Exception) : void;
-    
-    handle(exception : Exception = null) : void{}
+    */
+    handle(exception : Exception): void{}
 
-    before_handle(){}
+    handleBefore(){}
 };
