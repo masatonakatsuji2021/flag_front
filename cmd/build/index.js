@@ -103,12 +103,12 @@ const builds = (framework, option, rootPath) => {
     option.core.ViewPart = getLib("ViewPart");
     option.core.Template = getLib("Template");
     option.core.Background = getLib("Background");
-    option.core.Form = getLib("Form");
+//    option.core.Form = getLib("Form");
     option.core.Request = getLib("Request");
     option.core.Response = getLib("Response");
     option.core.LocalStorage = getLib("LocalStorage");
     option.core.SessionStorage = getLib("SessionStorage");
-    option.core.Dialog = getLib("Dialog");
+//    option.core.Dialog = getLib("Dialog");
     option.core.Crypto = getLib("Crypto");
     option.core.Socket = getLib("Socket");
     option.core.KeyEvent = getLib("KeyEvent");
@@ -127,8 +127,8 @@ const builds = (framework, option, rootPath) => {
         for(var n = 0 ; n < option.plugin.length ; n++){
             var plugin = option.plugin[n];
 
-            if(plugin.indexOf("@flagfw/plugin-") > -1){
-                var pluginName = plugin.substring("@flagfw/plugin-".length);
+            if(plugin.indexOf("@flagfw/front-plugin-") > -1){
+                var pluginName = plugin.substring("@flagfw/front-plugin-".length);
             }
             else{
                 var pluginName = plugin;
@@ -143,7 +143,12 @@ const builds = (framework, option, rootPath) => {
                 }
 
                 if(path.extname(p_) == ".js"){
-                    option.core["plugin-" + pluginName + "/" + path.basename(p_).split(".js").join("")] = fs.readFileSync(p_).toString();
+                    if(path.basename(p_).split(".js").join("") == "index"){
+                        option.core["plugin-" + pluginName] = fs.readFileSync(p_).toString();
+                    }
+                    else{
+                        option.core["plugin-" + pluginName + "/" + path.basename(p_).split(".js").join("")] = fs.readFileSync(p_).toString();
+                    }
                 }
                 else if(path.extname(p_) == ".html"){
                     option.coreHtml["plugin-" + pluginName + "/" + path.basename(p_).split(".html").join("") + "HTML"] = fs.readFileSync(p_).toString();

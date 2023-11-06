@@ -1,10 +1,10 @@
 import Util from "Util";
 import Data from "Data";
-import Form from "Form";
+// import Form from "Form";
 import Routes from "Routes";
 import Request from "Request";
 import Response from "Response";
-import VDomControl from "VDomControl";
+// import VDomControl from "VDomControl";
 // @ts-ignore
 import Config from "app/config/app";
 
@@ -36,11 +36,11 @@ export default (async function(){
             Response.rendering(routes);
         });
 
+        /*
         window.addEventListener("submit", function(e){
 
             e.stopPropagation();
             e.preventDefault();
-
             let vd = new VDomControl([e.target]);
 
             var targetRef = vd.ref;
@@ -50,9 +50,8 @@ export default (async function(){
             if(formBuffer){
                 formBuffer.submit();
             }
-
         });
-
+/*
         window.addEventListener("reset", function(e){
 
             // @ts-ignore
@@ -65,7 +64,6 @@ export default (async function(){
             }
 
         });
-
         window.addEventListener('change', function(e){
 
             // @ts-ignore
@@ -108,6 +106,7 @@ export default (async function(){
 
             Request.__file_uploads[name].push(buffers);
         });
+        */
 
         // background class method load.
         if(Config.backgrounds){

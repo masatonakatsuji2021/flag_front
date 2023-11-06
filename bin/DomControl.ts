@@ -16,6 +16,42 @@ export default class DomControl{
         }
     }
 
+    static load() : DomControl;
+
+    static load(selector : String) : DomControl;
+
+    static load(htmlElement : HTMLElement) : DomControl;
+
+    static load(htmlElement : Array<HTMLElement>) : DomControl;
+
+    static load(selector? : String | HTMLElement | Array<HTMLElement>) : DomControl{
+
+        let fullSelector = "";
+        if(selector){
+            if(typeof selector == "string"){
+                fullSelector = "html " + selector;
+            }
+            else{
+                let selectList = [];
+                if(!Array.isArray(selector)){
+                    selectList = [selector];
+                }
+                else{
+                    selectList = selector;
+                }
+
+                return new DomControl(selectList);
+            }    
+        }
+        else{
+            fullSelector = "html *";
+        }
+    
+        var qs = document.querySelectorAll(fullSelector);
+    
+        return new DomControl(qs);
+    }
+
     /**
      * get get
      * Get the document information of the get DOM.
