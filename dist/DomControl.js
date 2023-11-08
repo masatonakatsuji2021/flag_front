@@ -45,14 +45,14 @@ class DomControl {
         return new DomControl(qs);
     }
     /**
-     * get get
+     * ####(getter) get
      * Get the document information of the get DOM.
      */
     get get() {
         return this._qs;
     }
     /**
-     * get length
+     * ####(getter) length
      * Get the number of elements in the get DOM.
      * @returns {number} length
      */
@@ -60,7 +60,7 @@ class DomControl {
         return this._qs.length;
     }
     /**
-     * exists
+     * #### exists
      * Determine whether an element exists.
      * @returns {bolean} judgment result
      */
@@ -71,7 +71,7 @@ class DomControl {
         return false;
     }
     /**
-     * first
+     * #### first
      * Specifies the first element.
      * @returns {DomControl} DomControl Class Object
      */
@@ -79,7 +79,7 @@ class DomControl {
         return new DomControl([this._qs[0]]);
     }
     /**
-     * last
+     * #### last
      * Specifies the last element.
      * @returns {DomControl} DomControl Class Object
      */
@@ -87,7 +87,7 @@ class DomControl {
         return new DomControl([this._qs[this._qs.length - 1]]);
     }
     /**
-     * parent
+     * #### parent
      * Specifies the parent element one level above.
      * @returns {DomControl} DomControl Class Object
      */
@@ -95,7 +95,7 @@ class DomControl {
         return new DomControl([this._qs[this._qs.length - 1].parentNode]);
     }
     /**
-     * index
+     * #### index
      * Specifies the element at the index specified by the argument
      * @param {number} index element index
      * @returns {DomControl} DomControl Class Object
@@ -104,7 +104,7 @@ class DomControl {
         return new DomControl([this._qs[index]]);
     }
     /**
-     * even :
+     * #### even
      * Extract even element information only.
      * @returns {DomControl} DomControl Class Object
      */
@@ -119,7 +119,7 @@ class DomControl {
         return new DomControl(qs_);
     }
     /**
-     * odd :
+     * #### odd
      * Extract only odd element information
      * @returns {DomControl} DomControl Class Object
      */
@@ -134,7 +134,7 @@ class DomControl {
         return new DomControl(qs_);
     }
     /**
-     * findOnAttr
+     * #### findOnAttr
      * Specifies only elements that contain attribute information that matches the conditions of the argument.
      * @param {string} name attribute name
      * @param {string|number} value attribute value
@@ -154,7 +154,7 @@ class DomControl {
         return new DomControl(qss);
     }
     /**
-     * findOnVirtual
+     * #### findOnVirtual
      * Specify only elements that contain Virtual attribute information that matches the argument conditions.
      * @param {string} name virtual attribute name
      * @param {string|number} value virtual attribute value
@@ -204,14 +204,7 @@ class DomControl {
         }
         return new DomControl(qss);
     }
-    /**
-     * child
-     * Specifies the child element of the argument selector,
-     * If no selector is specified, all child elements are included
-     * @param {string} selector = null selector
-     * @returns {DomControl} DomControl Class Object
-     */
-    child(selector = null) {
+    child(selector) {
         if (!selector) {
             selector = "*";
         }
@@ -225,7 +218,7 @@ class DomControl {
         }
         return new DomControl(qss);
     }
-    text(string = null) {
+    text(string) {
         if (string == undefined) {
             return this._qs[this._qs.length - 1].innerText;
         }
@@ -237,7 +230,7 @@ class DomControl {
             return this;
         }
     }
-    html(string = null) {
+    html(string) {
         if (string == undefined) {
             return this._qs[this._qs.length - 1].innerHTML;
         }
@@ -249,20 +242,19 @@ class DomControl {
             return this;
         }
     }
-    /**
-     * append
-     * add element tag.
-     * @param {string} contents add contents
-     * @returns {DomControl} DomControl Class Object
-     */
     append(contents) {
         this._qs.forEach(function (qs) {
-            qs.insertAdjacentHTML("beforeend", contents);
+            if (typeof contents == "string") {
+                qs.insertAdjacentHTML("beforeend", contents);
+            }
+            else {
+                qs.append(contents);
+            }
         });
         return this;
     }
     /**
-     * append
+     * #### append
      * Append just before the element tag
      * @param {string} contents add contents
      * @returns {DomControl} DomControl Class Object
@@ -274,7 +266,7 @@ class DomControl {
         return this;
     }
     /**
-     * after
+     * #### after
      * Append right after the element tag
      * @param {string} contents add contents
      * @returns {DomControl} DomControl Class Object
@@ -286,7 +278,7 @@ class DomControl {
         return this;
     }
     /**
-     * remove
+     * #### remove
      * remove the element
      * @returns {DomControl} DomControl Class Object
      */
@@ -298,7 +290,7 @@ class DomControl {
         return this;
     }
     /**
-     * empty
+     * #### empty
      * clear inside element
      * @returns {DomControl} DomControl Class Object
      */
@@ -306,8 +298,8 @@ class DomControl {
         return this.html("");
     }
     /**
-     * on
-     * set the event handler
+     * #### on
+     * set the event handler.
      * @param {string} eventName event name
      * @param {Function} callback callback function
      * @returns {DomControl} DomControl Class Object
@@ -322,7 +314,79 @@ class DomControl {
         }
         return this;
     }
-    attribute(name, value = null) {
+    /**
+     * #### onClick
+     * Wrapper function when eventname of on method is set to "click".
+     * @param {Function} callback callback function
+     * @returns {DomControl} DomControl Class Object
+     */
+    onClick(callback) {
+        return this.on("click", callback);
+    }
+    /**
+     * #### onChange
+     * Wrapper function when eventname of on method is set to "change".
+     * @param {Function} callback callback function
+     * @returns {DomControl} DomControl Class Object
+     */
+    onChange(callback) {
+        return this.on("change", callback);
+    }
+    /**
+     * #### onKeyUp
+     * Wrapper function when eventname of on method is set to "keyup".
+     * @param {Function} callback callback function
+     * @returns {DomControl} DomControl Class Object
+     */
+    onKeyUp(callback) {
+        return this.on("keyup", callback);
+    }
+    /**
+     * #### onKeyDown
+     * Wrapper function when eventname of on method is set to "onKeyDown".
+     * @param {Function} callback callback function
+     * @returns {DomControl} DomControl Class Object
+     */
+    onKeyDown(callback) {
+        return this.on("keyup", callback);
+    }
+    /**
+     * #### onKeyPress
+     * Wrapper function when eventname of on method is set to "keypress".
+     * @param {Function} callback callback function
+     * @returns {DomControl} DomControl Class Object
+     */
+    onKeyPress(callback) {
+        return this.on("keypress", callback);
+    }
+    /**
+     * #### onMouseUp
+     * Wrapper function when eventname of on method is set to "mouseup".
+     * @param {Function} callback callback function
+     * @returns {DomControl} DomControl Class Object
+     */
+    onMouseUp(callback) {
+        return this.on("mouseup", callback);
+    }
+    /**
+     * #### onMouseDown
+     * Wrapper function when eventname of on method is set to "mousedown".
+     * @param {Function} callback callback function
+     * @returns {DomControl} DomControl Class Object
+     */
+    onMouseDown(callback) {
+        return this.on("mousedown", callback);
+    }
+    /**
+     * #### onMouseMove
+     * Wrapper function when eventname of on method is set to "mousemove".
+     * @param {Function} callback callback function
+     * @returns {DomControl} DomControl Class Object
+     */
+    onMouseMove(callback) {
+        return this.on("mousemove", callback);
+    }
+    attribute(name, value) {
         if (value == undefined) {
             return this._qs[this._qs.length - 1].attributes[name].value;
         }
@@ -334,11 +398,11 @@ class DomControl {
             return this;
         }
     }
-    attr(name, value = null) {
+    attr(name, value) {
         return this.attribute(name, value);
     }
     /**
-     * removeAttribute
+     * #### removeAttribute
      * Delete attribute information
      * @param {string} name attribute name
      * @returns {DomControl} DomControl Class Object
@@ -351,7 +415,7 @@ class DomControl {
         return this;
     }
     /**
-     * removeAttr
+     * #### removeAttr
      * Delete attribute information
      * @param {string} name attribute name
      * @returns {DomControl} DomControl Class Object
@@ -359,7 +423,7 @@ class DomControl {
     removeAttr(name) {
         return this.removeAttribute(name);
     }
-    virtual(name, value = null) {
+    virtual(name, value) {
         if (this._qs.length == 0) {
             return;
         }
@@ -393,7 +457,7 @@ class DomControl {
         }
     }
     /**
-     * removeVirtual
+     * #### removeVirtual
      * Delete virtual attribute information
      * @param {string} name virtual attribute name
      * @returns {DomControl} DomControl Class Object
@@ -420,7 +484,7 @@ class DomControl {
         return this;
     }
     /**
-     * style
+     * #### style
      * Sets stylesheet information.
      * @param {object} options stylesheet attribute information
      * @returns {DomControl} DomControl Class Object
@@ -437,7 +501,7 @@ class DomControl {
         }
         return this;
     }
-    getStyle(name = null) {
+    getStyle(name) {
         var qs = this._qs[this._qs.length - 1];
         if (name) {
             if (!qs.style[name]) {
@@ -463,7 +527,7 @@ class DomControl {
         return this;
     }
     /**
-     * removeClass
+     * #### removeClass
      * remove the class attribute
      * @param {string} className Delete class name
      * @returns {DomControl} DomControl Class Object
@@ -476,7 +540,7 @@ class DomControl {
         return this;
     }
     /**
-     * isClass
+     * #### isClass
      * Checks if the specified class exists in the element
      * @param {string} className Delete class name
      * @returns {boolean} exists status
@@ -485,7 +549,7 @@ class DomControl {
         var qs = this._qs[this._qs.length - 1];
         return qs.classList.contains(className);
     }
-    value(value = null) {
+    value(value) {
         if (value == undefined) {
             return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__get_value_default).call(this, 0);
         }
@@ -493,7 +557,7 @@ class DomControl {
             return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__set_value_Default).call(this, 0, value);
         }
     }
-    default(value = null) {
+    default(value) {
         if (value == undefined) {
             return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__get_value_default).call(this, 1);
         }
@@ -542,8 +606,8 @@ class DomControl {
         return this.value(value);
     }
     /**
-     * getNodeName
-     * get the node name of an element
+     * #### getNodeName
+     * get the node name of an element.
      * @returns {string} node name
      */
     getNodeName() {
@@ -551,16 +615,16 @@ class DomControl {
         return qs.localName;
     }
     /**
-     * getType
-     * get the type attribute
+     * #### getType
+     * get the type attribute.
      * @returns {string} type
      */
     getType() {
         return this.attr("type");
     }
     /**
-     * click
-     * click on element.
+     * #### click
+     * performs a click on an element.
      * @returns {DomControl} DomControl Class Object
      */
     click() {
@@ -571,8 +635,8 @@ class DomControl {
         return this;
     }
     /**
-     * dblclick
-     * double click on element.
+     * #### dblclick
+     * Performs a double click on an element.
      * @returns {DomControl} DomControl Class Object
      */
     dblclick() {
@@ -583,8 +647,8 @@ class DomControl {
         return this;
     }
     /**
-     * submit
-     * submit on element.
+     * #### submit
+     * Executes element submission.
      * @returns {DomControl} DomControl Class Object
      */
     submit() {
@@ -595,8 +659,8 @@ class DomControl {
         return this;
     }
     /**
-     * focus
-     * focus on element.
+     * #### focus
+     * Performs element focus.
      * @returns {DomControl} DomControl Class Object
      */
     focus() {

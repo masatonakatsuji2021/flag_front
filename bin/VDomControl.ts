@@ -42,13 +42,24 @@ export default class VDomControl extends DomControl{
     }
 
     /**
-     * child : 
-     * Specifies the child element of the argument selector,
-     * If no selector is specified, all child elements are included
-     * @param {string} refName ref name
+     * #### child
+     * Specifies the child element of the argument selector,  
+     * If no selector is specified, all child elements are included.  
+     * If no selector argument is used, get all child elements.
      * @returns {VDomControl} VDomControl Class Object
      */
-    child(refName : string) : VDomControl{
+    child() : VDomControl;
+
+    /**
+     * #### child
+     * Specifies the child element of the argument selector,  
+     * If no selector is specified, all child elements are included.  
+     * @param {string} refName ref name
+     * @returns {DomControl} DomControl Class Object
+     */
+    child(refName : string) : VDomControl;
+
+    child(refName? : string) : VDomControl{
 
         let v = [];
         let v1 : DomControl;
@@ -59,7 +70,10 @@ export default class VDomControl extends DomControl{
             var q_ = v1._qs[n];
             v.push(q_);
         }
-            
+
+        if(!refName){
+            refName = "*";
+        }
 
         if(refName.indexOf("*") > -1){
             var rns = refName.split("*");

@@ -14,7 +14,7 @@ const getLib = function(libName){
 
 const builds = (framework, option, rootPath) => {
 
-    cli.green("#").outn("build framework = " + framework);
+    cli.green("#").outn(" build framework = " + framework);
 
     option.rootPath = rootPath + "/src";
     option.appPath = option.rootPath + "/app";
@@ -151,7 +151,7 @@ const builds = (framework, option, rootPath) => {
                     }
                 }
                 else if(path.extname(p_) == ".html"){
-                    option.coreHtml["plugin-" + pluginName + "/" + path.basename(p_).split(".html").join("") + "HTML"] = fs.readFileSync(p_).toString();
+                    option.coreHtml["plugin-" + pluginName + "/" + path.basename(p_)] = fs.readFileSync(p_).toString();
                 }
             }
 

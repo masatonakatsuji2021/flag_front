@@ -34,13 +34,6 @@ class VDomControl extends DomControl_1.default {
         let v = super.child(selector);
         return new VDomControl(v._qs);
     }
-    /**
-     * child :
-     * Specifies the child element of the argument selector,
-     * If no selector is specified, all child elements are included
-     * @param {string} refName ref name
-     * @returns {VDomControl} VDomControl Class Object
-     */
     child(refName) {
         let v = [];
         let v1;
@@ -49,6 +42,9 @@ class VDomControl extends DomControl_1.default {
         for (var n = 0; n < v1._qs.length; n++) {
             var q_ = v1._qs[n];
             v.push(q_);
+        }
+        if (!refName) {
+            refName = "*";
         }
         if (refName.indexOf("*") > -1) {
             var rns = refName.split("*");

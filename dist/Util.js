@@ -1,35 +1,51 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Data_1 = require("Data");
 const FgDateTime_1 = require("FgDateTime");
-exports.default = new class Util {
+/**
+ * #### Util
+ * This class provides various functions required for static.
+ */
+class Util {
     /**
-     * getFramework :
+     * #### getFramework
      * @returns {string} framework
      */
-    getFramework() {
+    static getFramework() {
         // @ts-ignore
         return FRAMEWORK;
     }
     /**
-     * base64Encode :
-     * Encode the text to base64 format
+     * #### base64Encode
+     * Encode the text to base64 format.
      * @param {string} content text content
      * @returns {string} base64 encode content
      */
-    base64Encode(content) {
+    static base64Encode(content) {
         return btoa(unescape(encodeURIComponent(content)));
     }
     /**
-     * base64Decode :
-     * Decode base64 text to plaintext
+     * #### base64Decode
+     * Decode base64 text to plaintext.
      * @param {string} b64text base64 text
      * @returns {string} plain text content
      */
-    base64Decode(b64text) {
+    static base64Decode(b64text) {
         return decodeURIComponent(escape(atob(b64text)));
     }
-    uniqId(length = null) {
+    static loadHtml(path, binds) {
+        let content = use(path);
+        content = Util.base64Decode(content);
+        if (binds) {
+            const c = Object.keys(binds);
+            for (let n = 0; n < c.length; n++) {
+                const key = c[n];
+                const val = binds[key];
+                content = content.replace("{" + key + "}", val);
+            }
+        }
+        return content;
+    }
+    static uniqId(length) {
         if (!length) {
             length = 32;
         }
@@ -43,36 +59,31 @@ exports.default = new class Util {
         return str;
     }
     /**
-     * ucFirst :
-     * Outputs text with the first letter converted to uppercase
+     * #### ucFirst
+     * Outputs text with the first letter converted to uppercase.
      * @param {string} content text content
      * @returns {string} convert text content
      */
-    ucFirst(content) {
+    static ucFirst(content) {
         return content.substring(0, 1).toUpperCase() + content.substring(1);
     }
     /**
-     * lcFirst :
-     * Outputs text with the first letter converted to lowercase
+     * #### lcFirst
+     * Outputs text with the first letter converted to lowercase.
      * @param {string} content text content
      * @returns {string} convert text content
      */
-    lcFirst(content) {
+    static lcFirst(content) {
         return content.substring(0, 1).toLowerCase() + content.substring(1);
     }
-    getClassName(string, classType) {
+    static getClassName(string, classType) {
         return string.substring(0, string.indexOf(classType));
     }
-    searchForm(formName) {
-        if (Data_1.default.__form[formName]) {
-            return Data_1.default.__form[formName];
-        }
-    }
-    dt(datetime) {
+    static dt(datetime) {
         return new FgDateTime_1.default(datetime);
     }
     /**
-     * sleep :
+     * #### sleep
      * Stop processing for a certain period of time.(Synchronous processing)
      * This method is synchronized by executing it with await inside the asynced function.
      *
@@ -83,17 +94,23 @@ exports.default = new class Util {
      * @param {number} time Stop time
      * @returns {promise<unknown>} Promise Object
      */
-    sleep(time) {
+    static sleep(time) {
         return new Promise(function (resolve) {
             setTimeout(function () {
                 resolve();
             }, time);
         });
     }
-    promise(callback) {
+    /**
+     * ##### promise
+     * Simple version of promise class method.
+     * @param callback
+     * @returns
+     */
+    static promise(callback) {
         return new Promise(callback);
     }
-    addHeadTag(type, option) {
+    static addHeadTag(type, option) {
         if (!option) {
             option = {};
         }
@@ -112,19 +129,21 @@ exports.default = new class Util {
             },
         };
     }
-    addHeadScript(path, option) {
+    static addHeadScript(path, option) {
         if (!option) {
             option = {};
         }
         option.src = path;
-        return this.addHeadTag("script", option);
+        return Util.addHeadTag("script", option);
     }
-    addHeadStyle(path, option) {
+    static addHeadStyle(path, option) {
         if (!option) {
             option = {};
         }
         option.rel = "stylesheet";
         option.href = path;
-        return this.addHeadTag("link", option);
+        return Util.addHeadTag("link", option);
     }
-};
+}
+exports.default = Util;
+;
