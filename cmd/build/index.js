@@ -114,7 +114,7 @@ const builds = (framework, option, rootPath) => {
     option.core.KeyEvent = getLib("KeyEvent");
 
     option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
-    option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
+//    option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
 
     if(require.resolve("@flagfw/validate")){
         option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/Validator.js").toString();

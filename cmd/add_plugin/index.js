@@ -8,7 +8,7 @@ module.exports = async function(args){
         .outn("Answer the various questions when adding the plugin")
     ;
 
-    let pluginName = args._any[1];
+    let pluginName = args._any[2];
 
     if(!pluginName){
     
@@ -23,51 +23,50 @@ module.exports = async function(args){
                     .indent(2)
                 ;
             }
-            
-            var directory = process.cwd();
-            let package = require(directory + "/package.json");
-
-            if(package.flagFront.plugin){
-                if(package.flagFront.plugin.indexOf(pluginName) > -1){
-                    cli
-                        .indent(4)
-                        .yellow("[WARM] ")
-                        .outn("\"" + pluginName + "\" is already registered as a plugin.")
-                        .indent(2)
-                    ;
-                    return;
-                }
-            }
-
-        }
-
-        try{
-            require.resolve(pluginName);
-        }catch(e){
-
-            cli.yellow("  [WARM]").outn("\"" + pluginName + "\" does not exist as an npm module");
-
-            let status = await cli.in("  so run the installation command. Is it OK? (y)");
-
-            if(status){
-                if(status == "y"){
-                    status = true;
-                }
-                else{
-                    status = false;
-                }
-            }
-            else{
-                status = true;
-            }
-
-            if(!status){
-                cli.outn().outn(".....Add PLugin Pause!");
-                return;
-            }
         }
     }
 
+    var directory = process.cwd();
+    let package = require(directory + "/package.json");
+
+    if(package.flagFront.plugin){
+        if(package.flagFront.plugin.indexOf(pluginName) > -1){
+            cli
+                .indent(4)
+                .yellow("[WARM] ")
+                .outn("\"" + pluginName + "\" is already registered as a plugin.")
+                .indent(2)
+            ;
+            return;
+        }
+    }
+
+    try{
+        require.resolve(pluginName);
+    }catch(e){
+
+        cli.yellow("  [WARM]").outn("\"" + pluginName + "\" does not exist as an npm module");
+
+        let status = await cli.in("  so run the installation command. Is it OK? (y)");
+
+        if(status){
+            if(status == "y"){
+                status = true;
+            }
+            else{
+                status = false;
+            }
+        }
+        else{
+            status = true;
+        }
+
+        if(!status){
+            cli.outn().outn(".....Add PLugin Pause!");
+            return;
+        }
+    }
+    
     let status = await cli.outn().in("Add plugin \""+pluginName + "\" to the project so that it can be used. Is it OK? (y)")
 
     if(status){
