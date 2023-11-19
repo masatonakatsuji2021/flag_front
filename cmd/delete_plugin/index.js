@@ -1,8 +1,8 @@
-const cli = require("@flagfw/cli");
+const { FlagCLI } = require("@flagfw/cli");
 
 module.exports = function(){
 
 
-    cli.outn("plugin delete.....");
+    FlagCLI.outn("plugin delete.....");
     
 };

@@ -1,89 +1,92 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs");
-const path = require("path");
-const cli_1 = require("@flagfw/cli");
-const aa_1 = require("../aa");
-const build_1 = require("@flagfw/build");
+import * as fs from "fs";
+import * as path from "path";
+import { FlagCLI } from "@flagfw/cli";
+import aa from "../aa";
+import build from "@flagfw/build";
+
 __dirname = path.dirname(path.dirname(__dirname));
+
 const Startor = fs.readFileSync(__dirname + "/bin/Startor.js").toString();
-const getLib = function (libName) {
+
+const getLib = function(libName){
     return fs.readFileSync(__dirname + "/bin/" + libName + ".js").toString();
 };
+
 const builds = (framework, option, rootPath) => {
-    cli_1.FlagCLI.green("#").outn(" build framework = " + framework);
+
+    FlagCLI.green("#").outn(" build framework = " + framework);
+
     option.rootPath = rootPath + "/src";
     option.appPath = option.rootPath + "/app";
     option.renderingPath = option.rootPath + "/rendering";
     option.commonPath = option.rootPath + "/common";
+
     option.buildPath = rootPath + "/frameworks/" + framework;
-    if (framework != "web") {
+    if(framework != "web"){
         option.buildPath += "/www";
     }
-    if (option.typeScript) {
-        try {
+
+    if(option.typeScript){
+        try{
             var tsConfigJSon = require(option.rootPath + "/tsconfig.json");
-            if (tsConfigJSon.compilerOptions.outDir) {
+
+            if(tsConfigJSon.compilerOptions.outDir){
                 option.appPathTsComplied = option.rootPath + "/" + tsConfigJSon.compilerOptions.outDir;
             }
-        }
-        catch (error) {
+
+        }catch(error){
             console.log(error);
             return;
-        }
+        }            
     }
-    if (!option.const) {
+
+    if(!option.const){
         option.const = {};
     }
+
     option.const.framework = framework;
-    if (option.const.PATH_APP == undefined) {
+
+    if(option.const.PATH_APP == undefined){
         option.const.PATH_APP = "app";
     }
-    if (option.const.PATH_CONFIG == undefined) {
+    if(option.const.PATH_CONFIG == undefined){
         option.const.PATH_CONFIG = option.const.PATH_APP + "/config";
     }
-    if (option.const.PATH_CONTROLLER == undefined) {
+    if(option.const.PATH_CONTROLLER == undefined){
         option.const.PATH_CONTROLLER = option.const.PATH_APP + "/Controller";
     }
-    if (option.const.PATH_FORM == undefined) {
+    if(option.const.PATH_FORM == undefined){
         option.const.PATH_FORM = option.const.PATH_APP + "/Form";
     }
-    if (option.const.PATH_VALIDATOR == undefined) {
+    if(option.const.PATH_VALIDATOR == undefined){
         option.const.PATH_VALIDATOR = option.const.PATH_APP + "/VALIDATOR";
     }
-    if (option.const.PATH_EXCEPTION == undefined) {
+    if(option.const.PATH_EXCEPTION == undefined){
         option.const.PATH_EXCEPTION = option.const.PATH_APP + "/Exception";
     }
-    if (option.const.PATH_BACKGROUND == undefined) {
+    if(option.const.PATH_BACKGROUND == undefined){
         option.const.PATH_BACKGROUND = option.const.PATH_APP + "/Background";
     }
-    if (option.const.PATH_RENDERING == undefined) {
+    if(option.const.PATH_RENDERING == undefined){
         option.const.PATH_RENDERING = "rendering";
     }
-    if (option.const.PATH_VIEW == undefined) {
+    if(option.const.PATH_VIEW == undefined){
         option.const.PATH_VIEW = option.const.PATH_RENDERING + "/View";
     }
-    if (option.const.PATH_TEMPLATE == undefined) {
+    if(option.const.PATH_TEMPLATE == undefined){
         option.const.PATH_TEMPLATE = option.const.PATH_RENDERING + "/Template";
     }
-    if (option.const.PATH_VIEWPART == undefined) {
+    if(option.const.PATH_VIEWPART == undefined){
         option.const.PATH_VIEWPART = option.const.PATH_RENDERING + "/ViewPart";
     }
-    if (!option.core) {
+
+    if(!option.core){
         option.core = {};
     }
-    if (!option.coreHtml) {
+    if(!option.coreHtml){
         option.coreHtml = {};
     }
+
     option.core.Util = getLib("Util");
     option.core.FgDateTime = getLib("FgDateTime");
     option.core.Data = getLib("Data");
@@ -100,108 +103,137 @@ const builds = (framework, option, rootPath) => {
     option.core.ViewPart = getLib("ViewPart");
     option.core.Template = getLib("Template");
     option.core.Background = getLib("Background");
-    //    option.core.Form = getLib("Form");
+//    option.core.Form = getLib("Form");
     option.core.Request = getLib("Request");
     option.core.Response = getLib("Response");
     option.core.LocalStorage = getLib("LocalStorage");
     option.core.SessionStorage = getLib("SessionStorage");
-    //    option.core.Dialog = getLib("Dialog");
+//    option.core.Dialog = getLib("Dialog");
     option.core.Crypto = getLib("Crypto");
     option.core.Socket = getLib("Socket");
     option.core.KeyEvent = getLib("KeyEvent");
+
     option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
-    //    option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
-    if (require.resolve("@flagfw/validate")) {
+//    option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
+
+    if(require.resolve("@flagfw/validate")){
         option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/Validator.js").toString();
         option.core.ValidateRule = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/ValidateRule.js").toString();
         option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/ValidateResponse.js").toString();
     }
+
     // plugin loadset...
-    if (option.plugin) {
-        for (var n = 0; n < option.plugin.length; n++) {
+    if(option.plugin){
+        for(var n = 0 ; n < option.plugin.length ; n++){
             var plugin = option.plugin[n];
-            if (plugin.indexOf("@flagfw/front-plugin-") > -1) {
+
+            if(plugin.indexOf("@flagfw/front-plugin-") > -1){
                 var pluginName = plugin.substring("@flagfw/front-plugin-".length);
             }
-            else {
+            else{
                 var pluginName = plugin;
             }
+
             var pluginClassList = fs.readdirSync(path.dirname(require.resolve(plugin)) + "/bin/");
-            for (var n2 = 0; n2 < pluginClassList.length; n2++) {
+            for(var n2 = 0 ; n2 < pluginClassList.length ; n2++){
                 var p_ = path.dirname(require.resolve(plugin)) + "/bin/" + pluginClassList[n2];
-                if (fs.statSync(p_).isDirectory()) {
+
+                if(fs.statSync(p_).isDirectory()){
                     continue;
                 }
-                if (path.extname(p_) == ".js") {
-                    if (path.basename(p_).split(".js").join("") == "index") {
+
+                if(path.extname(p_) == ".js"){
+                    if(path.basename(p_).split(".js").join("") == "index"){
                         option.core["plugin-" + pluginName] = fs.readFileSync(p_).toString();
                     }
-                    else {
+                    else{
                         option.core["plugin-" + pluginName + "/" + path.basename(p_).split(".js").join("")] = fs.readFileSync(p_).toString();
                     }
                 }
-                else if (path.extname(p_) == ".html") {
+                else if(path.extname(p_) == ".html"){
                     option.coreHtml["plugin-" + pluginName + "/" + path.basename(p_)] = fs.readFileSync(p_).toString();
                 }
             }
+
         }
     }
-    if (option.compress == undefined) {
+
+    if(option.compress == undefined){
         option.compress = false;
     }
+
     option.startCallback = "function(){\nlet exports = {} ;\n" + Startor + "}";
-    (0, build_1.default)(option, {
+
+    build(option,{
         noExit: true,
     });
+
 };
-exports.default = (args, cliOption, seconded) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!seconded) {
-        (0, aa_1.default)();
+
+export default async (args : Object, cliOption? : Object, seconded? : boolean) => {
+
+    if(!seconded){
+        aa();
     }
-    cli_1.FlagCLI.greenn("# Build begin...");
-    if (!cliOption) {
+
+    FlagCLI.greenn("# Build begin...");
+
+    if(!cliOption){
         cliOption = {};
     }
+     
     var rootPath = process.cwd();
-    if (args["_any"][1]) {
+    if(args["_any"][1]){
         rootPath += "/" + args["_any"][1];
     }
     var packageJsonPath = rootPath + "/package.json";
-    try {
+    
+    try{
         var packageJson = require(packageJsonPath);
-    }
-    catch (error) {
-        cli_1.FlagCLI.red("[ERROR]").outn("Package.json not found. ");
+    }catch(error){
+        FlagCLI.red("[ERROR]").outn("Package.json not found. ")
         return;
     }
-    if (!packageJson.flagFront) {
-        cli_1.FlagCLI.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
+
+    if(!packageJson.flagFront){
+        FlagCLI.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
         return;
     }
+
     var option = packageJson.flagFront;
-    if (!option) {
-        cli_1.FlagCLI.red("[ERROR]").outn("Project information is not set in \"flagFront\" of \"package.json\".");
+
+    if(!option){
+        FlagCLI.red("[ERROR]").outn("Project information is not set in \"flagFront\" of \"package.json\".");
         return;
     }
-    if (!option.frameworks) {
+
+    if(!option.frameworks){
         option.frameworks = [];
     }
-    if (option.frameworks.indexOf("web") === -1) {
+
+    if(option.frameworks.indexOf("web") === -1){
         option.frameworks.push("web");
     }
-    for (let n = 0; n < option.frameworks.length; n++) {
+        
+    for(let n = 0 ; n < option.frameworks.length ; n++){
         const framework = option.frameworks[n];
+
         var buildPath = rootPath + "/frameworks/" + framework + "/www";
+
         fs.rmdirSync(buildPath, {
             recursive: true,
         });
+
         builds(framework, option, rootPath);
     }
-    cli_1.FlagCLI.greenn("# ....Build commit");
-    if (!cliOption["noExit"]) {
-        cli_1.FlagCLI
+
+    FlagCLI.greenn("# ....Build commit");
+
+    if(!cliOption["noExit"]){
+        FlagCLI
             .br()
             .green("...... Project Build Complete!")
-            .br();
+            .br()
+        ;
     }
-});
+};

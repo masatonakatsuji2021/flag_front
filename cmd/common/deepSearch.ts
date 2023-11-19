@@ -1,6 +1,6 @@
-const fs = require("fs");
+import * as fs from "fs";
 
-const deepSearch = function(path){
+const deepSearch = (path: string) => {
 
     var glob = fs.readdirSync(path);
 
@@ -29,4 +29,4 @@ const deepSearch = function(path){
 
     return res;
 };
-module.exports = deepSearch;
+export default deepSearch;

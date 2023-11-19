@@ -1,7 +1,7 @@
-const fs = require("fs");
-const deepSearch = require("./deepSearch.js");
+import * as fs from "fs";
+import deepSearch from "./deepSearch";
 
-module.exports = function(inputPath, outputPath, mkdirCallback, fileCopyCallback2){
+export default (inputPath : string, outputPath : string, mkdirCallback? : Function, fileCopyCallback2? : Function) => {
 
     var dataList = deepSearch(inputPath);
 

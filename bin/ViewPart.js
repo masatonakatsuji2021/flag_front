@@ -1,5 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * #### ViewPart Class
+ *
+ * This class is used to implement logic that automatically runs when the ViewPart is used, etc.
+ * If necessary, create a "{ViewPart name to use}ViewPart" class as a derived class of this ViewPart and override the required methods.
+ */
 class ViewPart {
     /**
      * handle :

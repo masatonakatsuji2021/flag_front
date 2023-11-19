@@ -1,4 +1,4 @@
-const cli = require("@flagfw/cli");
+const { FlagCLI } = require("@flagfw/cli");
 const fs = require("fs");
 const path = require("path");
 
@@ -6,7 +6,7 @@ const { execSync } = require("child_process");
 
 module.exports = async (pluginName)=>{
 
-    cli.outn();
+    FlagCLI.br();
 
     let exists = false;
     try{
@@ -15,11 +15,11 @@ module.exports = async (pluginName)=>{
     }catch(err){}
 
     if(!exists){
-        cli.green("#").outn(" npm plugin package install..")
+        FlagCLI.green("#").outn(" npm plugin package install..")
         try{
             execSync("npm i " + pluginName);
         }catch(error){
-            cli.outn(error);
+            FlagCLI.outn(error);
             return;
         }
     }
@@ -38,7 +38,7 @@ module.exports = async (pluginName)=>{
 
     fs.writeFileSync(directory + "/package.json", JSON.stringify(package, null, "   "));
 
-    cli.green("#").outn("rewrite package.json");
+    FlagCLI.green("#").outn("rewrite package.json");
 
     // add tsconfig.json
     if(package.flagFront.typeScript){
@@ -54,9 +54,9 @@ module.exports = async (pluginName)=>{
         tsConfig.compilerOptions.paths[pluginNameShort + "/*"] = [ pluginPath + "/bin/*" ];
 
         fs.writeFileSync(directory + "/src/tsconfig.json", JSON.stringify(tsConfig, null, "   "));
-        cli.green("#").outn(" rewrite tsconfig.json");
+        FlagCLI.green("#").outn(" rewrite tsconfig.json");
     }
 
-    cli.indent(0).outn().green("....add plugin complete.").outn();
+    FlagCLI.indent(0).br().green("....add plugin complete.").outn();
 
 };
