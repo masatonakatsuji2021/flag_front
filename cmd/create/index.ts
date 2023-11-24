@@ -111,7 +111,7 @@ export default async (args: Object, seconded? : boolean) => {
 */
     var create = {
         name: name,
-        frameworks: frameworks ? frameworks.toString().split(",") : [],
+        frameworks: frameworks ? frameworks.toString().split(",") : [ "web" ],
         typeScript: useTypeScript,
         compress: useCompress,
         obfuscate: useObfuscate,

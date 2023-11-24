@@ -14,15 +14,16 @@ const getLib = function(libName){
 
 const builds = (framework, option, rootPath) => {
 
-    FlagCLI.green("#").outn(" build framework = " + framework);
-
     option.rootPath = rootPath + "/src";
     option.appPath = option.rootPath + "/app";
     option.renderingPath = option.rootPath + "/rendering";
     option.commonPath = option.rootPath + "/common";
-
+    option.framework = framework;
     option.buildPath = rootPath + "/frameworks/" + framework;
-    if(framework != "web"){
+    if(
+        framework =="cordova" || 
+        framework == "electron"
+    ){
         option.buildPath += "/www";
     }
 
@@ -46,38 +47,8 @@ const builds = (framework, option, rootPath) => {
 
     option.const.framework = framework;
 
-    if(option.const.PATH_APP == undefined){
-        option.const.PATH_APP = "app";
-    }
-    if(option.const.PATH_CONFIG == undefined){
-        option.const.PATH_CONFIG = option.const.PATH_APP + "/config";
-    }
-    if(option.const.PATH_CONTROLLER == undefined){
-        option.const.PATH_CONTROLLER = option.const.PATH_APP + "/Controller";
-    }
-    if(option.const.PATH_FORM == undefined){
-        option.const.PATH_FORM = option.const.PATH_APP + "/Form";
-    }
-    if(option.const.PATH_VALIDATOR == undefined){
-        option.const.PATH_VALIDATOR = option.const.PATH_APP + "/VALIDATOR";
-    }
-    if(option.const.PATH_EXCEPTION == undefined){
-        option.const.PATH_EXCEPTION = option.const.PATH_APP + "/Exception";
-    }
     if(option.const.PATH_BACKGROUND == undefined){
-        option.const.PATH_BACKGROUND = option.const.PATH_APP + "/Background";
-    }
-    if(option.const.PATH_RENDERING == undefined){
-        option.const.PATH_RENDERING = "rendering";
-    }
-    if(option.const.PATH_VIEW == undefined){
-        option.const.PATH_VIEW = option.const.PATH_RENDERING + "/View";
-    }
-    if(option.const.PATH_TEMPLATE == undefined){
-        option.const.PATH_TEMPLATE = option.const.PATH_RENDERING + "/Template";
-    }
-    if(option.const.PATH_VIEWPART == undefined){
-        option.const.PATH_VIEWPART = option.const.PATH_RENDERING + "/ViewPart";
+        option.const.PATH_BACKGROUND = "app/Background";
     }
 
     if(!option.core){
@@ -103,24 +74,15 @@ const builds = (framework, option, rootPath) => {
     option.core.ViewPart = getLib("ViewPart");
     option.core.Template = getLib("Template");
     option.core.Background = getLib("Background");
-//    option.core.Form = getLib("Form");
     option.core.Request = getLib("Request");
     option.core.Response = getLib("Response");
-    option.core.LocalStorage = getLib("LocalStorage");
-    option.core.SessionStorage = getLib("SessionStorage");
-//    option.core.Dialog = getLib("Dialog");
+    /*
     option.core.Crypto = getLib("Crypto");
     option.core.Socket = getLib("Socket");
     option.core.KeyEvent = getLib("KeyEvent");
+    */
 
     option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
-//    option.coreHtml.DialogHtml = fs.readFileSync(__dirname + "/bin/Dialog.html").toString();
-
-    if(require.resolve("@flagfw/validate")){
-        option.core.Validator = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/Validator.js").toString();
-        option.core.ValidateRule = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/ValidateRule.js").toString();
-        option.core.ValidateResponse = fs.readFileSync(path.dirname(require.resolve("@flagfw/validate")) + "/bin/ValidateResponse.js").toString();
-    }
 
     // plugin loadset...
     if(option.plugin){
@@ -210,10 +172,6 @@ export default async (args : Object, cliOption? : Object, seconded? : boolean) =
     if(!option.frameworks){
         option.frameworks = [];
     }
-
-    if(option.frameworks.indexOf("web") === -1){
-        option.frameworks.push("web");
-    }
         
     for(let n = 0 ; n < option.frameworks.length ; n++){
         const framework = option.frameworks[n];
@@ -225,15 +183,9 @@ export default async (args : Object, cliOption? : Object, seconded? : boolean) =
         });
 
         builds(framework, option, rootPath);
+
+        FlagCLI.br();
     }
 
-    FlagCLI.greenn("# ....Build commit");
-
-    if(!cliOption["noExit"]){
-        FlagCLI
-            .br()
-            .green("...... Project Build Complete!")
-            .br()
-        ;
-    }
+    FlagCLI.greenn("# ....Build Complete!");
 };
