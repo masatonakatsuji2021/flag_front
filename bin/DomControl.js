@@ -671,7 +671,6 @@ class DomControl {
         return this;
     }
 }
-exports.default = DomControl;
 _DomControl_instances = new WeakSet(), _DomControl__get_value_default = function _DomControl__get_value_default(mode) {
     var qs = this._qs[this._qs.length - 1];
     if (qs.type == "radio") {
@@ -750,4 +749,5 @@ _DomControl_instances = new WeakSet(), _DomControl__get_value_default = function
     }
     return this;
 };
+exports.default = DomControl;
 ;

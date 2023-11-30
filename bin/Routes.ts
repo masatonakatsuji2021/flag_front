@@ -1,21 +1,28 @@
 // @ts-ignore
 import App from "app/config/app";
 
-export default new class Routes{
+interface Route{
+    view : string,
+    controller: string,
+    action: string,
+    aregment?: Array<any>,
+}
 
-    _routes = null;
+export default class Routes{
 
-    _decision = null;
+    public static _routes = null;
 
-    searchRoute(url: string = null){
+    public static _decision = null;
+
+    public static searchRoute(url: string = null){
 
         if(!this._routes){
             if(App){
-                this._routes = this.#routeConvert(App.routes);
+                Routes._routes = Routes.routeConvert(App.routes);
             }
             else{
                 let _App = use("app/config/app");
-                this._routes = this.#routeConvert(_App.routes);
+                Routes._routes = Routes.routeConvert(_App.routes);
             }
         }
 
@@ -35,16 +42,16 @@ export default new class Routes{
             }
         }
 
-        this._decision = this.#routeSelect(targetUrl);
+        Routes._decision = Routes.routeSelect(targetUrl);
 
-        return this._decision;
+        return Routes._decision;
     }
 
-    getRoute(){
-        return this._decision;
+    public static getRoute(){
+        return Routes._decision;
     }
 
-    #routeConvert(routes){
+    private static routeConvert(routes){
 
         var res = {};
 
@@ -56,25 +63,38 @@ export default new class Routes{
             if(typeof val == "string"){
                 var vals = val.split("|");
 
-                var buffer = {
+                var buffer : Route = {
                     controller: null,
+                    view: null,
                     action: null,
                 };
                 for(var n2 = 0; n2 < vals.length ; n2++){
                     var v_ = vals[n2];
 
-                    if(v_.indexOf("controller") === 0){
+                    if(v_.indexOf("controller:") === 0){
                         buffer.controller = v_.substring("controller:".length);
                     }
-                    else if(v_.indexOf("action") === 0){
+                    else if(v_.indexOf("c:") === 0){
+                        buffer.controller = v_.substring("c:".length);
+                    }
+                    else if(v_.indexOf("action:") === 0){
                         buffer.action = v_.substring("action:".length);
+                    }
+                    else if(v_.indexOf("a:") === 0){
+                        buffer.action = v_.substring("a:".length);
+                    }
+                    else if(v_.indexOf("view:") === 0){
+                        buffer.view = v_.substring("view:".length);
+                    }
+                    else if(v_.indexOf("v:") === 0){
+                        buffer.view = v_.substring("v:".length);
                     }
                 }
 
                 res[url] = buffer;             
             }
             else{
-                var buffers = this.#routeConvert(val);
+                var buffers = Routes.routeConvert(val);
 
                 var columns2 = Object.keys(buffers);
                 for(var n2 = 0 ; n2 < columns2.length ; n2++){
@@ -92,7 +112,7 @@ export default new class Routes{
         return res;
     }
 
-    #routeSelect(targetUrl){
+    private static routeSelect(targetUrl){
 
         var sect0 = targetUrl.split("/");
 
@@ -166,6 +186,7 @@ export default new class Routes{
                 controller: decision.controller,
                 action: decision.action,
                 aregment: decision.aregment,
+                view : decision.view,
             };
         }
         else{
@@ -174,8 +195,8 @@ export default new class Routes{
                 mode: "notfound",
             };
         }
-
+        
         return res;
     }
     
-};
+}

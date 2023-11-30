@@ -152,8 +152,9 @@ exports.default = (args, cliOption, seconded) => __awaiter(void 0, void 0, void 
     for (let n = 0; n < option.frameworks.length; n++) {
         const framework = option.frameworks[n];
         var buildPath = rootPath + "/frameworks/" + framework + "/www";
-        fs.rmdirSync(buildPath, {
+        fs.rmSync(buildPath, {
             recursive: true,
+            force: true,
         });
         builds(framework, option, rootPath);
         cli_1.FlagCLI.br();

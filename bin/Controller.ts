@@ -23,7 +23,7 @@ import Dom from "Dom";
  */
 export default class Controller{
 
-    private _view : string = null;
+    public view : string = null;
 
     /**
      * view 
@@ -32,30 +32,24 @@ export default class Controller{
      * If not specified, automatically determined by "{Controller Name}/{action name}"  
      * If you use it, place the HTML file in the path "rendering/View/{Controller Name}/{action Name}.html".
      */
-    get view() : string{
-        return this._view;
-    }
-
-    set view(value : string){
-        this._view = value;
-        this.__rendering();
+    public setView(value : string)  : void{
+        this.view = value;
+        const routes = Routes.getRoute();
+        Response.__rendering(routes, this);
     }
     
-    private _template : string = null;
+    public template : string = null;
 
     /**
-     * template
+     * setTemplate
      * 
      * Specifies the template name to use on the displayed page.  
      * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.  
      */
-    get template() : string{
-        return this._template;
-    }
-
-    set template(value : string){
-        this._template = value;
-        this.__rendering();
+    public setTemplate(value : string){
+        this.template = value;
+        const routes = Routes.getRoute();
+        Response.__rendering(routes, this);
     }
 
     /**
@@ -96,33 +90,4 @@ export default class Controller{
      * @param {string} action before access controller action name
      */
     handleLeave(action? : string){}
-
-    __rendering(){
-
-        if(!this.view){
-            var routes = Routes.getRoute();
-            this.view = routes.controller + "/" + routes.action;
-        }
-
-        if(this.template){
-
-            if(Data.before_template != this.template){
-
-                Data.before_template = this.template;
-
-                Response.bindTemplate("body", this.template);
-                Response.bindView("[spa-contents]", this.view);
-            }
-            else{
-                Response.bindView("[spa-contents]", this.view);
-            }
-
-        }
-        else{
-            Data.before_template = null;
-            Response.bindView("body", this.view);
-        }
-
-        VDom().refresh();
-    }
-};
+}

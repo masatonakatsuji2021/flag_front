@@ -3,11 +3,14 @@ import Dom from "Dom";
 import VDom from "VDom";
 import Data from "Data";
 import Controller from "Controller";
+import View from "View";
 
 export default new class Response{
 
     __before_controller : Controller = null;
     __before_controller_path : string = null;
+    __before_view : View = null;
+    __before_view_path : string = null;
     __before_action : string = null;
     __page_status : boolean = true;
 
@@ -79,6 +82,143 @@ export default new class Response{
         }
     }
 
+    async __rendering(routes, context){
+
+        if(!context.view){
+            if(routes.controller){
+                context.view = routes.controller + "/" + routes.action;
+            }
+            else if(routes.view){
+                context.view = routes.view;
+            }
+        }
+
+        if(context.template){
+
+            if(Data.before_template != context.template){
+
+                Data.before_template = context.template;
+
+                this.bindTemplate("body", context.template);
+                this.bindView("[spa-contents]", context.view);
+            }
+            else{
+                this.bindView("[spa-contents]", context.view);
+            }
+
+        }
+        else{
+            Data.before_template = null;
+            this.bindView("body", context.view);
+        }
+
+        VDom().refresh();
+    }
+
+    async renderingOnController(routes){
+
+        var controllerName = routes.controller.substring(0,1).toUpperCase() + routes.controller.substring(1) + "Controller";
+        var contPath = "app/Controller/" + controllerName;
+
+        if(!useExists(contPath)){
+            throw("\"" + controllerName + "\" Class is not found.");
+        }
+
+        const Controller = use(contPath);
+        var cont = new Controller();
+
+        if(this.__before_controller_path != contPath){
+            this.__before_controller_path = contPath;
+            if(cont.handleBegin){
+                await cont.handleBegin();
+            }
+        }
+
+        if(!(
+            cont[routes.action] ||
+            cont["before_" + routes.action]
+        )){
+            throw("\"" + routes.action + "\" method on \"" + controllerName + "\" class is not found.");
+        }
+
+        await cont.handleBefore();
+        
+        if(cont["before_" + routes.action]){
+            var method = "before_" + routes.action;
+
+            if(routes.aregment){
+                await cont[method](...routes.aregment);
+            }
+            else{
+                await cont[method]();
+            }    
+        }
+
+        await cont.handleAfter();
+
+        await this.__rendering(routes, cont);
+
+        await cont.handleRenderBefore();
+
+        if(cont[routes.action]){
+            let method : string = routes.action;
+
+            if(routes.aregment){
+                await cont[method](...routes.aregment);
+            }
+            else{
+                await cont[method]();
+            }
+        }
+
+        await cont.handleRenderAfter(); 
+
+        this.__before_controller = cont;
+        this.__before_action = routes.action;
+        this.__before_view = null;
+    }
+    
+    async renderingOnView(routes){
+        let viewName : string = routes.view.substring(0,1).toUpperCase() + routes.view.substring(1) + "View";
+        let viewPath : string = "app/View/" + viewName;
+
+        if(!useExists(viewPath)){
+            throw("\"" + viewName + "\" Class is not found.");
+        }
+
+        const View_ = use(viewPath);
+        let vm : View = new View_();
+
+        if(this.__before_view_path != viewPath){
+            this.__before_view_path = viewPath;
+            if(vm.handleBegin){
+                await vm.handleBegin();
+            }
+        }
+
+        await vm.handleBefore();
+
+        await vm.handleAfter();
+
+        await this.__rendering(routes, vm);
+
+        await vm.handleRenderBefore();
+
+
+        if(routes.aregment){
+            await vm.handle(...routes.aregment);
+        }
+        else{
+            await vm.handle();
+        }        
+
+        await vm.handleRenderAfter(); 
+
+        this.__before_view = vm;
+        this.__before_controller = null;
+        this.__before_action = null;
+    }
+
     rendering(routes) : void{
 
         (async function(){
@@ -90,71 +230,24 @@ export default new class Response{
                     await befCont.handleLeave(this.__before_action);
                 }
 
+                if(this.__before_view){
+                    var befView = this.__before_view;
+                    await befView.handleLeave();
+                }
+
                 if(routes.mode == "notfound"){
                     throw("404 not found");
                 }
                
-                var controllerName = routes.controller.substring(0,1).toUpperCase() + routes.controller.substring(1) + "Controller";
-        
-                var contPath = "app/Controller/" + controllerName;
-        
-                if(!useExists(contPath)){
-                    throw("\"" + controllerName + "\" Class is not found.");
+                if(routes.controller){
+                    await this.renderingOnController(routes);
                 }
-
-                const Controller = use(contPath);
-                var cont = new Controller();
-
-                if(this.__before_controller_path != contPath){
-                    this.__before_controller_path = contPath;
-                    if(cont.handleBegin){
-                        await cont.handleBegin();
-                    }
+                else if(routes.view){
+                    await this.renderingOnView(routes);
                 }
-        
-                if(!(
-                    cont[routes.action] ||
-                    cont["before_" + routes.action]
-                )){
-                    throw("\"" + routes.action + "\" method on \"" + controllerName + "\" class is not found.");
-                }
-        
-                await cont.handleBefore();
-                
-                if(cont["before_" + routes.action]){
-                    var method = "before_" + routes.action;
-
-                    if(routes.aregment){
-                        await cont[method](...routes.aregment);
-                    }
-                    else{
-                        await cont[method]();
-                    }    
-                }
-
-                await cont.handleAfter();
-        
-                await cont.__rendering();
-        
-                await cont.handleRenderBefore();
-
-                if(cont[routes.action]){
-                    let method : string = routes.action;
-
-                    if(routes.aregment){
-                        await cont[method](...routes.aregment);
-                    }
-                    else{
-                        await cont[method]();
-                    }
-                }
-        
-                await cont.handleRenderAfter(); 
-
-                this.__before_controller = cont;
-                this.__before_action = routes.action;
                 
             }catch(error){
+
                 console.error(error);
 
                 try{
@@ -171,8 +264,11 @@ export default new class Response{
                     var exps = new Exception;
 
                     if(!(
-                        exps.handle ||
+                        exps.handle
+/*
+                         ||
                         cont.before_handle
+                        */
                     )){
                         console.error("\handle\" method on \"Exception\" class is not found.");
                         return;

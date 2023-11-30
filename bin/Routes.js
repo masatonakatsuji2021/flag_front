@@ -1,52 +1,39 @@
 "use strict";
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
-var _Routes_instances, _Routes_routeConvert, _Routes_routeSelect, _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
 const app_1 = require("app/config/app");
-exports.default = new (_a = class Routes {
-        constructor() {
-            _Routes_instances.add(this);
-            this._routes = null;
-            this._decision = null;
-        }
-        searchRoute(url = null) {
-            if (!this._routes) {
-                if (app_1.default) {
-                    this._routes = __classPrivateFieldGet(this, _Routes_instances, "m", _Routes_routeConvert).call(this, app_1.default.routes);
-                }
-                else {
-                    let _App = use("app/config/app");
-                    this._routes = __classPrivateFieldGet(this, _Routes_instances, "m", _Routes_routeConvert).call(this, _App.routes);
-                }
-            }
-            let targetUrl = location.hash.substring(1);
-            if (url) {
-                targetUrl = url;
-            }
-            if (!targetUrl) {
-                targetUrl = "/";
+class Routes {
+    static searchRoute(url = null) {
+        if (!this._routes) {
+            if (app_1.default) {
+                Routes._routes = Routes.routeConvert(app_1.default.routes);
             }
             else {
-                if (targetUrl != "/") {
-                    if (targetUrl.substring(targetUrl.length - 1) == "/") {
-                        targetUrl = targetUrl.substring(0, targetUrl.length - 1);
-                    }
+                let _App = use("app/config/app");
+                Routes._routes = Routes.routeConvert(_App.routes);
+            }
+        }
+        let targetUrl = location.hash.substring(1);
+        if (url) {
+            targetUrl = url;
+        }
+        if (!targetUrl) {
+            targetUrl = "/";
+        }
+        else {
+            if (targetUrl != "/") {
+                if (targetUrl.substring(targetUrl.length - 1) == "/") {
+                    targetUrl = targetUrl.substring(0, targetUrl.length - 1);
                 }
             }
-            this._decision = __classPrivateFieldGet(this, _Routes_instances, "m", _Routes_routeSelect).call(this, targetUrl);
-            return this._decision;
         }
-        getRoute() {
-            return this._decision;
-        }
-    },
-    _Routes_instances = new WeakSet(),
-    _Routes_routeConvert = function _Routes_routeConvert(routes) {
+        Routes._decision = Routes.routeSelect(targetUrl);
+        return Routes._decision;
+    }
+    static getRoute() {
+        return Routes._decision;
+    }
+    static routeConvert(routes) {
         var res = {};
         var columns = Object.keys(routes);
         for (var n = 0; n < columns.length; n++) {
@@ -56,21 +43,34 @@ exports.default = new (_a = class Routes {
                 var vals = val.split("|");
                 var buffer = {
                     controller: null,
+                    view: null,
                     action: null,
                 };
                 for (var n2 = 0; n2 < vals.length; n2++) {
                     var v_ = vals[n2];
-                    if (v_.indexOf("controller") === 0) {
+                    if (v_.indexOf("controller:") === 0) {
                         buffer.controller = v_.substring("controller:".length);
                     }
-                    else if (v_.indexOf("action") === 0) {
+                    else if (v_.indexOf("c:") === 0) {
+                        buffer.controller = v_.substring("c:".length);
+                    }
+                    else if (v_.indexOf("action:") === 0) {
                         buffer.action = v_.substring("action:".length);
+                    }
+                    else if (v_.indexOf("a:") === 0) {
+                        buffer.action = v_.substring("a:".length);
+                    }
+                    else if (v_.indexOf("view:") === 0) {
+                        buffer.view = v_.substring("view:".length);
+                    }
+                    else if (v_.indexOf("v:") === 0) {
+                        buffer.view = v_.substring("v:".length);
                     }
                 }
                 res[url] = buffer;
             }
             else {
-                var buffers = __classPrivateFieldGet(this, _Routes_instances, "m", _Routes_routeConvert).call(this, val);
+                var buffers = Routes.routeConvert(val);
                 var columns2 = Object.keys(buffers);
                 for (var n2 = 0; n2 < columns2.length; n2++) {
                     var url2 = columns2[n2];
@@ -83,8 +83,8 @@ exports.default = new (_a = class Routes {
             }
         }
         return res;
-    },
-    _Routes_routeSelect = function _Routes_routeSelect(targetUrl) {
+    }
+    static routeSelect(targetUrl) {
         var sect0 = targetUrl.split("/");
         var decision = null;
         var columns = Object.keys(this._routes);
@@ -143,6 +143,7 @@ exports.default = new (_a = class Routes {
                 controller: decision.controller,
                 action: decision.action,
                 aregment: decision.aregment,
+                view: decision.view,
             };
         }
         else {
@@ -152,5 +153,8 @@ exports.default = new (_a = class Routes {
             };
         }
         return res;
-    },
-    _a);
+    }
+}
+Routes._routes = null;
+Routes._decision = null;
+exports.default = Routes;

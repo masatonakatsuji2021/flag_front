@@ -12,18 +12,16 @@
  * -----------------------------------------------------
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const Data_1 = require("Data");
 const Routes_1 = require("Routes");
 const Response_1 = require("Response");
-const VDom_1 = require("VDom");
 /**
  * Controller :
  * Core class for page display.
  */
 class Controller {
     constructor() {
-        this._view = null;
-        this._template = null;
+        this.view = null;
+        this.template = null;
     }
     /**
      * view
@@ -32,25 +30,21 @@ class Controller {
      * If not specified, automatically determined by "{Controller Name}/{action name}"
      * If you use it, place the HTML file in the path "rendering/View/{Controller Name}/{action Name}.html".
      */
-    get view() {
-        return this._view;
-    }
-    set view(value) {
-        this._view = value;
-        this.__rendering();
+    setView(value) {
+        this.view = value;
+        const routes = Routes_1.default.getRoute();
+        Response_1.default.__rendering(routes, this);
     }
     /**
-     * template
+     * setTemplate
      *
      * Specifies the template name to use on the displayed page.
      * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.
      */
-    get template() {
-        return this._template;
-    }
-    set template(value) {
-        this._template = value;
-        this.__rendering();
+    setTemplate(value) {
+        this.template = value;
+        const routes = Routes_1.default.getRoute();
+        Response_1.default.__rendering(routes, this);
     }
     /**
      * handleBegin :
@@ -85,27 +79,5 @@ class Controller {
      * @param {string} action before access controller action name
      */
     handleLeave(action) { }
-    __rendering() {
-        if (!this.view) {
-            var routes = Routes_1.default.getRoute();
-            this.view = routes.controller + "/" + routes.action;
-        }
-        if (this.template) {
-            if (Data_1.default.before_template != this.template) {
-                Data_1.default.before_template = this.template;
-                Response_1.default.bindTemplate("body", this.template);
-                Response_1.default.bindView("[spa-contents]", this.view);
-            }
-            else {
-                Response_1.default.bindView("[spa-contents]", this.view);
-            }
-        }
-        else {
-            Data_1.default.before_template = null;
-            Response_1.default.bindView("body", this.view);
-        }
-        (0, VDom_1.default)().refresh();
-    }
 }
 exports.default = Controller;
-;

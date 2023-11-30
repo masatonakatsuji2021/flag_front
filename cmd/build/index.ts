@@ -178,8 +178,9 @@ export default async (args : Object, cliOption? : Object, seconded? : boolean) =
 
         var buildPath = rootPath + "/frameworks/" + framework + "/www";
 
-        fs.rmdirSync(buildPath, {
+        fs.rmSync(buildPath, {
             recursive: true,
+            force: true,
         });
 
         builds(framework, option, rootPath);
