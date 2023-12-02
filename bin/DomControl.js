@@ -1,23 +1,16 @@
 "use strict";
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
-var _DomControl_instances, _DomControl__get_value_default, _DomControl__set_value_Default;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const DomStatic_1 = require("DomStatic");
 class DomControl {
     constructor(qs) {
-        _DomControl_instances.add(this);
         this._qs = null;
         this._qs = qs;
         for (var n = 0; n < this._qs.length; n++) {
-            var qs = this._qs[n];
-            if (!qs.uid) {
+            var qs_ = this._qs[n];
+            if (!qs_.uid) {
                 var uid = Util_1.default.uniqId();
-                qs.uid = uid;
+                qs_.uid = uid;
             }
         }
     }
@@ -45,14 +38,14 @@ class DomControl {
         return new DomControl(qs);
     }
     /**
-     * ####(getter) get
+     * ***get*** :
      * Get the document information of the get DOM.
      */
     get get() {
         return this._qs;
     }
     /**
-     * ####(getter) length
+     * ***length*** :
      * Get the number of elements in the get DOM.
      * @returns {number} length
      */
@@ -60,42 +53,42 @@ class DomControl {
         return this._qs.length;
     }
     /**
-     * #### exists
+     * ***exists*** :
      * Determine whether an element exists.
      * @returns {bolean} judgment result
      */
-    exists() {
+    get exists() {
         if (this._qs.length) {
             return true;
         }
         return false;
     }
     /**
-     * #### first
+     * ***first*** :
      * Specifies the first element.
      * @returns {DomControl} DomControl Class Object
      */
-    first() {
+    get first() {
         return new DomControl([this._qs[0]]);
     }
     /**
-     * #### last
+     * ***last*** :
      * Specifies the last element.
      * @returns {DomControl} DomControl Class Object
      */
-    last() {
+    get last() {
         return new DomControl([this._qs[this._qs.length - 1]]);
     }
     /**
-     * #### parent
+     * ***parent*** :
      * Specifies the parent element one level above.
      * @returns {DomControl} DomControl Class Object
      */
-    parent() {
+    get parent() {
         return new DomControl([this._qs[this._qs.length - 1].parentNode]);
     }
     /**
-     * #### index
+     * ***index*** :
      * Specifies the element at the index specified by the argument
      * @param {number} index element index
      * @returns {DomControl} DomControl Class Object
@@ -104,11 +97,11 @@ class DomControl {
         return new DomControl([this._qs[index]]);
     }
     /**
-     * #### even
+     * ***even*** :
      * Extract even element information only.
      * @returns {DomControl} DomControl Class Object
      */
-    even() {
+    get even() {
         var qs_ = [];
         for (var n = 0; n < this._qs.length; n++) {
             var q_ = this._qs[n];
@@ -119,11 +112,11 @@ class DomControl {
         return new DomControl(qs_);
     }
     /**
-     * #### odd
+     * ***odd*** :
      * Extract only odd element information
      * @returns {DomControl} DomControl Class Object
      */
-    odd() {
+    get odd() {
         var qs_ = [];
         for (var n = 0; n < this._qs.length; n++) {
             var q_ = this._qs[n];
@@ -134,7 +127,7 @@ class DomControl {
         return new DomControl(qs_);
     }
     /**
-     * #### findOnAttr
+     * ***findOnAttr*** :
      * Specifies only elements that contain attribute information that matches the conditions of the argument.
      * @param {string} name attribute name
      * @param {string|number} value attribute value
@@ -154,10 +147,10 @@ class DomControl {
         return new DomControl(qss);
     }
     /**
-     * #### findOnVirtual
+     * ***findOnVirtual*** :
      * Specify only elements that contain Virtual attribute information that matches the argument conditions.
      * @param {string} name virtual attribute name
-     * @param {string|number} value virtual attribute value
+     * @param {any} value virtual attribute value
      * @returns {DomControl} DomControl Class Object
      */
     findOnVirtual(name, value) {
@@ -218,28 +211,43 @@ class DomControl {
         }
         return new DomControl(qss);
     }
-    text(string) {
-        if (string == undefined) {
-            return this._qs[this._qs.length - 1].innerText;
-        }
-        else {
-            for (var n = 0; n < this._qs.length; n++) {
-                var qs = this._qs[n];
-                qs.innerText = string;
-            }
-            return this;
+    /**
+     * ***text*** :
+     * get/set the text inside the element tag
+     */
+    get text() {
+        return this._qs[this._qs.length - 1].innerText;
+    }
+    set text(text) {
+        for (var n = 0; n < this._qs.length; n++) {
+            var qs = this._qs[n];
+            qs.innerText = text;
         }
     }
-    html(string) {
-        if (string == undefined) {
-            return this._qs[this._qs.length - 1].innerHTML;
+    /**
+     * ***html*** :
+     * Get/Set the HTML inside the element tag (innerHTML)
+     */
+    get html() {
+        return this._qs[this._qs.length - 1].innerHTML;
+    }
+    set html(html) {
+        for (var n = 0; n < this._qs.length; n++) {
+            var qs = this._qs[n];
+            qs.innerHTML = html;
         }
-        else {
-            for (var n = 0; n < this._qs.length; n++) {
-                var qs = this._qs[n];
-                qs.innerHTML = string;
-            }
-            return this;
+    }
+    /**
+     * ***outerHtml*** :
+     * Get/Set the HTML inside the element tag (outerHTML)
+     */
+    get outerHtml() {
+        return this._qs[this._qs.length - 1].outerHTML;
+    }
+    set outerHtml(html) {
+        for (var n = 0; n < this._qs.length; n++) {
+            var qs = this._qs[n];
+            qs.outerHtml = html;
         }
     }
     append(contents) {
@@ -253,32 +261,30 @@ class DomControl {
         });
         return this;
     }
-    /**
-     * #### append
-     * Append just before the element tag
-     * @param {string} contents add contents
-     * @returns {DomControl} DomControl Class Object
-     */
     before(contents) {
         this._qs.forEach(function (qs) {
-            qs.insertAdjacentHTML("beforebegin", contents);
+            if (typeof contents == "string") {
+                qs.insertAdjacentHTML("beforebegin", contents);
+            }
+            else {
+                qs.before(contents);
+            }
         });
         return this;
     }
-    /**
-     * #### after
-     * Append right after the element tag
-     * @param {string} contents add contents
-     * @returns {DomControl} DomControl Class Object
-     */
     after(contents) {
         this._qs.forEach(function (qs) {
-            qs.insertAdjacentHTML("afterend", contents);
+            if (typeof contents == "string") {
+                qs.insertAdjacentHTML("afterend", contents);
+            }
+            else {
+                qs.after(contents);
+            }
         });
         return this;
     }
     /**
-     * #### remove
+     * ***remove*** :
      * remove the element
      * @returns {DomControl} DomControl Class Object
      */
@@ -290,101 +296,102 @@ class DomControl {
         return this;
     }
     /**
-     * #### empty
+     * ***empty*** :
      * clear inside element
      * @returns {DomControl} DomControl Class Object
      */
     empty() {
-        return this.html("");
+        this.html = "";
+        return this;
     }
     /**
-     * #### on
+     * ***on*** :
      * set the event handler.
      * @param {string} eventName event name
      * @param {Function} callback callback function
      * @returns {DomControl} DomControl Class Object
      */
     on(eventName, callback) {
-        var cont = this;
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
-            qs.addEventListener(eventName, function (e) {
-                callback.bind(cont)(e, cont);
+            qs.addEventListener(eventName, (e) => {
+                const targetDom = new DomControl([e.target]);
+                callback(targetDom, e);
             });
         }
         return this;
     }
     /**
-     * #### onClick
+     * ***onClick*** :
      * Wrapper function when eventname of on method is set to "click".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onClick(callback) {
-        return this.on("click", callback);
+    set onClick(callback) {
+        this.on("click", callback);
     }
     /**
-     * #### onChange
+     * ***onContextmenu*** :
+     * Wrapper function when eventname of on method is set to "contextmenu".
+     * @param {Function} callback callback function
+     */
+    set onContextmenu(callback) {
+        this.on("contextmenu", callback);
+    }
+    /**
+     * ***onChange*** :
      * Wrapper function when eventname of on method is set to "change".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onChange(callback) {
-        return this.on("change", callback);
+    set onChange(callback) {
+        this.on("change", callback);
     }
     /**
-     * #### onKeyUp
+     * ***onKeyUp*** :
      * Wrapper function when eventname of on method is set to "keyup".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onKeyUp(callback) {
-        return this.on("keyup", callback);
+    set onKeyUp(callback) {
+        this.on("keyup", callback);
     }
     /**
-     * #### onKeyDown
+     * ***onKeyDown*** :
      * Wrapper function when eventname of on method is set to "onKeyDown".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onKeyDown(callback) {
-        return this.on("keyup", callback);
+    set onKeyDown(callback) {
+        this.on("keyup", callback);
     }
     /**
-     * #### onKeyPress
+     * ***onKeyPress*** :
      * Wrapper function when eventname of on method is set to "keypress".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onKeyPress(callback) {
-        return this.on("keypress", callback);
+    set onKeyPress(callback) {
+        this.on("keypress", callback);
     }
     /**
-     * #### onMouseUp
+     * ***onMouseUp**** :
      * Wrapper function when eventname of on method is set to "mouseup".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onMouseUp(callback) {
-        return this.on("mouseup", callback);
+    set onMouseUp(callback) {
+        this.on("mouseup", callback);
     }
     /**
-     * #### onMouseDown
+     * ***onMouseDown*** :
      * Wrapper function when eventname of on method is set to "mousedown".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onMouseDown(callback) {
-        return this.on("mousedown", callback);
+    set onMouseDown(callback) {
+        this.on("mousedown", callback);
     }
     /**
-     * #### onMouseMove
+     * ***onMouseMove*** :
      * Wrapper function when eventname of on method is set to "mousemove".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onMouseMove(callback) {
-        return this.on("mousemove", callback);
+    set onMouseMove(callback) {
+        this.on("mousemove", callback);
     }
     attribute(name, value) {
         if (value == undefined) {
@@ -402,7 +409,7 @@ class DomControl {
         return this.attribute(name, value);
     }
     /**
-     * #### removeAttribute
+     * ***removeAttribute*** :
      * Delete attribute information
      * @param {string} name attribute name
      * @returns {DomControl} DomControl Class Object
@@ -415,7 +422,7 @@ class DomControl {
         return this;
     }
     /**
-     * #### removeAttr
+     * ***removeAttr*** :
      * Delete attribute information
      * @param {string} name attribute name
      * @returns {DomControl} DomControl Class Object
@@ -457,7 +464,7 @@ class DomControl {
         }
     }
     /**
-     * #### removeVirtual
+     * ***removeVirtual*** :
      * Delete virtual attribute information
      * @param {string} name virtual attribute name
      * @returns {DomControl} DomControl Class Object
@@ -484,7 +491,7 @@ class DomControl {
         return this;
     }
     /**
-     * #### style
+     * ***style*** :
      * Sets stylesheet information.
      * @param {object} options stylesheet attribute information
      * @returns {DomControl} DomControl Class Object
@@ -527,7 +534,7 @@ class DomControl {
         return this;
     }
     /**
-     * #### removeClass
+     * ***removeClass*** :
      * remove the class attribute
      * @param {string} className Delete class name
      * @returns {DomControl} DomControl Class Object
@@ -540,7 +547,7 @@ class DomControl {
         return this;
     }
     /**
-     * #### isClass
+     * ***isClass*** :
      * Checks if the specified class exists in the element
      * @param {string} className Delete class name
      * @returns {boolean} exists status
@@ -551,19 +558,98 @@ class DomControl {
     }
     value(value) {
         if (value == undefined) {
-            return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__get_value_default).call(this, 0);
+            return this.get_value_default(0);
         }
         else {
-            return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__set_value_Default).call(this, 0, value);
+            return this.set_value_Default(0, value);
         }
     }
     default(value) {
         if (value == undefined) {
-            return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__get_value_default).call(this, 1);
+            return this.get_value_default(1);
         }
         else {
-            return __classPrivateFieldGet(this, _DomControl_instances, "m", _DomControl__set_value_Default).call(this, 1, value);
+            return this.set_value_Default(1, value);
         }
+    }
+    get_value_default(mode) {
+        var qs = this._qs[this._qs.length - 1];
+        if (qs.type == "radio") {
+            for (var n = 0; n < this._qs.length; n++) {
+                var qs = this._qs[n];
+                if (qs.checked == true) {
+                    return qs.value;
+                }
+            }
+        }
+        else if (qs.type == "checkbox") {
+            var result = [];
+            for (var n = 0; n < this._qs.length; n++) {
+                var qs = this._qs[n];
+                if (qs.checked == true) {
+                    result.push(qs.value);
+                }
+            }
+            return result;
+        }
+        else {
+            return qs.value;
+        }
+    }
+    set_value_Default(mode, value) {
+        for (var n = 0; n < this._qs.length; n++) {
+            var qs = this._qs[n];
+            var type = qs.type;
+            if (type == "radio") {
+                if (qs.value == value) {
+                    if (mode == 0) {
+                        qs.checked = true;
+                    }
+                    else {
+                        qs.setAttribute("checked", true);
+                    }
+                }
+                else {
+                    if (mode == 0) {
+                        qs.checked = false;
+                    }
+                    else {
+                        qs.removeAttribute("checked");
+                    }
+                }
+            }
+            else if (type == "checkbox") {
+                if (typeof value == "string") {
+                    value = [value];
+                }
+                if (mode == 0) {
+                    qs.checked = false;
+                }
+                else {
+                    qs.removeAttribute("checked");
+                }
+                for (var n2 = 0; n2 < value.length; n2++) {
+                    var v = value[n2];
+                    if (qs.value == v) {
+                        if (mode == 0) {
+                            qs.checked = true;
+                        }
+                        else {
+                            qs.setAttribute("checked", true);
+                        }
+                    }
+                }
+            }
+            else {
+                if (mode == 0) {
+                    qs.value = value;
+                }
+                else {
+                    qs.setAttribute("value", value);
+                }
+            }
+        }
+        return this;
     }
     valueIncrement(step) {
         let value = this.value();
@@ -606,24 +692,22 @@ class DomControl {
         return this.value(value);
     }
     /**
-     * #### getNodeName
+     * ***nodeName*** :
      * get the node name of an element.
-     * @returns {string} node name
      */
-    getNodeName() {
+    get nodeName() {
         var qs = this._qs[this._qs.length - 1];
         return qs.localName;
     }
     /**
-     * #### getType
+     * ***type*** :
      * get the type attribute.
-     * @returns {string} type
      */
-    getType() {
+    get type() {
         return this.attr("type");
     }
     /**
-     * #### click
+     * ***click*** :
      * performs a click on an element.
      * @returns {DomControl} DomControl Class Object
      */
@@ -635,7 +719,7 @@ class DomControl {
         return this;
     }
     /**
-     * #### dblclick
+     * ***dblclick*** :
      * Performs a double click on an element.
      * @returns {DomControl} DomControl Class Object
      */
@@ -647,7 +731,7 @@ class DomControl {
         return this;
     }
     /**
-     * #### submit
+     * ***submit*** :
      * Executes element submission.
      * @returns {DomControl} DomControl Class Object
      */
@@ -659,7 +743,7 @@ class DomControl {
         return this;
     }
     /**
-     * #### focus
+     * ***focus*** :
      * Performs element focus.
      * @returns {DomControl} DomControl Class Object
      */
@@ -671,83 +755,5 @@ class DomControl {
         return this;
     }
 }
-_DomControl_instances = new WeakSet(), _DomControl__get_value_default = function _DomControl__get_value_default(mode) {
-    var qs = this._qs[this._qs.length - 1];
-    if (qs.type == "radio") {
-        for (var n = 0; n < this._qs.length; n++) {
-            var qs = this._qs[n];
-            if (qs.checked == true) {
-                return qs.value;
-            }
-        }
-    }
-    else if (qs.type == "checkbox") {
-        var result = [];
-        for (var n = 0; n < this._qs.length; n++) {
-            var qs = this._qs[n];
-            if (qs.checked == true) {
-                result.push(qs.value);
-            }
-        }
-        return result;
-    }
-    else {
-        return qs.value;
-    }
-}, _DomControl__set_value_Default = function _DomControl__set_value_Default(mode, value) {
-    for (var n = 0; n < this._qs.length; n++) {
-        var qs = this._qs[n];
-        var type = qs.type;
-        if (type == "radio") {
-            if (qs.value == value) {
-                if (mode == 0) {
-                    qs.checked = true;
-                }
-                else {
-                    qs.setAttribute("checked", true);
-                }
-            }
-            else {
-                if (mode == 0) {
-                    qs.checked = false;
-                }
-                else {
-                    qs.removeAttribute("checked");
-                }
-            }
-        }
-        else if (type == "checkbox") {
-            if (typeof value == "string") {
-                value = [value];
-            }
-            if (mode == 0) {
-                qs.checked = false;
-            }
-            else {
-                qs.removeAttribute("checked");
-            }
-            for (var n2 = 0; n2 < value.length; n2++) {
-                var v = value[n2];
-                if (qs.value == v) {
-                    if (mode == 0) {
-                        qs.checked = true;
-                    }
-                    else {
-                        qs.setAttribute("checked", true);
-                    }
-                }
-            }
-        }
-        else {
-            if (mode == 0) {
-                qs.value = value;
-            }
-            else {
-                qs.setAttribute("value", value);
-            }
-        }
-    }
-    return this;
-};
 exports.default = DomControl;
 ;

@@ -1,6 +1,6 @@
-export default new class Data{
-    __form = {};
-    __before_url = null;
-    __file_uploads = {};
-    before_template = null;
+export default class Data{
+    public static __form = {};
+    public static __before_url = null;
+    public static __file_uploads = {};
+    public static before_template = null;
 };

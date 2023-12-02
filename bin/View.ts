@@ -12,8 +12,7 @@ export default class View{
     public view : string = null;
 
     /**
-     * view 
-     * 
+     * ***setView*** :  
      * Set the page view path to display.  
      * If not specified, automatically determined by "{Controller Name}/{action name}"  
      * If you use it, place the HTML file in the path "rendering/View/{Controller Name}/{action Name}.html".
@@ -27,8 +26,7 @@ export default class View{
     public template : string = null;
 
     /**
-     * setTemplate
-     * 
+     * ***setTemplate*** : 
      * Specifies the template name to use on the displayed page.  
      * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.  
      */
@@ -39,15 +37,14 @@ export default class View{
     }
 
     /**
-     * #### handle
+     * ***handle*** : 
      * An event handler that runs automatically when the view is drawn on the screen.  
      * This event is executed only when rendered.
      */
     handle(aregment? : Array<any>) : void{}
 
-
     /**
-     * #### handleAlways
+     * ***handleAlways*** : 
      * An event handler that runs automatically when the View is displayed on screen.  
      * This event is always executed even if the same View has already been rendered..
      */

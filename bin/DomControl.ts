@@ -3,29 +3,28 @@ import DomStatic from "DomStatic";
 
 export default class DomControl{
 
-    _qs = null;
+    public _qs = null;
 
-    constructor(qs){
+    public constructor(qs){
         this._qs = qs;
         for(var n = 0 ; n < this._qs.length ; n++){
-            var qs = this._qs[n];
-            if(!qs.uid){
+            var qs_ = this._qs[n];
+            if(!qs_.uid){
                 var uid = Util.uniqId();
-                qs.uid = uid;    
+                qs_.uid = uid;
             }
         }
     }
 
-    static load() : DomControl;
+    public static load() : DomControl;
 
-    static load(selector : String) : DomControl;
+    public static load(selector : String) : DomControl;
 
-    static load(htmlElement : HTMLElement) : DomControl;
+    public static load(htmlElement : HTMLElement) : DomControl;
 
-    static load(htmlElement : Array<HTMLElement>) : DomControl;
+    public static load(htmlElement : Array<HTMLElement>) : DomControl;
 
-    static load(selector? : String | HTMLElement | Array<HTMLElement>) : DomControl{
-
+    public static load(selector? : String | HTMLElement | Array<HTMLElement>) : DomControl{
         let fullSelector = "";
         if(selector){
             if(typeof selector == "string"){
@@ -53,28 +52,28 @@ export default class DomControl{
     }
 
     /**
-     * ####(getter) get
+     * ***get*** : 
      * Get the document information of the get DOM.
      */
-    get get(){
+    public get get(){
         return this._qs;
     }
 
     /**
-     * ####(getter) length
+     * ***length*** : 
      * Get the number of elements in the get DOM.
      * @returns {number} length
      */
-    get length() : number{
+    public get length() : number{
         return this._qs.length;
     }
 
     /**
-     * #### exists
+     * ***exists*** : 
      * Determine whether an element exists.
      * @returns {bolean} judgment result
      */
-    exists() : boolean{
+    public get exists() : boolean{
         if(this._qs.length){
             return true;
         }
@@ -82,48 +81,48 @@ export default class DomControl{
     }
 
     /**
-     * #### first
+     * ***first*** : 
      * Specifies the first element.
      * @returns {DomControl} DomControl Class Object
      */
-    first() : DomControl{
+    public get first() : DomControl{
         return new DomControl([ this._qs[0] ]);
     }
 
     /**
-     * #### last
+     * ***last*** : 
      * Specifies the last element.
      * @returns {DomControl} DomControl Class Object
      */
-    last() : DomControl{
+    public get last() : DomControl{
         return new DomControl([ this._qs[this._qs.length - 1] ]);
     }
 
     /**
-     * #### parent
+     * ***parent*** : 
      * Specifies the parent element one level above.
      * @returns {DomControl} DomControl Class Object
      */
-    parent() : DomControl{
+    public get parent() : DomControl{
         return new DomControl([ this._qs[this._qs.length - 1].parentNode ]);
     }
 
     /**
-     * #### index
+     * ***index*** : 
      * Specifies the element at the index specified by the argument
      * @param {number} index element index
      * @returns {DomControl} DomControl Class Object
      */
-    index(index : number) : DomControl{
+    public index(index : number) : DomControl{
         return new DomControl([ this._qs[index] ]);
     }
 
     /**
-     * #### even
+     * ***even*** : 
      * Extract even element information only.
      * @returns {DomControl} DomControl Class Object
      */
-    even() : DomControl{
+    public get even() : DomControl{
         var qs_ = [];
         for(var n = 0 ; n < this._qs.length ; n++){
             var q_ = this._qs[n];
@@ -135,11 +134,11 @@ export default class DomControl{
     }
 
     /**
-     * #### odd
+     * ***odd*** : 
      * Extract only odd element information
      * @returns {DomControl} DomControl Class Object
      */
-    odd() : DomControl{
+    public get odd() : DomControl{
         var qs_ = [];
         for(var n = 0 ; n < this._qs.length ; n++){
             var q_ = this._qs[n];
@@ -151,13 +150,13 @@ export default class DomControl{
     }
 
     /**
-     * #### findOnAttr
+     * ***findOnAttr*** : 
      * Specifies only elements that contain attribute information that matches the conditions of the argument.
      * @param {string} name attribute name
      * @param {string|number} value attribute value
      * @returns {DomControl} DomControl Class Object
      */
-    findOnAttr(name : string, value : any) : DomControl{
+    public findOnAttr(name : string, value : any) : DomControl{
         var qss = [];
         for(var n = 0 ; n < this._qs.length ;n ++){
             var qs = this._qs[n];
@@ -174,13 +173,13 @@ export default class DomControl{
     }
 
     /**
-     * #### findOnVirtual
+     * ***findOnVirtual*** : 
      * Specify only elements that contain Virtual attribute information that matches the argument conditions.
      * @param {string} name virtual attribute name
-     * @param {string|number} value virtual attribute value
+     * @param {any} value virtual attribute value
      * @returns {DomControl} DomControl Class Object
      */
-    findOnVirtual(name : string, value) : DomControl{
+    public findOnVirtual(name : string, value : any) : DomControl{
         var qss = [];
         for(var n = 0 ; n < this._qs.length ;n ++){
             var qs = this._qs[n];
@@ -238,24 +237,24 @@ export default class DomControl{
     }
 
     /**
-     * #### child
+     * ***child*** : 
      * Specifies the child element of the argument selector,
      * If no selector is specified, all child elements are included.
      * If no selector argument is used, get all child elements.
      * @returns {DomControl} DomControl Class Object
      */
-    child(): DomControl;
+    public child() : DomControl;
 
     /**
-     * #### child
+     * ***child*** : 
      * Specifies the child element of the argument selector,
      * If no selector is specified, all child elements are included
      * @param {string} selector selector
      * @returns {DomControl} DomControl Class Object
      */
-    child(selector : string) : DomControl;
+    public child(selector : string) : DomControl;
 
-    child(selector? : string) : DomControl{
+    public child(selector? : string) : DomControl{
         
         if(!selector){
             selector = "*";
@@ -273,80 +272,66 @@ export default class DomControl{
     }
 
     /**
-     * #### text
-     * get the text inside the element tag
-     * @returns {string} text contents
+     * ***text*** : 
+     * get/set the text inside the element tag
      */
-    text(): string;
+    public get text(): string{
+        return this._qs[this._qs.length - 1].innerText;
+    }
 
-    /**
-     * #### text
-     * Sets the text inside the element tag.
-     * Since it is set as innerText, HTML tags etc. are omitted.
-     * @param {string} text text contents
-     * @returns {DomControl} DomControl Class Object
-     */
-    text(text : string): DomControl;
-
-    text(string? : string) : string | DomControl{
-        if(string == undefined){
-            return this._qs[this._qs.length - 1].innerText;
-        }
-        else{
-            for(var n = 0 ; n < this._qs.length ;n ++){
-                var qs = this._qs[n];
-                qs.innerText = string;
-            }
-            return this;
+    public set text(text : string){
+        for(var n = 0 ; n < this._qs.length ;n ++){
+            var qs = this._qs[n];
+            qs.innerText = text;
         }
     }
 
     /**
-     * #### html
-     * Get the HTML inside the element tag (innerHTML)
-     * @returns {string} html contents
+     * ***html*** : 
+     * Get/Set the HTML inside the element tag (innerHTML)
      */
-    html(): string;
+    public get html(): string{
+        return this._qs[this._qs.length - 1].innerHTML;
+    }
 
-    /**
-     * #### html
-     * Sets the HTML (innerHTML) inside the element tag
-     * @param {strin} html html contents 
-     * @returns {DomControl} DomControl Class Object
-     */
-    html(html: string): DomControl;
-
-    html(string? : string) : string | DomControl{
-
-        if(string == undefined){
-            return this._qs[this._qs.length - 1].innerHTML;
-        }
-        else{
-            for(var n = 0 ; n < this._qs.length ;n ++){
-                var qs = this._qs[n];
-                qs.innerHTML = string;
-            }
-            return this;
+    public set html(html : string){
+        for(var n = 0 ; n < this._qs.length ;n ++){
+            var qs = this._qs[n];
+            qs.innerHTML = html;
         }
     }
 
     /**
-     * #### append
-     * add element tag.
-     * @param {string} contents add contents 
-     * @returns {DomControl} DomControl Class Object
+     * ***outerHtml*** : 
+     * Get/Set the HTML inside the element tag (outerHTML)
      */
-    append(appendHtmlContent : string) : DomControl;
+    public get outerHtml() : string{
+        return this._qs[this._qs.length - 1].outerHTML;
+    }
+    public set outerHtml(html : string){
+        for(var n = 0 ; n < this._qs.length ;n ++){
+            var qs = this._qs[n];
+            qs.outerHtml = html;
+        }
+    }
 
     /**
-     * #### append
+     * ***append*** : 
      * add element tag.
      * @param {string} contents add contents 
      * @returns {DomControl} DomControl Class Object
      */
-    append(appendElement : Element) : DomControl;
+    public append(appendHtmlContent : string) : DomControl;
 
-    append(contents : string | Element) : DomControl{
+    /**
+     * ***append*** : 
+     * add element Object.
+     * @param {Element} appendElement add contents Element object
+     * @returns {DomControl} DomControl Class Object
+     */
+    public append(appendElement : Element) : DomControl;
+
+    public append(contents) : DomControl{
         this._qs.forEach(function(qs){
             if(typeof contents == "string"){
                 qs.insertAdjacentHTML("beforeend", contents);
@@ -359,37 +344,67 @@ export default class DomControl{
     }
 
     /**
-     * #### append
+     * ***before*** : 
      * Append just before the element tag
-     * @param {string} contents add contents 
+     * @param {string} contents add before contents
      * @returns {DomControl} DomControl Class Object
      */
-    before(contents : string) : DomControl{
+    public before(beforeHtmlContent : string) : DomControl;
+
+    /**
+     * ***before*** : 
+     * Append just before the element object.
+     * @param {Element} beforeElement add before contents Element object
+     * @returns {DomControl} DomControl Class Object
+     */
+    public before(beforeElement : Element) : DomControl;
+
+    public before(contents) : DomControl{
         this._qs.forEach(function(qs){
-            qs.insertAdjacentHTML("beforebegin", contents);
+            if(typeof contents == "string"){
+                qs.insertAdjacentHTML("beforebegin", contents);
+            }
+            else{
+                qs.before(contents);
+            }
         });
         return this;
     }
 
     /**
-     * #### after
+     * ***after*** : 
      * Append right after the element tag
-     * @param {string} contents add contents 
+     * @param {string} contents add after contents 
      * @returns {DomControl} DomControl Class Object
      */
-    after(contents : string) : DomControl{
+    public after(beforeHtmlContent : string) : DomControl;
+
+    /**
+     * ***after*** : 
+     * Append right after the element tag
+     * @param {Element} beforeElement add after contents Element object
+     * @returns {DomControl} DomControl Class Object
+     */
+    public after(beforeElement : Element) : DomControl;
+
+    public after(contents) : DomControl{
         this._qs.forEach(function(qs){
-            qs.insertAdjacentHTML("afterend", contents);
+            if(typeof contents == "string"){
+                qs.insertAdjacentHTML("afterend", contents);
+            }
+            else{
+                qs.after(contents);
+            }
         });
         return this;
     }
 
     /**
-     * #### remove
+     * ***remove*** : 
      * remove the element
      * @returns {DomControl} DomControl Class Object
      */
-    remove() : DomControl{
+    public remove() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.remove();
@@ -398,130 +413,132 @@ export default class DomControl{
     }
 
     /**
-     * #### empty
+     * ***empty*** : 
      * clear inside element
      * @returns {DomControl} DomControl Class Object
      */
-    empty() : DomControl{
-        return this.html("");
+    public empty() : DomControl{
+        this.html = "";
+        return this;
     }
 
     /**
-     * #### on
+     * ***on*** : 
      * set the event handler.
      * @param {string} eventName event name
      * @param {Function} callback callback function
      * @returns {DomControl} DomControl Class Object
      */
-    on(eventName : string, callback : Function) : DomControl{
-        var cont = this;
+    public on(eventName : string, callback : Function) : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
-            qs.addEventListener(eventName, function(e){
-                callback.bind(cont)(e, cont);
+            qs.addEventListener(eventName, (e) => {
+                const targetDom = new DomControl([e.target]);
+                callback(targetDom, e);
             });
         }
         return this;
     }
 
     /**
-     * #### onClick
+     * ***onClick*** : 
      * Wrapper function when eventname of on method is set to "click".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onClick(callback : Function) : DomControl{
-        return this.on("click", callback);
+    public set onClick(callback : Function){
+        this.on("click", callback);
     }
 
     /**
-     * #### onChange
+     * ***onContextmenu*** : 
+     * Wrapper function when eventname of on method is set to "contextmenu".
+     * @param {Function} callback callback function
+     */
+    public set onContextmenu(callback : Function){
+        this.on("contextmenu", callback);
+    }
+
+    /**
+     * ***onChange*** : 
      * Wrapper function when eventname of on method is set to "change".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onChange(callback : Function) : DomControl{
-        return this.on("change", callback);
+    public set onChange(callback : Function){
+        this.on("change", callback);
     }
 
     /**
-     * #### onKeyUp
+     * ***onKeyUp*** : 
      * Wrapper function when eventname of on method is set to "keyup".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onKeyUp(callback : Function) : DomControl{
-        return this.on("keyup", callback);
+    public set onKeyUp(callback : Function){
+        this.on("keyup", callback);
     }
 
     /**
-     * #### onKeyDown
+     * ***onKeyDown*** : 
      * Wrapper function when eventname of on method is set to "onKeyDown".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onKeyDown(callback : Function) : DomControl{
-        return this.on("keyup", callback);
+    public set onKeyDown(callback : Function){
+        this.on("keyup", callback);
     }
 
     /**
-     * #### onKeyPress
+     * ***onKeyPress*** : 
      * Wrapper function when eventname of on method is set to "keypress".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onKeyPress(callback : Function) : DomControl{
-        return this.on("keypress", callback);        
+    public set onKeyPress(callback : Function){
+        this.on("keypress", callback);        
     }
 
     /**
-     * #### onMouseUp
+     * ***onMouseUp**** : 
      * Wrapper function when eventname of on method is set to "mouseup".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onMouseUp(callback : Function) : DomControl{
-        return this.on("mouseup", callback);        
+    public set onMouseUp(callback : Function){
+        this.on("mouseup", callback);        
     }
 
     /**
-     * #### onMouseDown
+     * ***onMouseDown*** : 
      * Wrapper function when eventname of on method is set to "mousedown".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onMouseDown(callback : Function) : DomControl{
-        return this.on("mousedown", callback);        
+    public set onMouseDown(callback : Function){
+        this.on("mousedown", callback);        
     }
 
     /**
-     * #### onMouseMove
+     * ***onMouseMove*** : 
      * Wrapper function when eventname of on method is set to "mousemove".
      * @param {Function} callback callback function
-     * @returns {DomControl} DomControl Class Object
      */
-    onMouseMove(callback : Function) : DomControl{
-        return this.on("mousemove", callback);        
+    public set onMouseMove(callback : Function){
+        this.on("mousemove", callback);        
     }
 
     /**
-     * #### attribute
+     * ***attribute*** : 
      * get attribute information
      * @param {string} name attribute name
      * @returns {string} attribute value
      */
-    attribute(name: string): string;
+    public attribute(name: string): string;
 
     /**
-     * #### attribute
+     * ***attribute*** : 
      * Set attribute information
      * @param {string} name attribute name
      * @param value attribute value
      * @returns {DomControl} DomControl Class Object
      */
-    attribute(name: string, value : any) : DomControl;
+    public attribute(name: string, value : any) : DomControl;
 
-    attribute(name : string, value? : any) : string | DomControl{
+    public attribute(name : string, value? : any) : string | DomControl{
         if(value == undefined){
             return this._qs[this._qs.length - 1].attributes[name].value;
         }
@@ -535,33 +552,33 @@ export default class DomControl{
     }
 
     /**
-     * #### attr
+     * ***attr*** : 
      * get attribute information
      * @param {string} name attribute name
      * @returns {string} attribute value
      */
-    attr(name : string): string;
+    public attr(name : string): string;
 
     /**
-     * #### attr
+     * ***attr*** : 
      * Set attribute information
      * @param {string} name attribute name
      * @param value attribute value
      * @returns {DomControl} DomControl Class Object
      */
-    attr(name : string, value : any): DomControl;
+    public attr(name : string, value : any): DomControl;
 
-    attr(name : string, value? : any) : string | DomControl{
+    public attr(name : string, value? : any) : string | DomControl{
         return this.attribute(name, value);
     }
 
     /**
-     * #### removeAttribute
+     * ***removeAttribute*** : 
      * Delete attribute information
      * @param {string} name attribute name
      * @returns {DomControl} DomControl Class Object
      */
-    removeAttribute(name : string) : DomControl{
+    public removeAttribute(name : string) : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.removeAttribute(name);
@@ -570,33 +587,33 @@ export default class DomControl{
     }
     
     /**
-     * #### removeAttr
+     * ***removeAttr*** : 
      * Delete attribute information
      * @param {string} name attribute name
      * @returns {DomControl} DomControl Class Object
      */
-    removeAttr(name : string) : DomControl{
+    public removeAttr(name : string) : DomControl{
         return this.removeAttribute(name);
     }
 
     /**
-     * virtual
+     * ***virtual*** : 
      * Get virtual attribute information
      * @param {string} name virtual attribute name
      * @returns {string} virtual attribute value
      */
-    virtual(name : string) : string;
+    public virtual(name : string) : string;
 
     /**
-     * #### virtual
+     * ***virtual*** : 
      * Set virtual attribute information
      * @param {string} name virtual attribute name
      * @param {any} value virtual attribute value
      * @returns {DomControl} DomControl Class Object
      */
-    virtual(name : string, value : any) : DomControl;
+    public virtual(name : string, value : any) : DomControl;
 
-    virtual(name : string, value? : any) : string | DomControl{
+    public virtual(name : string, value? : any) : string | DomControl{
 
         if(this._qs.length == 0){
             return;
@@ -640,12 +657,12 @@ export default class DomControl{
     }
     
     /**
-     * #### removeVirtual
+     * ***removeVirtual*** : 
      * Delete virtual attribute information
      * @param {string} name virtual attribute name
      * @returns {DomControl} DomControl Class Object
      */
-    removeVirtual(name : string) : DomControl{
+    public removeVirtual(name : string) : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
 
@@ -673,12 +690,12 @@ export default class DomControl{
     }
 
     /**
-     * #### style
+     * ***style*** : 
      * Sets stylesheet information.
      * @param {object} options stylesheet attribute information
      * @returns {DomControl} DomControl Class Object
      */
-    style(options : object) : DomControl{
+    public style(options : object) : DomControl{
 
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
@@ -694,11 +711,11 @@ export default class DomControl{
     }
 
     /**
-     * #### getStyle
+     * ***getStyle*** : 
      * Get all stylesheet information.
      * @returns stylesheet information
      */
-    getStyle();
+    public getStyle() : string;
 
     /**
      * #### getStyle
@@ -706,9 +723,9 @@ export default class DomControl{
      * @param {string} name specified style
      * @returns {string} stylesheet info
      */
-    getStyle(name: string): string;
+    public getStyle(name: string): string;
 
-    getStyle(name? : string) : string{
+    public getStyle(name? : string) : string{
         var qs = this._qs[this._qs.length - 1];
         
         if(name){
@@ -724,22 +741,22 @@ export default class DomControl{
     }
 
     /**
-     * #### addClass
+     * ***addClass*** : 
      * add class attribute
      * @param {string} className additional class name
      * @returns {DomControl} DomControl Class Object
      */
-    addClass(className : string) : DomControl;
+    public addClass(className : string) : DomControl;
     
     /**
-     * #### addClass
+     * ***addClass*** : 
      * Add multiple class attributes
      * @param {Array<string>} className additional class names
      * @returns {DomControl} DomControl Class Object
      */
-    addClass(className : Array<string>) : DomControl;
+    public addClass(className : Array<string>) : DomControl;
 
-    addClass(className : string | Array<string>) : DomControl{
+    public addClass(className : string | Array<string>) : DomControl{
 
         if(typeof className == "string"){
             className = [ className ];
@@ -756,12 +773,12 @@ export default class DomControl{
     }
 
     /**
-     * #### removeClass
+     * ***removeClass*** : 
      * remove the class attribute
      * @param {string} className Delete class name
      * @returns {DomControl} DomControl Class Object
      */
-    removeClass(className : string) : DomControl{
+    public removeClass(className : string) : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.classList.remove(className);
@@ -770,66 +787,66 @@ export default class DomControl{
     }
 
     /**
-     * #### isClass
+     * ***isClass*** : 
      * Checks if the specified class exists in the element
      * @param {string} className Delete class name 
      * @returns {boolean} exists status
      */
-    isClass(className : string) : boolean{
+    public isClass(className : string) : boolean{
         var qs = this._qs[this._qs.length - 1];
         return qs.classList.contains(className);
     }
 
     /**
-     * #### value
+     * ***value*** : 
      * For input fields, get the specified value
      * @returns {any} input value
      */
-    value() : any;
+    public value() : any;
 
     /**
-     * #### value
+     * ***value*** : 
      * For input fields, specify the value
      * @param {string} value input value
      * @returns {DomControl} DomControl Class Object
      */
-    value(value): DomControl;
+    public value(value): DomControl;
 
-    value(value? : any){
+    public value(value? : any){
         if(value == undefined){
-            return this.#_get_value_default(0);
+            return this.get_value_default(0);
         }
         else{
-            return this.#_set_value_Default(0, value);
+            return this.set_value_Default(0, value);
         }
     }
 
     /**
-     * #### default
+     * ***default*** : 
      * For input fields, get the specified value
      * @returns {any} input value
      */
-    default(): any;
+    public default(): any;
 
     /**
-     * #### default
+     * ***default**** : 
      * For input fields, specify the value
      * * If a reset event occurs, it will revert to the value specified in this method.
      * @param {string} value input value
      * @returns {DomControl} DomControl Class Object
      */
-    default(value : any): DomControl;
+    public default(value : any): DomControl;
 
-    default(value? : any){
+    public default(value? : any){
         if(value == undefined){
-            return this.#_get_value_default(1);
+            return this.get_value_default(1);
         }
         else{
-            return this.#_set_value_Default(1, value);
+            return this.set_value_Default(1, value);
         }
     }
 
-    #_get_value_default(mode){
+    private get_value_default(mode){
         var qs = this._qs[this._qs.length - 1];
         if(qs.type == "radio"){
             for(var n = 0 ; n < this._qs.length ; n++){
@@ -857,7 +874,7 @@ export default class DomControl{
         }
     }
 
-    #_set_value_Default(mode, value){
+    private set_value_Default(mode, value){
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             var type = qs.type;
@@ -918,24 +935,24 @@ export default class DomControl{
     }
 
     /**
-     * #### valueIncrement
+     * ***valueIncrement*** : 
      * This function automatically increments when the target element is a numerical input field (text box, etc.)
      * Increment is performed based on the value range of min and max attributes.
      * @returns {DomControl} DomControl Class Object
      */
-    valueIncrement() : DomControl;
+    public valueIncrement() : DomControl;
 
     /**
-     * #### valueIncrement
+     * ***valueIncrement*** : 
      * This function automatically increments when the target element is a numerical input field (text box, etc.)
      * Increment is performed based on the value range of min and max attributes.
      * The number of steps in the argument is added.
      * @param {number} step Number of addition steps
      * @returns {DomControl} DomControl Class Object
      */
-    valueIncrement(step : number) : DomControl;
+    public valueIncrement(step : number) : DomControl;
 
-    valueIncrement(step? : number) : DomControl{
+    public valueIncrement(step? : number) : DomControl{
         let value = this.value();
 
         if(!step){
@@ -963,24 +980,24 @@ export default class DomControl{
     }
     
     /**
-     * #### valueIncrement
+     * ***valueIncrement*** : 
      * This function automatically decrements when the target element is a numerical input field (text box, etc.)
      * Decrement is performed based on the value range of min and max attributes.
      * @returns {DomControl} DomControl Class Object
      */
-    valueDecrement() : DomControl;
+    public valueDecrement() : DomControl;
 
     /**
-     * #### valueIncrement
+     * ***valueIncrement*** : 
      * This function automatically decrements when the target element is a numerical input field (text box, etc.)
      * Decrement is performed based on the value range of min and max attributes.
      * The number of steps in the argument is added.
      * @param {number} step Number of subtraction steps
      * @returns {DomControl} DomControl Class Object
      */
-    valueDecrement(step : number) : DomControl;
+    public valueDecrement(step : number) : DomControl;
 
-    valueDecrement(step? : number) : DomControl{
+    public valueDecrement(step? : number) : DomControl{
         let value = this.value();
 
         if(!step){
@@ -1008,30 +1025,28 @@ export default class DomControl{
     }
 
     /**
-     * #### getNodeName
+     * ***nodeName*** : 
      * get the node name of an element.
-     * @returns {string} node name
      */
-    getNodeName(): string{
+    public get nodeName(): string{
         var qs = this._qs[this._qs.length - 1];
         return qs.localName;
     }
 
     /**
-     * #### getType
+     * ***type*** : 
      * get the type attribute.
-     * @returns {string} type
      */
-    getType(): string{
+    public get type(): string{
         return this.attr("type");
     }
 
     /**
-     * #### click
+     * ***click*** : 
      * performs a click on an element.
      * @returns {DomControl} DomControl Class Object
      */
-    click() : DomControl{
+    public click() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.click();
@@ -1040,11 +1055,11 @@ export default class DomControl{
     }
 
     /**
-     * #### dblclick
+     * ***dblclick*** : 
      * Performs a double click on an element.
      * @returns {DomControl} DomControl Class Object
      */
-    dblclick() : DomControl{
+    public dblclick() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.dblclick();
@@ -1053,11 +1068,11 @@ export default class DomControl{
     }
 
     /**
-     * #### submit
+     * ***submit*** : 
      * Executes element submission.
      * @returns {DomControl} DomControl Class Object
      */
-    submit() : DomControl{
+    public submit() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.dblclick();
@@ -1066,11 +1081,11 @@ export default class DomControl{
     }
     
     /**
-     * #### focus
+     * ***focus*** : 
      * Performs element focus.
      * @returns {DomControl} DomControl Class Object
      */
-    focus() : DomControl{
+    public focus() : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.focus();

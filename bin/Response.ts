@@ -5,70 +5,44 @@ import Data from "Data";
 import Controller from "Controller";
 import View from "View";
 
-export default new class Response{
+export default class Response{
 
-    __before_controller : Controller = null;
-    __before_controller_path : string = null;
-    __before_view : View = null;
-    __before_view_path : string = null;
-    __before_action : string = null;
-    __page_status : boolean = true;
+    public static __before_controller : Controller = null;
+    public static __before_controller_path : string = null;
+    public static __before_view : View = null;
+    public static __before_view_path : string = null;
+    public static __before_action : string = null;
+    public static __page_status : boolean = true;
 
     /**
-     * pageDisable
-     * 
+     * ***pageEnable*** : 
      * Temporarily suspend the page move operation.
-     * 
-     * @returns {Response} Response Class Object (method chain)
      */
-    pageDisable() : Response{
-        this.__page_status = false;
-        return this;
+    public static set pageEnable(status : boolean){
+        Response.__page_status = status;
+    }
+    public static get pageEnable() : boolean{
+        return Response.__page_status;
     }
 
     /**
-     * pageEnable
-     * 
-     * unpause the page move operation
-     * 
-     * @returns {Response} Response Class Object (method chain)
-     */
-    pageEnable() : Response{
-        this.__page_status = true;
-        return this;
-    }
-
-    /**
-     * setPageStatus
-     * 
-     * Get the page navigation state.
-     * 
-     * @returns {boolean} page status
-     */
-    setPageStatus() : boolean{
-        return this.__page_status;
-    }
-
-    /**
-     * redirect
-     * 
+     * ***redirect*** : 
      * redirect to another page.  
      * @param {string} url Destination page URL
      * @returns {void}
      */
-    redirect(url : string) : void;
+    public static redirect(url : string) : void;
 
     /**
-     * redirect
-     * 
+     * ***redirect*** :
      * redirect to another page.  
      * @param {string} url Destination page URL
      * @param {boolean} sliented When set to true, page transition processing is not performed only by changing the page URL
      * @returns {void}
      */
-    redirect(url : string, sliented : boolean) : void;
+    public static redirect(url : string, sliented : boolean) : void;
 
-    redirect(url : string, sliented? : boolean) : void{
+    public static redirect(url : string, sliented? : boolean) : void{
 
         if(!url){
             url = "/";
@@ -82,7 +56,7 @@ export default new class Response{
         }
     }
 
-    async __rendering(routes, context){
+    public static async __rendering(routes, context){
 
         if(!context.view){
             if(routes.controller){
@@ -99,36 +73,38 @@ export default new class Response{
 
                 Data.before_template = context.template;
 
-                this.bindTemplate("body", context.template);
-                this.bindView("[spa-contents]", context.view);
+                Response.bindTemplate("body", context.template);
+                Response.bindView("[spa-contents]", context.view);
             }
             else{
-                this.bindView("[spa-contents]", context.view);
+                Response.bindView("[spa-contents]", context.view);
             }
 
         }
         else{
             Data.before_template = null;
-            this.bindView("body", context.view);
+            Response.bindView("body", context.view);
         }
+
+        Response.setBindViewPart();
 
         VDom().refresh();
     }
 
-    async renderingOnController(routes){
+    private static async renderingOnController(routes){
 
-        var controllerName = routes.controller.substring(0,1).toUpperCase() + routes.controller.substring(1) + "Controller";
-        var contPath = "app/Controller/" + controllerName;
+        const controllerName : string = Util.ucFirst(routes.controller) + "Controller";
+        const contPath : string = "app/Controller/" + controllerName;
 
         if(!useExists(contPath)){
             throw("\"" + controllerName + "\" Class is not found.");
         }
 
-        const Controller = use(contPath);
-        var cont = new Controller();
+        const Controller_ = use(contPath);
+        const cont : Controller = new Controller_();
 
-        if(this.__before_controller_path != contPath){
-            this.__before_controller_path = contPath;
+        if(Response.__before_controller_path != contPath){
+            Response.__before_controller_path = contPath;
             if(cont.handleBegin){
                 await cont.handleBegin();
             }
@@ -144,7 +120,7 @@ export default new class Response{
         await cont.handleBefore();
         
         if(cont["before_" + routes.action]){
-            var method = "before_" + routes.action;
+            const method : string = "before_" + routes.action;
 
             if(routes.aregment){
                 await cont[method](...routes.aregment);
@@ -156,12 +132,12 @@ export default new class Response{
 
         await cont.handleAfter();
 
-        await this.__rendering(routes, cont);
+        await Response.__rendering(routes, cont);
 
         await cont.handleRenderBefore();
 
         if(cont[routes.action]){
-            let method : string = routes.action;
+            const method : string = routes.action;
 
             if(routes.aregment){
                 await cont[method](...routes.aregment);
@@ -173,24 +149,24 @@ export default new class Response{
 
         await cont.handleRenderAfter(); 
 
-        this.__before_controller = cont;
-        this.__before_action = routes.action;
-        this.__before_view = null;
+        Response.__before_controller = cont;
+        Response.__before_action = routes.action;
+        Response.__before_view = null;
     }
     
-    async renderingOnView(routes){
-        let viewName : string = routes.view.substring(0,1).toUpperCase() + routes.view.substring(1) + "View";
-        let viewPath : string = "app/View/" + viewName;
+    private static async renderingOnView(routes){
+        const viewName : string = Util.ucFirst(routes.view) + "View";
+        const viewPath : string = "app/View/" + viewName;
 
         if(!useExists(viewPath)){
             throw("\"" + viewName + "\" Class is not found.");
         }
 
         const View_ = use(viewPath);
-        let vm : View = new View_();
+        const vm : View = new View_();
 
-        if(this.__before_view_path != viewPath){
-            this.__before_view_path = viewPath;
+        if(Response.__before_view_path != viewPath){
+            Response.__before_view_path = viewPath;
             if(vm.handleBegin){
                 await vm.handleBegin();
             }
@@ -200,10 +176,9 @@ export default new class Response{
 
         await vm.handleAfter();
 
-        await this.__rendering(routes, vm);
+        await Response.__rendering(routes, vm);
 
         await vm.handleRenderBefore();
-
 
         if(routes.aregment){
             await vm.handle(...routes.aregment);
@@ -214,157 +189,151 @@ export default new class Response{
 
         await vm.handleRenderAfter(); 
 
-        this.__before_view = vm;
-        this.__before_controller = null;
-        this.__before_action = null;
+        Response.__before_view = vm;
+        Response.__before_controller = null;
+        Response.__before_action = null;
     }
 
-    rendering(routes) : void{
+    public static async rendering(routes){
 
-        (async function(){
+        try{
+
+            if(Response.__before_controller){
+                var befCont = Response.__before_controller;
+                await befCont.handleLeave(Response.__before_action);
+            }
+
+            if(Response.__before_view){
+                var befView = Response.__before_view;
+                await befView.handleLeave();
+            }
+
+            if(routes.mode == "notfound"){
+                throw("404 not found");
+            }
+            
+            if(routes.controller){
+                await Response.renderingOnController(routes);
+            }
+            else if(routes.view){
+                await Response.renderingOnView(routes);
+            }
+                
+        }catch(error){
+
+            console.error(error);
 
             try{
-
-                if(this.__before_controller){
-                    var befCont = this.__before_controller;
-                    await befCont.handleLeave(this.__before_action);
-                }
-
-                if(this.__before_view){
-                    var befView = this.__before_view;
-                    await befView.handleLeave();
-                }
-
-                if(routes.mode == "notfound"){
-                    throw("404 not found");
-                }
-               
-                if(routes.controller){
-                    await this.renderingOnController(routes);
-                }
-                else if(routes.view){
-                    await this.renderingOnView(routes);
-                }
-                
-            }catch(error){
-
-                console.error(error);
-
-                try{
                     
-                    var expPath = "app/Exception/Exception";
+                const expPath : string = "app/Exception/Exception";
 
-                    if(!useExists(expPath)){
-                        console.error("\Exception\" Class is not found.");
-                        this.#_defautShowException();
-                        return;
-                    }
-
-                    const Exception = use(expPath);
-                    var exps = new Exception;
-
-                    if(!(
-                        exps.handle
-/*
-                         ||
-                        cont.before_handle
-                        */
-                    )){
-                        console.error("\handle\" method on \"Exception\" class is not found.");
-                        return;
-                    }
-
-                    await exps.handleBefore(error);
-
-                    if(exps.before_handle){
-                        await exps.before_handle(error);
-                    }
-
-                    await exps.handleAfter(error);
-
-                    await exps.__rendering();
-
-                    await exps.handleRenderBefore();
-            
-                    if(exps.handle){
-                        await exps.handle(error);
-                    }
-            
-                    await exps.handleRenderAfter(); 
-
-                }catch(error2){
-                    console.error(error2);
+                if(!useExists(expPath)){
+                    console.error("\Exception\" Class is not found.");
+                    Response.defautShowException();
+                    return;
                 }
+
+                const Exception_ = use(expPath);
+                const exps = new Exception_;
+
+                if(!(
+                    exps.handle
+                    /*
+                     ||
+                    cont.before_handle
+                    */
+                )){
+                    console.error("\handle\" method on \"Exception\" class is not found.");
+                    return;
+                }
+
+                await exps.handleBefore(error);
+
+                if(exps.before_handle){
+                    await exps.before_handle(error);
+                }
+
+                await exps.handleAfter(error);
+
+                await exps.__rendering();
+
+                await exps.handleRenderBefore();
+            
+                if(exps.handle){
+                    await exps.handle(error);
+                }
+            
+                await exps.handleRenderAfter(); 
+
+            }catch(error2){
+                console.error(error2);
             }
-   
-        }).bind(this)();
+        }   
     }
 
     /**
-     * view
-     * 
+     * *** view *** : 
      * Get View's content information.
-     * 
      * @param {string} viewName View Name
      * @returns {string} view contents
      */
-    view(viewName : string) : string{
+    public static view(viewName : string) : string{
 
-        var viewPath = "View/" + viewName + ".html";
+        const viewPath : string = "View/" + viewName + ".html";
         if(!useExists(viewPath)){
             return "<div style=\"font-weight:bold;\">[Rendering ERROR] View data does not exist. Check if source file \"" + viewPath + "\" exists.</div>"; 
         }
         
-        var content = use(viewPath);
+        let content : string = use(viewPath);
         content = Util.base64Decode(content);
         
         return content;
     }
 
     /**
-     * template
-     * 
+     * ***template*** : 
      * Get template content information.
-     * 
      * @param {string} templateName Template Name
      * @returns {string} template contents
      */
-    template(templateName : string) : string{
+    public static template(templateName : string) : string{
 
-        var templatePath = "Template/" + templateName + ".html";
+        const templatePath : string = "Template/" + templateName + ".html";
 
         if(!useExists(templatePath)){
             return "<div style=\"font-weight:bold;\">[Rendering ERROR] Template data does not exist. Check if source file \"" + templatePath + "\" exists.</div>"; 
         }
 
-        var content = use(templatePath);
+        var content : string = use(templatePath);
         content = Util.base64Decode(content);
         
         return content;
     }
 
     /**
-     * viewPart
-     * 
+     * ***viewPart*** : 
      * Get viewPart content information.
-     * 
      * @param {string} viewPartName ViewPart Name
      * @returns {string} viewPart contents
      */
-    viewPart(viewPartName : string) : string{
+    public static viewPart(viewPartName : string) : string{
 
-        var viewPartPath = "ViewPart/" + viewPartName + ".html";
+        const viewPartPath : string = "ViewPart/" + viewPartName + ".html";
         if(!useExists(viewPartPath)){
             return "<div style=\"font-weight:bold;\">ViewPart data does not exist. Check if source file \"" + viewPartPath + "\" exists.</div>";
         }
         
         var content = use(viewPartPath);
         content = Util.base64Decode(content);
-        
-        return content;
+
+        const vw = document.createElement("div");
+        vw.innerHTML = content;
+        Response.setBindViewPart(vw);
+    
+        return vw.innerHTML;
     }
 
-    private __bind(type : string, arg1: string, arg2? : string, vdomFlg? : boolean) : object{
+    private static __bind(type : string, arg1: string, arg2? : string, vdomFlg? : boolean) : object{
         let target = null;
         let name : string = "";
         if(arg2){
@@ -396,7 +365,7 @@ export default new class Response{
         }
 
         var content = this[methodName](name);
-        target.html(content);
+        target.html = content;
 
         return {
             already: false,
@@ -404,8 +373,8 @@ export default new class Response{
         };
     }
 
-    private _loadRenderingClass(type : string, option : any) : void{
-        const classPath = "app/" + type + "/" + option.name;
+    private static loadRenderingClass(type : string, option : any) : void{
+        const classPath : string = "app/" + type + "/" + option.name;
 
         if(!useExists(classPath)){
             return;
@@ -430,21 +399,18 @@ export default new class Response{
     }
 
     /**
-     * 
-     * bindView :
-     * 
+     * ***bindView*** : 
      * Binds the View content to the specified selector's element tag.  
      * This method will execute the event handler at the same time if the View class is set.  
      * (Requires handle method.)
      * @param {string} viewName View content name and binding destination element tag VDom selector name (ref attribute).
      * @returns {void}
      */
-    bindView(viewName : string) : void;
+    public static bindView(viewName : string) : void;
 
     /**
      * 
-     * bindView :
-     * 
+     * ***bindView*** : 
      * Binds the View content to the specified selector's element tag.  
      * This method will execute the event handler at the same time if the View class is set.  
      * (Requires handle method.)
@@ -452,12 +418,10 @@ export default new class Response{
      * @param {string} viewName View content name
      * @returns {void}
      */
-    bindView(selector : string, viewName : string) : void;
+    public static  bindView(selector : string, viewName : string) : void;
 
     /**
-     * 
-     * bindView :
-     * 
+     * ***bindView*** : 
      * Binds the View content to the specified selector's element tag.  
      * This method will execute the event handler at the same time if the View class is set.  
      * (Requires handle method.)
@@ -466,40 +430,36 @@ export default new class Response{
      * @param {boolean} vdomFlg If specified as true, it will be bound by virtual Dom control.
      * @returns {void}
      */
-    bindView(selector : string, viewName : string, vdomFlg : boolean) : void;
+    public static bindView(selector : string, viewName : string, vdomFlg : boolean) : void;
 
-    bindView(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
-        const res = this.__bind("view", arg1, arg2, vdomFlg);
-        this._loadRenderingClass("View", res);
+    public static bindView(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
+        const res = Response.__bind("view", arg1, arg2, vdomFlg);
+        Response.loadRenderingClass("View", res);
     }
 
-    bindTemplate(templateName : string) : void;
+    public static bindTemplate(templateName : string) : void;
 
-    bindTemplate(selector : string, templateName : string) : void;
+    public static bindTemplate(selector : string, templateName : string) : void;
 
-    bindTemplate(selector : string, templateName : string, vdomFlg : boolean) : void;
+    public static bindTemplate(selector : string, templateName : string, vdomFlg : boolean) : void;
 
-    bindTemplate(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
-        const res = this.__bind("template", arg1, arg2, vdomFlg);
-        this._loadRenderingClass("Template", res);
+    public static bindTemplate(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
+        const res = Response.__bind("template", arg1, arg2, vdomFlg);
+        Response.loadRenderingClass("Template", res);
     }
 
     /**
-     * 
-     * bindViewPart :
-     * 
+     * ***bindViewPart*** : 
      * Binds the ViewPart content to the specified selector's element tag.  
      * This method will execute the event handler at the same time if the ViewPart class is set.  
      * (Requires handle method.)
      * @param {string} viewPartName ViewPart content name and binding destination element tag VDom selector name (ref attribute).
      * @returns {void}
      */
-    bindViewPart(viewPartName : string) : void;
+    public static bindViewPart(viewPartName : string) : void;
 
     /**
-     * 
-     * bindViewPart :
-     * 
+     * ***bindViewPart*** : 
      * Binds the ViewPart content to the specified selector's element tag.  
      * This method will execute the event handler at the same time if the ViewPart class is set.  
      * (Requires handle method.)
@@ -507,12 +467,10 @@ export default new class Response{
      * @param {string} viewPartName ViewPart content name
      * @returns {void}
      */
-    bindViewPart(selector : string, viewPartName : string) : void;
+    public static bindViewPart(selector : string, viewPartName : string) : void;
 
     /**
-     * 
-     * bindViewPart :
-     * 
+     * ***bindViewPart*** : 
      * Binds the ViewPart content to the specified selector's element tag.  
      * This method will execute the event handler at the same time if the ViewPart class is set.  
      * (Requires handle method.)
@@ -521,18 +479,40 @@ export default new class Response{
      * @param {boolean} vdomFlg If specified as true, it will be bound by virtual Dom control.
      * @returns {void}
      */
-    bindViewPart(selector : string, viewPartName : string, vdomFlg : boolean) : void;
+    public static bindViewPart(selector : string, viewPartName : string, vdomFlg : boolean) : void;
 
-    bindViewPart(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
-        const res = this.__bind("viewpart", arg1, arg2, vdomFlg);
-        this._loadRenderingClass("ViewPart", res);
+    public static bindViewPart(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
+        const res = Response.__bind("viewpart", arg1, arg2, vdomFlg);
+        Response.loadRenderingClass("ViewPart", res);
     }
 
-    #_defautShowException(){
+    private static defautShowException(){
         var content = use("ExceptionHtml");
         content = Util.base64Decode(content);
-        Dom("body").removeVirtual("__before_render__").html(content);
+        Dom("body").removeVirtual("__before_render__").html = content;
         this.__before_controller = null;
         Data.before_template = null;
+    }
+
+    public static setBindViewPart(parentElement? : Element){
+        const name = "v-show-viewpart";
+        let viewparts;
+        if(parentElement){
+            viewparts = parentElement.querySelectorAll("[" + name + "]");
+        }
+        else{
+            viewparts = document.querySelectorAll("[" + name + "]");
+        }
+        for(let n = 0 ; n < viewparts.length ; n++){
+            const viewpart = viewparts[n];
+            const vwname = viewpart.getAttribute(name);
+            viewpart.removeAttribute(name);
+            const content = Response.viewPart(vwname);
+            viewpart.outerHTML = content;
+            Response.loadRenderingClass("ViewPart", {
+                name: vwname,
+                already: false,
+            });
+        }
     }
 };

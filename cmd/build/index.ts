@@ -74,7 +74,6 @@ const builds = (framework, option, rootPath) => {
     option.core.ViewPart = getLib("ViewPart");
     option.core.Template = getLib("Template");
     option.core.Background = getLib("Background");
-    option.core.Request = getLib("Request");
     option.core.Response = getLib("Response");
     /*
     option.core.Crypto = getLib("Crypto");

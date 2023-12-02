@@ -1,19 +1,13 @@
-import _Controller from "Controller";
-import v from "VDom";
-import DomStatic from "DomStatic";
+import BaseController from "Controller";
+import VDom from "VDom";
 
-export default class Controller extends _Controller{
+export default class Controller extends BaseController{
 
-    title : string = "App Title";
-
-    handleBefore(){
-        super.handleBefore();
-        
-        this.template = "default";
-    }
+    public template : string = "default";
+    public title : string = "App Title";
 
     handleRenderBefore(): void {
-        v("htitle").text(this.title);
+        v("htitle").text = this.title;
     }
 
 };

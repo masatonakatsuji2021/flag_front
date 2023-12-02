@@ -24,8 +24,7 @@ class Controller {
         this.template = null;
     }
     /**
-     * view
-     *
+     * ***setView*** :
      * Set the page view path to display.
      * If not specified, automatically determined by "{Controller Name}/{action name}"
      * If you use it, place the HTML file in the path "rendering/View/{Controller Name}/{action Name}.html".
@@ -36,8 +35,7 @@ class Controller {
         Response_1.default.__rendering(routes, this);
     }
     /**
-     * setTemplate
-     *
+     * ***setTemplate*** :
      * Specifies the template name to use on the displayed page.
      * When using it, place the TML file for the template with the specified name in the "rendering/Template" directory.
      */

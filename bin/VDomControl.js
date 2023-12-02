@@ -7,7 +7,7 @@ class VDomControl extends DomControl_1.default {
         return this.virtual("__ref");
     }
     /**
-     * refresh
+     * ***refresh*** :
      * @returns {VDomControl} VDomCOntrol Class Object
      */
     refresh() {
@@ -23,16 +23,6 @@ class VDomControl extends DomControl_1.default {
             obj.target.removeAttribute(refCheckCode);
         }
         return this;
-    }
-    /**
-     * childDom
-     * Specifies the child element of the argument selector,
-     * @param {string} selector
-     * @returns {VDomControl} VDomControl Class Object
-     */
-    childDom(selector) {
-        let v = super.child(selector);
-        return new VDomControl(v._qs);
     }
     child(refName) {
         let v = [];
@@ -72,34 +62,34 @@ class VDomControl extends DomControl_1.default {
         return new VDomControl(v);
     }
     /**
-     * first
+     * ***first*** :
      * Specifies the first element.
      * @returns {VDomControl} VDomControl Class Object
      */
-    first() {
-        let v = super.first();
+    get first() {
+        let v = super.first;
         return new VDomControl(v._qs);
     }
     /**
-     * last
+     * ***last*** :
      * Specifies the last element.
      * @returns {VDomControl} VDomControl Class Object
      */
-    last() {
-        let v = super.last();
+    get last() {
+        let v = super.last;
         return new VDomControl(v._qs);
     }
     /**
-     * parent
+     * ***parent*** :
      * Specifies the parent element one level above.
      * @returns {VDomControl} VDomControl Class Object
      */
-    parent() {
-        let v = super.parent();
+    get parent() {
+        let v = super.parent;
         return new VDomControl(v._qs);
     }
     /**
-     * index
+     * ***index*** :
      * Specifies the element at the index specified by the argument
      * @param {number} index element index
      * @returns {VDomControl} VDomControl Class Object
@@ -109,22 +99,21 @@ class VDomControl extends DomControl_1.default {
         return new VDomControl(v._qs);
     }
     /**
-     * even
+     * ***even*** :
      * Extract even element information only.
-     * @param {number} index element index
      * @returns {VDomControl} VDomControl Class Object
      */
-    even() {
-        let v = super.even();
+    get even() {
+        const v = super.even;
         return new VDomControl(v._qs);
     }
     /**
-     * odd :
+     * ***odd** :
      * Extract only odd element information
      * @returns {VDomControl} VDomControl Class Object
      */
-    odd() {
-        let v = super.odd();
+    get odd() {
+        const v = super.odd;
         return new VDomControl(v._qs);
     }
     /**
@@ -135,7 +124,7 @@ class VDomControl extends DomControl_1.default {
      * @returns {VDomControl} VDomControl Class Object
      */
     findOnAttr(name, value) {
-        let v = super.findOnAttr(name, value);
+        const v = super.findOnAttr(name, value);
         return new VDomControl(v._qs);
     }
     /**
@@ -146,7 +135,184 @@ class VDomControl extends DomControl_1.default {
      * @returns {VDomControl} VDomControl Class Object
      */
     findOnVirtual(name, value) {
-        let v = super.findOnVirtual(name, value);
+        const v = super.findOnVirtual(name, value);
+        return new VDomControl(v._qs);
+    }
+    append(contents) {
+        const v = super.append(contents);
+        return new VDomControl(v._qs);
+    }
+    before(contents) {
+        const v = super.before(contents);
+        return new VDomControl(v._qs);
+    }
+    after(contents) {
+        const v = super.after(contents);
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***remove*** :
+     * remove the element
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    remove() {
+        const v = super.remove();
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***empty*** :
+     * clear inside element
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    empty() {
+        const v = super.empty();
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***on*** :
+     * set the event handler.
+     * @param {string} eventName event name
+     * @param {Function} callback callback function
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    on(eventName, callback) {
+        const v = super.on(eventName, callback);
+        return new VDomControl(v._qs);
+    }
+    attribute(name, value) {
+        const v = super.attribute(name, value);
+        if (typeof v == "string") {
+            return v;
+        }
+        else {
+            return new VDomControl(v._qs);
+        }
+    }
+    attr(name, value) {
+        return this.attribute(name, value);
+    }
+    /**
+     * ***removeAttribute*** :
+     * Delete attribute information
+     * @param {string} name attribute name
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    removeAttribute(name) {
+        const v = super.removeAttribute(name);
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***removeAttr*** :
+     * Delete attribute information
+     * @param {string} name attribute name
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    removeAttr(name) {
+        return this.removeAttribute(name);
+    }
+    virtual(name, value) {
+        const v = super.virtual(name, value);
+        if (typeof v == "string") {
+            return v;
+        }
+        else {
+            return new VDomControl(v._qs);
+        }
+    }
+    /**
+     * ***removeVirtual*** :
+     * Delete virtual attribute information
+     * @param {string} name virtual attribute name
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    removeVirtual(name) {
+        const v = super.removeVirtual(name);
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***style*** :
+     * Sets stylesheet information.
+     * @param {object} options stylesheet attribute information
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    style(options) {
+        const v = super.style(options);
+        return new VDomControl(v._qs);
+    }
+    addClass(className) {
+        const v = super.addClass(className);
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***removeClass*** :
+     * remove the class attribute
+     * @param {string} className Delete class name
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    removeClass(className) {
+        const v = super.removeClass(className);
+        return new VDomControl(v._qs);
+    }
+    value(value) {
+        const v = super.value(value);
+        if (v instanceof DomControl_1.default) {
+            return new VDomControl(v._qs);
+        }
+        else {
+            return v;
+        }
+    }
+    default(value) {
+        const v = super.default(value);
+        if (v instanceof DomControl_1.default) {
+            return new VDomControl(v._qs);
+        }
+        else {
+            return v;
+        }
+    }
+    valueIncrement(step) {
+        const v = super.valueIncrement(step);
+        return new VDomControl(v._qs);
+    }
+    valueDecrement(step) {
+        const v = super.valueDecrement(step);
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***click*** :
+     * performs a click on an element.
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    click() {
+        const v = super.click();
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***dblclick*** :
+     * Performs a double click on an element.
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    dblclick() {
+        const v = super.dblclick();
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***submit*** :
+     * Executes element submission.
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    submit() {
+        const v = super.submit();
+        return new VDomControl(v._qs);
+    }
+    /**
+     * ***focus*** :
+     * Performs element focus.
+     * @returns {DomControl} DomControl Class Object
+     */
+    focus() {
+        const v = super.focus();
         return new VDomControl(v._qs);
     }
 }

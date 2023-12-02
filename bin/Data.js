@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = new class Data {
-    constructor() {
-        this.__form = {};
-        this.__before_url = null;
-        this.__file_uploads = {};
-        this.before_template = null;
-    }
-};
+class Data {
+}
+Data.__form = {};
+Data.__before_url = null;
+Data.__file_uploads = {};
+Data.before_template = null;
+exports.default = Data;
+;

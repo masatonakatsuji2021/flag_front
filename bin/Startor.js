@@ -11,19 +11,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Util_1 = require("Util");
 const Data_1 = require("Data");
-// import Form from "Form";
 const Routes_1 = require("Routes");
-const Request_1 = require("Request");
 const Response_1 = require("Response");
-// import VDomControl from "VDomControl";
-// @ts-ignore
-const app_1 = require("app/config/app");
 exports.default = (function () {
     return __awaiter(this, void 0, void 0, function* () {
         window.addEventListener("load", function () {
             return __awaiter(this, void 0, void 0, function* () {
-                window.addEventListener("popstate", function (e) {
-                    if (!Response_1.default.setPageStatus()) {
+                window.addEventListener("click", (e) => {
+                    // @ts-ignore
+                    if (e.target.localName != "a") {
+                        return true;
+                    }
+                    // @ts-ignore
+                    if (e.target.getAttribute("go_back")) {
+                        alert("back button click");
+                    }
+                });
+                window.addEventListener("popstate", (e) => {
+                    if (!Response_1.default.pageEnable) {
                         if (Data_1.default.__before_url) {
                             history.pushState(null, null, Data_1.default.__before_url);
                         }
@@ -32,88 +37,16 @@ exports.default = (function () {
                         }
                         return false;
                     }
-                    Request_1.default.clear();
-                    // VDom().refresh();
                     var url = location.hash.substring(1);
                     Data_1.default.__before_url = location.hash;
                     var routes = Routes_1.default.searchRoute(url);
                     Response_1.default.rendering(routes);
                 });
-                /*
-                window.addEventListener("submit", function(e){
-        
-                    e.stopPropagation();
-                    e.preventDefault();
-                    let vd = new VDomControl([e.target]);
-        
-                    var targetRef = vd.ref;
-        
-                    var formBuffer = Util.searchForm(targetRef);
-        
-                    if(formBuffer){
-                        formBuffer.submit();
-                    }
-                });
-        /*
-                window.addEventListener("reset", function(e){
-        
-                    // @ts-ignore
-                    var targetId = e.target.id;
-        
-                    var formBuffer = Util.searchForm(targetId);
-        
-                    if(formBuffer){
-                        formBuffer.reset();
-                    }
-        
-                });
-                window.addEventListener('change', function(e){
-        
-                    // @ts-ignore
-                    var targetType = e.target.type;
-        
-                    if(targetType != "file"){
-                        return;
-                    }
-        
-                    // @ts-ignore
-                    var name = e.target.name;
-        
-                    var buffers = [];
-                    var ind = 0;
-        
-                    // @ts-ignore
-                    let files = e.target.files;
-                    for(var n = 0 ; n < files.length ; n++){
-                        var file = files[n];
-        
-                        var buffer = {
-                            name: file.name,
-                            size: file.size,
-                            type: file.type,
-                        };
-                        buffers.push(buffer);
-        
-                        var file_reader = new FileReader();
-        
-                        file_reader.addEventListener('load', function(e2) {
-        
-                            let result = e2.target.result;
-                            // @ts-ignore
-                            buffers[ind].result = Util.base64Encode(result);
-                            ind++;
-                        });
-        
-                        file_reader.readAsText(file);
-                    }
-        
-                    Request.__file_uploads[name].push(buffers);
-                });
-                */
+                const Config = use("app/config/app");
                 // background class method load.
-                if (app_1.default.backgrounds) {
-                    for (let n = 0; n < app_1.default.backgrounds.length; n++) {
-                        let bgPath = PATH_BACKGROUND + "/" + Util_1.default.ucFirst(app_1.default.backgrounds[n]);
+                if (Config.backgrounds) {
+                    for (let n = 0; n < Config.backgrounds.length; n++) {
+                        let bgPath = PATH_BACKGROUND + "/" + Util_1.default.ucFirst(Config.backgrounds[n]);
                         if (useExists(bgPath)) {
                             const bg = use(bgPath);
                             yield bg.handleBegin();
