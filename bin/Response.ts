@@ -236,13 +236,7 @@ export default class Response{
                 const Exception_ = use(expPath);
                 const exps = new Exception_;
 
-                if(!(
-                    exps.handle
-                    /*
-                     ||
-                    cont.before_handle
-                    */
-                )){
+                if(!(exps.handle)){
                     console.error("\handle\" method on \"Exception\" class is not found.");
                     return;
                 }
@@ -255,7 +249,7 @@ export default class Response{
 
                 await exps.handleAfter(error);
 
-                await exps.__rendering();
+                await Response.__rendering(routes, exps);
 
                 await exps.handleRenderBefore();
             

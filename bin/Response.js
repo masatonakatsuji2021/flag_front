@@ -173,12 +173,7 @@ class Response {
                     }
                     const Exception_ = use(expPath);
                     const exps = new Exception_;
-                    if (!(exps.handle
-                    /*
-                     ||
-                    cont.before_handle
-                    */
-                    )) {
+                    if (!(exps.handle)) {
                         console.error("\handle\" method on \"Exception\" class is not found.");
                         return;
                     }
@@ -187,7 +182,7 @@ class Response {
                         yield exps.before_handle(error);
                     }
                     yield exps.handleAfter(error);
-                    yield exps.__rendering();
+                    yield Response.__rendering(routes, exps);
                     yield exps.handleRenderBefore();
                     if (exps.handle) {
                         yield exps.handle(error);

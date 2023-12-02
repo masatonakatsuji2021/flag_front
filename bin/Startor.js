@@ -17,16 +17,6 @@ exports.default = (function () {
     return __awaiter(this, void 0, void 0, function* () {
         window.addEventListener("load", function () {
             return __awaiter(this, void 0, void 0, function* () {
-                window.addEventListener("click", (e) => {
-                    // @ts-ignore
-                    if (e.target.localName != "a") {
-                        return true;
-                    }
-                    // @ts-ignore
-                    if (e.target.getAttribute("go_back")) {
-                        alert("back button click");
-                    }
-                });
                 window.addEventListener("popstate", (e) => {
                     if (!Response_1.default.pageEnable) {
                         if (Data_1.default.__before_url) {
