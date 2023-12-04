@@ -255,19 +255,20 @@ export default class DomControl{
     public child(selector : string) : DomControl;
 
     public child(selector? : string) : DomControl{
-        
-        if(!selector){
-            selector = "*";
-        }
-        var qss = [];
+        let qss = [];
         for(var n = 0 ; n < this._qs.length ;n ++){
-            var qs = this._qs[n];
-            var buff = qs.querySelectorAll(selector);
+            const qs = this._qs[n];
+            let buff;
+            if(selector){
+                buff = qs.querySelectorAll(selector);
+            }
+            else{
+                buff = qs.childNodes;
+            }
             buff.forEach(function(b_){
                 qss.push(b_);
             })
         }
-
         return new DomControl(qss);
     }
 
@@ -340,6 +341,20 @@ export default class DomControl{
                 qs.append(contents);
             }
         });
+        return this;
+    }
+
+    /**
+     * ***stamp*** : 
+     * 
+     * @param {string} stampSource  
+     * @param {Function} callback 
+     * @returns {DomControl} DomControl Class Object
+     */
+    public stamp(stampSource : string, callback : Function) : DomControl{
+        this.append(stampSource);
+        let target = this.child().last;
+        callback(target);
         return this;
     }
 

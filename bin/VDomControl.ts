@@ -199,6 +199,18 @@ export default class VDomControl extends DomControl{
     }
 
     /**
+     * ***stamp*** : 
+     * 
+     * @param {string} stampSource  
+     * @param {Function} callback 
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    public stamp(stampSource : string, callback : Function) : VDomControl{
+        const v : DomControl = super.stamp(stampSource, callback);
+        return new VDomControl(v._qs);
+    }
+
+    /**
      * ***before*** : 
      * Append just before the element tag
      * @param {string} contents add contents 

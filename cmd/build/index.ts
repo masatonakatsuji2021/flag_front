@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import FlagCLI from "@flagfw/flag/bin/Cli";
 import aa from "../aa";
-import build from "@flagfw/build";
+import build from "./build";
 
 __dirname = path.dirname(path.dirname(__dirname));
 

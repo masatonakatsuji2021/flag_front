@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Controller_1 = require("Controller");
-class Exception extends Controller_1.default {
+const View_1 = require("View");
+class Exception extends View_1.default {
     constructor() {
         super(...arguments);
-        this.view = "error/index";
+        this.view = "exception";
     }
     /**
      * ***handle*** :

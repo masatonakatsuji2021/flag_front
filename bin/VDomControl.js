@@ -142,6 +142,17 @@ class VDomControl extends DomControl_1.default {
         const v = super.append(contents);
         return new VDomControl(v._qs);
     }
+    /**
+     * ***stamp*** :
+     *
+     * @param {string} stampSource
+     * @param {Function} callback
+     * @returns {VDomControl} VDomControl Class Object
+     */
+    stamp(stampSource, callback) {
+        const v = super.stamp(stampSource, callback);
+        return new VDomControl(v._qs);
+    }
     before(contents) {
         const v = super.before(contents);
         return new VDomControl(v._qs);

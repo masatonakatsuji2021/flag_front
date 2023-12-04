@@ -1,8 +1,8 @@
-import Controller from "Controller";
+import View from "View";
 
-export default class Exception extends Controller{
+export default class Exception extends View{
 
-    public view : string = "error/index";
+    public view : string = "exception";
 
     /**
      * ***handle*** : 
