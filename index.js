@@ -27,8 +27,8 @@ exports.default = (args) => __awaiter(void 0, void 0, void 0, function* () {
     let cmd2;
     if (!args) {
         args = Cli_1.default.getArgsOption();
-        cmd1 = args["_any"][0];
-        cmd2 = args["_any"][1];
+        cmd1 = args["_any"][1];
+        cmd2 = args["_any"][2];
     }
     else {
         cmd1 = args[0];

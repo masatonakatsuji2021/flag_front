@@ -19,8 +19,8 @@ export default async (args? : Object) => {
     let cmd2 : string;
     if(!args){
         args = FlagCLI.getArgsOption();
-        cmd1 = args["_any"][0];
-        cmd2 = args["_any"][1];
+        cmd1 = args["_any"][1];
+        cmd2 = args["_any"][2];
     }
     else{
         cmd1 = args[0];
