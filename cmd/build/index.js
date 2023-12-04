@@ -125,8 +125,8 @@ exports.default = (args, cliOption, seconded) => __awaiter(void 0, void 0, void 
         cliOption = {};
     }
     var rootPath = process.cwd();
-    if (args["_any"][1]) {
-        rootPath += "/" + args["_any"][1];
+    if (args["_any"][3]) {
+        rootPath += "/" + args["_any"][3];
     }
     var packageJsonPath = rootPath + "/package.json";
     try {

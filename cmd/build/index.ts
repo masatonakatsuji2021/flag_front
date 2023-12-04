@@ -144,8 +144,8 @@ export default async (args : Object, cliOption? : Object, seconded? : boolean) =
     }
      
     var rootPath = process.cwd();
-    if(args["_any"][1]){
-        rootPath += "/" + args["_any"][1];
+    if(args["_any"][3]){
+        rootPath += "/" + args["_any"][3];
     }
     var packageJsonPath = rootPath + "/package.json";
     
