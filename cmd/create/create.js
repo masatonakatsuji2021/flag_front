@@ -11,14 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
-const cli_1 = require("@flagfw/cli");
+const Cli_1 = require("@flagfw/flag/bin/Cli");
 const deepCopy_1 = require("../common/deepCopy");
 const build_1 = require("../build");
 const child_process_1 = require("child_process");
 function default_1(create) {
     return __awaiter(this, void 0, void 0, function* () {
         const padEnd = 22;
-        cli_1.FlagCLI
+        Cli_1.default
             .indent(2)
             .br()
             .outn("* SPA Create-Project")
@@ -26,33 +26,33 @@ function default_1(create) {
         var directory = process.cwd();
         // mkdir project directory
         var rootPath = directory + "/" + create.name;
-        cli_1.FlagCLI.greenn("# Create Start.");
+        Cli_1.default.greenn("# Create Start.");
         fs.mkdirSync(rootPath, {
             recursive: true,
         });
-        cli_1.FlagCLI.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPath);
+        Cli_1.default.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPath);
         var rootPathSrc = rootPath + "/src";
         fs.mkdirSync(rootPathSrc, {
             recursive: true,
         });
-        cli_1.FlagCLI.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPathSrc);
+        Cli_1.default.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPathSrc);
         // get template path
         const tempDir = path.dirname(path.dirname(__dirname)) + "/source";
         var templatePath = tempDir + "/default";
         if (create.typeScript) {
             fs.copyFileSync(tempDir + "/_ts/init.d.ts", rootPathSrc + "/init.d.ts");
-            cli_1.FlagCLI.green("# ").outn("SourceCopy ".padEnd(padEnd) + "./" + create.name + "/init.d.ts");
+            Cli_1.default.green("# ").outn("SourceCopy ".padEnd(padEnd) + "./" + create.name + "/init.d.ts");
             var tsConfig = require(tempDir + "/_ts/tsconfig.json");
             tsConfig.compilerOptions.paths["*"] = [path.dirname(require.resolve("@flagfw/front")) + "/bin/*"];
             fs.writeFileSync(rootPathSrc + "/tsconfig.json", JSON.stringify(tsConfig, null, "   "));
-            cli_1.FlagCLI.green("# ").outn("SourceCopy ".padEnd(padEnd) + "./" + create.name + "/tsconfig.json");
+            Cli_1.default.green("# ").outn("SourceCopy ".padEnd(padEnd) + "./" + create.name + "/tsconfig.json");
             templatePath = tempDir + "/default_ts";
         }
         // template file copy
         (0, deepCopy_1.default)(templatePath, rootPathSrc, function (dir) {
-            cli_1.FlagCLI.green("# ").outn("Mkdir ".padEnd(padEnd) + dir);
+            Cli_1.default.green("# ").outn("Mkdir ".padEnd(padEnd) + dir);
         }, function (outputFile) {
-            cli_1.FlagCLI.green("# ").outn("SourceCopy ".padEnd(padEnd) + outputFile);
+            Cli_1.default.green("# ").outn("SourceCopy ".padEnd(padEnd) + outputFile);
         });
         // other frameworks exists...
         if (create.frameworks) {
@@ -60,25 +60,25 @@ function default_1(create) {
             fs.mkdirSync(rootPathFw, {
                 recursive: true,
             });
-            cli_1.FlagCLI.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPathFw);
+            Cli_1.default.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPathFw);
             if (create.frameworks.indexOf("cordova") > -1) {
-                cli_1.FlagCLI.green("# ").outn("framework setting".padEnd(padEnd) + "[Cordova]");
+                Cli_1.default.green("# ").outn("framework setting".padEnd(padEnd) + "[Cordova]");
                 // case cordova...
                 var rootPathCordova = rootPathFw + "/cordova";
                 fs.mkdirSync(rootPathCordova, {
                     recursive: true,
                 });
-                cli_1.FlagCLI.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPathCordova);
-                cli_1.FlagCLI.green("# ").out("cordova create....");
+                Cli_1.default.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPathCordova);
+                Cli_1.default.green("# ").out("cordova create....");
                 try {
                     (0, child_process_1.execSync)("cordova create " + rootPathCordova);
                 }
                 catch (error) {
-                    cli_1.FlagCLI.red("NG!").br();
-                    cli_1.FlagCLI.red("[Cordova Error]").outn(error);
+                    Cli_1.default.red("NG!").br();
+                    Cli_1.default.red("[Cordova Error]").outn(error);
                     return;
                 }
-                cli_1.FlagCLI.outn("OK");
+                Cli_1.default.outn("OK");
             }
             else if (create.frameworks.indexOf("electron") > -1) {
                 // case electron...
@@ -86,7 +86,7 @@ function default_1(create) {
                 fs.mkdirSync(rootPathElectron, {
                     recursive: true,
                 });
-                cli_1.FlagCLI.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPathElectron);
+                Cli_1.default.green("# ").outn("Mkdir ".padEnd(padEnd) + rootPathElectron);
             }
         }
         // make package JSON 
@@ -101,8 +101,8 @@ function default_1(create) {
             },
         };
         fs.writeFileSync(rootPath + "/package.json", JSON.stringify(packageJson, null, "   "));
-        cli_1.FlagCLI.green("# ").outn("Make ".padEnd(padEnd) + "package.json");
-        cli_1.FlagCLI.greenn("# Create Complete.").br();
+        Cli_1.default.green("# ").outn("Make ".padEnd(padEnd) + "package.json");
+        Cli_1.default.greenn("# Create Complete.").br();
         yield (0, build_1.default)({
             _any: [
                 "build",
@@ -111,7 +111,7 @@ function default_1(create) {
         }, {
             noExit: true,
         }, true);
-        cli_1.FlagCLI
+        Cli_1.default
             .br()
             .green("...... Project Create and Build Complete!")
             .br();

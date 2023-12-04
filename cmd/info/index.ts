@@ -1,6 +1,5 @@
-import cli from "../../cli";
-
-import { FlagCLI } from "@flagfw/cli";
+import cli from "@flagfw/front";
+import FlagCLI from "@flagfw/flag/bin/Cli";
 
 export default async () => {
 

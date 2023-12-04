@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_1 = require("@flagfw/cli");
+const Cli_1 = require("@flagfw/flag/bin/Cli");
 const path = require("path");
 exports.default = (args) => __awaiter(void 0, void 0, void 0, function* () {
     __dirname = path.dirname(__dirname);
     var projectName = args._any[1];
     if (!projectName) {
-        cli_1.FlagCLI.red("[ERROR]").outn("package name not found.");
+        Cli_1.default.red("[ERROR]").outn("package name not found.");
         return;
     }
     let packageJson;
@@ -23,11 +23,11 @@ exports.default = (args) => __awaiter(void 0, void 0, void 0, function* () {
         packageJson = require(process.cwd() + "/package.json");
     }
     catch (error) {
-        cli_1.FlagCLI.red("[ERROR]").outn("Package.json not found. ");
+        Cli_1.default.red("[ERROR]").outn("Package.json not found. ");
         return;
     }
     if (!packageJson.flagFront) {
-        cli_1.FlagCLI.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
+        Cli_1.default.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
         return;
     }
     var option = null;
@@ -39,20 +39,20 @@ exports.default = (args) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     if (!option) {
-        cli_1.FlagCLI.red("[ERROR]").outn("Project information \"" + projectName + "\" is not set in \"flagFront\" of \"package.json\".");
+        Cli_1.default.red("[ERROR]").outn("Project information \"" + projectName + "\" is not set in \"flagFront\" of \"package.json\".");
         return;
     }
-    cli_1.FlagCLI
+    Cli_1.default
         .outn("Delete project \"" + projectName + "\".")
         .br()
         .br();
-    var judge = yield cli_1.FlagCLI.in("Are you really sure? [y]");
+    var judge = yield Cli_1.default.in("Are you really sure? [y]");
     if (!judge) {
         judge = "y";
     }
     if (judge.toString().toLowerCase() == "y") {
     }
-    cli_1.FlagCLI
+    Cli_1.default
         .br()
         .br()
         .green("..... Remove Project!");

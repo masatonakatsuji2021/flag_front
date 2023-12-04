@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { FlagCLI } from "@flagfw/cli";
+import FlagCLI from "@flagfw/flag/bin/Cli";
 import aa from "../aa";
 import build from "@flagfw/build";
 

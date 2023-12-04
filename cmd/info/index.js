@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_1 = require("../../cli");
-const cli_2 = require("@flagfw/cli");
+const front_1 = require("@flagfw/front");
+const Cli_1 = require("@flagfw/flag/bin/Cli");
 exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
     const info = {
         "- create": "Create and build the SPA project.",
@@ -21,7 +21,7 @@ exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
         "- fw add": "Add the framework to output at build time from the project.",
         "- fw remove": "Removes the framework specified in the project.",
     };
-    cli_2.FlagCLI
+    Cli_1.default
         .indent(3)
         .br()
         .outn("[ Command List ]")
@@ -29,10 +29,10 @@ exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
         .outData(info)
         .br()
         .indent(0);
-    let cmd = yield cli_2.FlagCLI.in("Enter Command");
-    cli_2.FlagCLI
+    let cmd = yield Cli_1.default.in("Enter Command");
+    Cli_1.default
         .grayn(".....")
         .br();
     let args = cmd.toString().split(" ");
-    yield (0, cli_1.default)(args);
+    yield (0, front_1.default)(args);
 });

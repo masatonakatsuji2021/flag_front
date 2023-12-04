@@ -1,4 +1,4 @@
-import { FlagCLI } from "@flagfw/cli";
+import FlagCLI from "@flagfw/flag/bin/Cli";
 import * as path from "path";
 
 export default async (args) => {

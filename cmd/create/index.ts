@@ -1,4 +1,5 @@
-import { FlagCLI , CLIColorType } from "@flagfw/cli";
+import FlagCLI from "@flagfw/flag/bin/Cli";
+
 import aa from "../aa";
 import createMethod from "./create";
 

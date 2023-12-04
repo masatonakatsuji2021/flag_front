@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_1 = require("@flagfw/cli");
+const Cli_1 = require("@flagfw/flag/bin/Cli");
 exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
-    cli_1.FlagCLI
+    Cli_1.default
         .br()
         .outn("----------------------------------------------------------------------------")
         .indent(2)

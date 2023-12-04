@@ -9,29 +9,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_1 = require("@flagfw/cli");
+const Cli_1 = require("@flagfw/flag/bin/Cli");
 const aa_1 = require("../aa");
 const create_1 = require("./create");
 exports.default = (args, seconded) => __awaiter(void 0, void 0, void 0, function* () {
     if (!seconded) {
         (0, aa_1.default)();
     }
-    cli_1.FlagCLI
+    Cli_1.default
         .indent(3)
         .br()
         .outn("Please answer various questions as you create your project.")
         .br();
     var name;
     while (!name) {
-        name = yield cli_1.FlagCLI.in("- Enter project name to create");
+        name = yield Cli_1.default.in("- Enter project name to create");
         if (!name) {
-            cli_1.FlagCLI
+            Cli_1.default
                 .indent(6)
                 .red("[ERROR] ").outn("No project name entered. retry.")
                 .indent(3);
         }
     }
-    var useTypeScript = yield cli_1.FlagCLI.in("- Do you use TypeScript?(y)");
+    var useTypeScript = yield Cli_1.default.in("- Do you use TypeScript?(y)");
     if (useTypeScript) {
         if (useTypeScript == "y") {
             useTypeScript = true;
@@ -43,7 +43,7 @@ exports.default = (args, seconded) => __awaiter(void 0, void 0, void 0, function
     else {
         useTypeScript = true;
     }
-    var useCompress = yield cli_1.FlagCLI.in("- Compress Javascript Source on build? (y)");
+    var useCompress = yield Cli_1.default.in("- Compress Javascript Source on build? (y)");
     if (useCompress) {
         if (useCompress == "y") {
             useCompress = true;
@@ -55,7 +55,7 @@ exports.default = (args, seconded) => __awaiter(void 0, void 0, void 0, function
     else {
         useCompress = true;
     }
-    var useObfuscate = yield cli_1.FlagCLI.in("- Obfuscate Javascript Source at build? (y)");
+    var useObfuscate = yield Cli_1.default.in("- Obfuscate Javascript Source at build? (y)");
     if (useObfuscate) {
         if (useObfuscate == "y") {
             useObfuscate = true;
@@ -71,7 +71,7 @@ exports.default = (args, seconded) => __awaiter(void 0, void 0, void 0, function
         "cordova": "Android app creation using \"cordova\".",
         "electron": "Windows/Mac desktop application creation using \"Electron\"",
     };
-    let frameworks = yield cli_1.FlagCLI.outn("- If there is a framework to create, please select from the following.")
+    let frameworks = yield Cli_1.default.outn("- If there is a framework to create, please select from the following.")
         .outn("  (Multiple selections can be made separated by.)")
         .indent(6)
         .br()
@@ -117,13 +117,13 @@ exports.default = (args, seconded) => __awaiter(void 0, void 0, void 0, function
         "Source Compress": useCompress,
         "Source Obfuscate": useObfuscate,
     };
-    cli_1.FlagCLI
+    Cli_1.default
         .indent(6)
         .br()
         .outData(createText)
         .br()
         .indent(3);
-    var status = yield cli_1.FlagCLI.in("- Create a project with the above contents. Is it OK? (y)");
+    var status = yield Cli_1.default.in("- Create a project with the above contents. Is it OK? (y)");
     if (status) {
         if (status == "y") {
             status = true;
@@ -136,7 +136,7 @@ exports.default = (args, seconded) => __awaiter(void 0, void 0, void 0, function
         status = true;
     }
     if (!status) {
-        cli_1.FlagCLI.br().redn(".....Create Projsect Pause!");
+        Cli_1.default.br().redn(".....Create Projsect Pause!");
         return;
     }
     yield (0, create_1.default)(create);

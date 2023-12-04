@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { FlagCLI } from "@flagfw/cli";
+import FlagCLI from "@flagfw/flag/bin/Cli";
 import deepCopy from "../common/deepCopy";
 import build from "../build";
 import { execSync } from "child_process";

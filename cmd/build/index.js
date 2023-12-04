@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
-const cli_1 = require("@flagfw/cli");
+const Cli_1 = require("@flagfw/flag/bin/Cli");
 const aa_1 = require("../aa");
 const build_1 = require("@flagfw/build");
 __dirname = path.dirname(path.dirname(__dirname));
@@ -120,7 +120,7 @@ exports.default = (args, cliOption, seconded) => __awaiter(void 0, void 0, void 
     if (!seconded) {
         (0, aa_1.default)();
     }
-    cli_1.FlagCLI.greenn("# Build begin...");
+    Cli_1.default.greenn("# Build begin...");
     if (!cliOption) {
         cliOption = {};
     }
@@ -133,16 +133,16 @@ exports.default = (args, cliOption, seconded) => __awaiter(void 0, void 0, void 
         var packageJson = require(packageJsonPath);
     }
     catch (error) {
-        cli_1.FlagCLI.red("[ERROR]").outn("Package.json not found. ");
+        Cli_1.default.red("[ERROR]").outn("Package.json not found. ");
         return;
     }
     if (!packageJson.flagFront) {
-        cli_1.FlagCLI.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
+        Cli_1.default.red("[ERROR]").outn("Option information of \"flagFront\" is not set in \"package.json\".");
         return;
     }
     var option = packageJson.flagFront;
     if (!option) {
-        cli_1.FlagCLI.red("[ERROR]").outn("Project information is not set in \"flagFront\" of \"package.json\".");
+        Cli_1.default.red("[ERROR]").outn("Project information is not set in \"flagFront\" of \"package.json\".");
         return;
     }
     if (!option.frameworks) {
@@ -156,7 +156,7 @@ exports.default = (args, cliOption, seconded) => __awaiter(void 0, void 0, void 
             force: true,
         });
         builds(framework, option, rootPath);
-        cli_1.FlagCLI.br();
+        Cli_1.default.br();
     }
-    cli_1.FlagCLI.greenn("# ....Build Complete!");
+    Cli_1.default.greenn("# ....Build Complete!");
 });

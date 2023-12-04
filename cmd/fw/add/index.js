@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_1 = require("@flagfw/cli");
+const Cli_1 = require("@flagfw/flag/bin/Cli");
 exports.default = (args) => {
-    cli_1.FlagCLI.outn("add framework....");
+    Cli_1.default.outn("add framework....");
 };
