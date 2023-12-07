@@ -7,10 +7,9 @@ const FgDateTime_1 = require("FgDateTime");
  */
 class Util {
     /**
-     * #### getFramework
-     * @returns {string} framework
+     * #### framework
      */
-    static getFramework() {
+    static get framework() {
         // @ts-ignore
         return FRAMEWORK;
     }
@@ -79,7 +78,7 @@ class Util {
     static getClassName(string, classType) {
         return string.substring(0, string.indexOf(classType));
     }
-    static dt(datetime) {
+    static datetime(datetime) {
         return new FgDateTime_1.default(datetime);
     }
     /**

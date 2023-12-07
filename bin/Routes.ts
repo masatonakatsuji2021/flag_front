@@ -91,6 +91,14 @@ export default class Routes{
                     }
                 }
 
+                if(
+                    !buffer.controller && 
+                    !buffer.view &&
+                    !buffer.action
+                ){
+                    buffer.view = val;
+                }
+
                 res[url] = buffer;             
             }
             else{

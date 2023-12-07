@@ -7,22 +7,15 @@ import View from "View";
 
 export default class Response{
 
-    public static __before_controller : Controller = null;
-    public static __before_controller_path : string = null;
-    public static __before_view : View = null;
-    public static __before_view_path : string = null;
-    public static __before_action : string = null;
-    public static __page_status : boolean = true;
-
     /**
      * ***pageEnable*** : 
      * Temporarily suspend the page move operation.
      */
     public static set pageEnable(status : boolean){
-        Response.__page_status = status;
+        Data.__page_status = status;
     }
     public static get pageEnable() : boolean{
-        return Response.__page_status;
+        return Data.__page_status;
     }
 
     /**
@@ -73,17 +66,17 @@ export default class Response{
 
                 Data.before_template = context.template;
 
-                Response.bindTemplate("body", context.template);
-                Response.bindView("[spa-contents]", context.view);
-            }
-            else{
-                Response.bindView("[spa-contents]", context.view);
+                const templateHtml = Response.template(context.template);
+                Dom("body").html = templateHtml;
             }
 
+            const viewHtml = Response.view(context.view);
+            Dom("[spa-contents]").html = viewHtml;
         }
         else{
             Data.before_template = null;
-            Response.bindView("body", context.view);
+            const viewHtml = Response.view(context.view);
+            Dom("body").html = viewHtml;
         }
 
         Response.setBindViewPart();
@@ -103,13 +96,18 @@ export default class Response{
         const Controller_ = use(contPath);
         const cont : Controller = new Controller_();
 
-        if(Response.__before_controller_path != contPath){
-            Response.__before_controller_path = contPath;
+        if(Data.__before_controller_path != contPath){
+            Data.__before_controller_path = contPath;
             if(cont.handleBegin){
                 await cont.handleBegin();
             }
         }
 
+        Data.__before_controller = cont;
+        Data.__before_action = routes.action;
+        Data.__before_view = null;
+        Data.__child_classs = {};
+        
         if(!(
             cont[routes.action] ||
             cont["before_" + routes.action]
@@ -149,9 +147,6 @@ export default class Response{
 
         await cont.handleRenderAfter(); 
 
-        Response.__before_controller = cont;
-        Response.__before_action = routes.action;
-        Response.__before_view = null;
     }
     
     private static async renderingOnView(routes){
@@ -165,12 +160,17 @@ export default class Response{
         const View_ = use(viewPath);
         const vm : View = new View_();
 
-        if(Response.__before_view_path != viewPath){
-            Response.__before_view_path = viewPath;
+        if(Data.__before_view_path != viewPath){
+            Data.__before_view_path = viewPath;
             if(vm.handleBegin){
                 await vm.handleBegin();
             }
         }
+
+        Data.__before_view = vm;
+        Data.__before_controller = null;
+        Data.__before_action = null;
+        Data.__child_classs = {};
 
         await vm.handleBefore();
 
@@ -187,24 +187,20 @@ export default class Response{
             await vm.handle();
         }        
 
-        await vm.handleRenderAfter(); 
-
-        Response.__before_view = vm;
-        Response.__before_controller = null;
-        Response.__before_action = null;
+        await vm.handleRenderAfter();
     }
 
     public static async rendering(routes){
 
         try{
 
-            if(Response.__before_controller){
-                var befCont = Response.__before_controller;
-                await befCont.handleLeave(Response.__before_action);
+            if(Data.__before_controller){
+                var befCont = Data.__before_controller;
+                await befCont.handleLeave(Data.__before_action);
             }
 
-            if(Response.__before_view){
-                var befView = Response.__before_view;
+            if(Data.__before_view){
+                var befView = Data.__before_view;
                 await befView.handleLeave();
             }
 
@@ -327,48 +323,8 @@ export default class Response{
         return vw.innerHTML;
     }
 
-    private static __bind(type : string, arg1: string, arg2? : string, vdomFlg? : boolean) : object{
-        let target = null;
-        let name : string = "";
-        if(arg2){
-            name = arg2;
-            if(vdomFlg){
-                target = VDom(arg1);
-            }
-            else{
-                target = Dom(arg1);
-            }
-        }
-        else{
-            name = arg1;
-            target = VDom(arg1);
-        }
-        
-        if(target.virtual("__before_render__") == type + "-" + name){
-            return {
-                already: true,
-                name : name,
-            };
-        }
-
-        target.virtual("__before_render__", type + "-" + name);
-
-        let methodName : string = type;        
-        if(type == "viewpart"){
-            methodName = "viewPart";
-        }
-
-        var content = this[methodName](name);
-        target.html = content;
-
-        return {
-            already: false,
-            name : name,
-        };
-    }
-
-    private static loadRenderingClass(type : string, option : any) : void{
-        const classPath : string = "app/" + type + "/" + option.name;
+    private static setRenderingClass(type : string, className : string){
+        const classPath : string = "app/" + type + "/" + className;
 
         if(!useExists(classPath)){
             return;
@@ -381,10 +337,20 @@ export default class Response{
             return;
         }
 
-        if(!option.already){
-            if(classObj.handle){
-                classObj.handle();
-            }
+        Data.__child_classs[classPath] = classObj;
+
+        return classObj;
+    }
+
+    private static loadRenderingClass(type : string, className : string) : void{
+        const classObj = Response.setRenderingClass(type, className);
+
+        if(!classObj){
+            return;
+        }
+        
+        if(classObj.handle){
+            classObj.handle();
         }
 
         if(classObj.handleAlways){
@@ -392,99 +358,11 @@ export default class Response{
         }
     }
 
-    /**
-     * ***bindView*** : 
-     * Binds the View content to the specified selector's element tag.  
-     * This method will execute the event handler at the same time if the View class is set.  
-     * (Requires handle method.)
-     * @param {string} viewName View content name and binding destination element tag VDom selector name (ref attribute).
-     * @returns {void}
-     */
-    public static bindView(viewName : string) : void;
-
-    /**
-     * 
-     * ***bindView*** : 
-     * Binds the View content to the specified selector's element tag.  
-     * This method will execute the event handler at the same time if the View class is set.  
-     * (Requires handle method.)
-     * @param {string} selector Element tag selector to bind to
-     * @param {string} viewName View content name
-     * @returns {void}
-     */
-    public static  bindView(selector : string, viewName : string) : void;
-
-    /**
-     * ***bindView*** : 
-     * Binds the View content to the specified selector's element tag.  
-     * This method will execute the event handler at the same time if the View class is set.  
-     * (Requires handle method.)
-     * @param {string} selector Element tag selector to bind to
-     * @param {string} viewName View content name
-     * @param {boolean} vdomFlg If specified as true, it will be bound by virtual Dom control.
-     * @returns {void}
-     */
-    public static bindView(selector : string, viewName : string, vdomFlg : boolean) : void;
-
-    public static bindView(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
-        const res = Response.__bind("view", arg1, arg2, vdomFlg);
-        Response.loadRenderingClass("View", res);
-    }
-
-    public static bindTemplate(templateName : string) : void;
-
-    public static bindTemplate(selector : string, templateName : string) : void;
-
-    public static bindTemplate(selector : string, templateName : string, vdomFlg : boolean) : void;
-
-    public static bindTemplate(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
-        const res = Response.__bind("template", arg1, arg2, vdomFlg);
-        Response.loadRenderingClass("Template", res);
-    }
-
-    /**
-     * ***bindViewPart*** : 
-     * Binds the ViewPart content to the specified selector's element tag.  
-     * This method will execute the event handler at the same time if the ViewPart class is set.  
-     * (Requires handle method.)
-     * @param {string} viewPartName ViewPart content name and binding destination element tag VDom selector name (ref attribute).
-     * @returns {void}
-     */
-    public static bindViewPart(viewPartName : string) : void;
-
-    /**
-     * ***bindViewPart*** : 
-     * Binds the ViewPart content to the specified selector's element tag.  
-     * This method will execute the event handler at the same time if the ViewPart class is set.  
-     * (Requires handle method.)
-     * @param {string} selector Element tag selector to bind to
-     * @param {string} viewPartName ViewPart content name
-     * @returns {void}
-     */
-    public static bindViewPart(selector : string, viewPartName : string) : void;
-
-    /**
-     * ***bindViewPart*** : 
-     * Binds the ViewPart content to the specified selector's element tag.  
-     * This method will execute the event handler at the same time if the ViewPart class is set.  
-     * (Requires handle method.)
-     * @param {string} selector Element tag selector to bind to
-     * @param {string} viewPartName ViewPart content name
-     * @param {boolean} vdomFlg If specified as true, it will be bound by virtual Dom control.
-     * @returns {void}
-     */
-    public static bindViewPart(selector : string, viewPartName : string, vdomFlg : boolean) : void;
-
-    public static bindViewPart(arg1 : string, arg2? : string, vdomFlg? : boolean) : void{
-        const res = Response.__bind("viewpart", arg1, arg2, vdomFlg);
-        Response.loadRenderingClass("ViewPart", res);
-    }
-
     private static defautShowException(){
         var content = use("ExceptionHtml");
         content = Util.base64Decode(content);
         Dom("body").removeVirtual("__before_render__").html = content;
-        this.__before_controller = null;
+        Data.__before_controller = null;
         Data.before_template = null;
     }
 
@@ -503,10 +381,7 @@ export default class Response{
             viewpart.removeAttribute(name);
             const content = Response.viewPart(vwname);
             viewpart.outerHTML = content;
-            Response.loadRenderingClass("ViewPart", {
-                name: vwname,
-                already: false,
-            });
+            Response.loadRenderingClass("ViewPart", vwname);
         }
     }
 };

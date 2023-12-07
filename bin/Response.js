@@ -19,10 +19,10 @@ class Response {
      * Temporarily suspend the page move operation.
      */
     static set pageEnable(status) {
-        Response.__page_status = status;
+        Data_1.default.__page_status = status;
     }
     static get pageEnable() {
-        return Response.__page_status;
+        return Data_1.default.__page_status;
     }
     static redirect(url, sliented) {
         if (!url) {
@@ -48,16 +48,16 @@ class Response {
             if (context.template) {
                 if (Data_1.default.before_template != context.template) {
                     Data_1.default.before_template = context.template;
-                    Response.bindTemplate("body", context.template);
-                    Response.bindView("[spa-contents]", context.view);
+                    const templateHtml = Response.template(context.template);
+                    (0, Dom_1.default)("body").html = templateHtml;
                 }
-                else {
-                    Response.bindView("[spa-contents]", context.view);
-                }
+                const viewHtml = Response.view(context.view);
+                (0, Dom_1.default)("[spa-contents]").html = viewHtml;
             }
             else {
                 Data_1.default.before_template = null;
-                Response.bindView("body", context.view);
+                const viewHtml = Response.view(context.view);
+                (0, Dom_1.default)("body").html = viewHtml;
             }
             Response.setBindViewPart();
             (0, VDom_1.default)().refresh();
@@ -72,12 +72,16 @@ class Response {
             }
             const Controller_ = use(contPath);
             const cont = new Controller_();
-            if (Response.__before_controller_path != contPath) {
-                Response.__before_controller_path = contPath;
+            if (Data_1.default.__before_controller_path != contPath) {
+                Data_1.default.__before_controller_path = contPath;
                 if (cont.handleBegin) {
                     yield cont.handleBegin();
                 }
             }
+            Data_1.default.__before_controller = cont;
+            Data_1.default.__before_action = routes.action;
+            Data_1.default.__before_view = null;
+            Data_1.default.__child_classs = {};
             if (!(cont[routes.action] ||
                 cont["before_" + routes.action])) {
                 throw ("\"" + routes.action + "\" method on \"" + controllerName + "\" class is not found.");
@@ -105,9 +109,6 @@ class Response {
                 }
             }
             yield cont.handleRenderAfter();
-            Response.__before_controller = cont;
-            Response.__before_action = routes.action;
-            Response.__before_view = null;
         });
     }
     static renderingOnView(routes) {
@@ -119,12 +120,16 @@ class Response {
             }
             const View_ = use(viewPath);
             const vm = new View_();
-            if (Response.__before_view_path != viewPath) {
-                Response.__before_view_path = viewPath;
+            if (Data_1.default.__before_view_path != viewPath) {
+                Data_1.default.__before_view_path = viewPath;
                 if (vm.handleBegin) {
                     yield vm.handleBegin();
                 }
             }
+            Data_1.default.__before_view = vm;
+            Data_1.default.__before_controller = null;
+            Data_1.default.__before_action = null;
+            Data_1.default.__child_classs = {};
             yield vm.handleBefore();
             yield vm.handleAfter();
             yield Response.__rendering(routes, vm);
@@ -136,20 +141,17 @@ class Response {
                 yield vm.handle();
             }
             yield vm.handleRenderAfter();
-            Response.__before_view = vm;
-            Response.__before_controller = null;
-            Response.__before_action = null;
         });
     }
     static rendering(routes) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (Response.__before_controller) {
-                    var befCont = Response.__before_controller;
-                    yield befCont.handleLeave(Response.__before_action);
+                if (Data_1.default.__before_controller) {
+                    var befCont = Data_1.default.__before_controller;
+                    yield befCont.handleLeave(Data_1.default.__before_action);
                 }
-                if (Response.__before_view) {
-                    var befView = Response.__before_view;
+                if (Data_1.default.__before_view) {
+                    var befView = Data_1.default.__before_view;
                     yield befView.handleLeave();
                 }
                 if (routes.mode == "notfound") {
@@ -243,42 +245,8 @@ class Response {
         Response.setBindViewPart(vw);
         return vw.innerHTML;
     }
-    static __bind(type, arg1, arg2, vdomFlg) {
-        let target = null;
-        let name = "";
-        if (arg2) {
-            name = arg2;
-            if (vdomFlg) {
-                target = (0, VDom_1.default)(arg1);
-            }
-            else {
-                target = (0, Dom_1.default)(arg1);
-            }
-        }
-        else {
-            name = arg1;
-            target = (0, VDom_1.default)(arg1);
-        }
-        if (target.virtual("__before_render__") == type + "-" + name) {
-            return {
-                already: true,
-                name: name,
-            };
-        }
-        target.virtual("__before_render__", type + "-" + name);
-        let methodName = type;
-        if (type == "viewpart") {
-            methodName = "viewPart";
-        }
-        var content = this[methodName](name);
-        target.html = content;
-        return {
-            already: false,
-            name: name,
-        };
-    }
-    static loadRenderingClass(type, option) {
-        const classPath = "app/" + type + "/" + option.name;
+    static setRenderingClass(type, className) {
+        const classPath = "app/" + type + "/" + className;
         if (!useExists(classPath)) {
             return;
         }
@@ -287,32 +255,26 @@ class Response {
         if (!classObj) {
             return;
         }
-        if (!option.already) {
-            if (classObj.handle) {
-                classObj.handle();
-            }
+        Data_1.default.__child_classs[classPath] = classObj;
+        return classObj;
+    }
+    static loadRenderingClass(type, className) {
+        const classObj = Response.setRenderingClass(type, className);
+        if (!classObj) {
+            return;
+        }
+        if (classObj.handle) {
+            classObj.handle();
         }
         if (classObj.handleAlways) {
             classObj.handleAlways();
         }
     }
-    static bindView(arg1, arg2, vdomFlg) {
-        const res = Response.__bind("view", arg1, arg2, vdomFlg);
-        Response.loadRenderingClass("View", res);
-    }
-    static bindTemplate(arg1, arg2, vdomFlg) {
-        const res = Response.__bind("template", arg1, arg2, vdomFlg);
-        Response.loadRenderingClass("Template", res);
-    }
-    static bindViewPart(arg1, arg2, vdomFlg) {
-        const res = Response.__bind("viewpart", arg1, arg2, vdomFlg);
-        Response.loadRenderingClass("ViewPart", res);
-    }
     static defautShowException() {
         var content = use("ExceptionHtml");
         content = Util_1.default.base64Decode(content);
         (0, Dom_1.default)("body").removeVirtual("__before_render__").html = content;
-        this.__before_controller = null;
+        Data_1.default.__before_controller = null;
         Data_1.default.before_template = null;
     }
     static setBindViewPart(parentElement) {
@@ -330,18 +292,9 @@ class Response {
             viewpart.removeAttribute(name);
             const content = Response.viewPart(vwname);
             viewpart.outerHTML = content;
-            Response.loadRenderingClass("ViewPart", {
-                name: vwname,
-                already: false,
-            });
+            Response.loadRenderingClass("ViewPart", vwname);
         }
     }
 }
-Response.__before_controller = null;
-Response.__before_controller_path = null;
-Response.__before_view = null;
-Response.__before_view_path = null;
-Response.__before_action = null;
-Response.__page_status = true;
 exports.default = Response;
 ;

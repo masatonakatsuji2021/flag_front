@@ -58,15 +58,13 @@ const builds = (framework, option, rootPath) => {
         option.coreHtml = {};
     }
 
+    option.core.Core = getLib("Core");
     option.core.Util = getLib("Util");
     option.core.FgDateTime = getLib("FgDateTime");
     option.core.Data = getLib("Data");
-    option.core.Ajax = getLib("Ajax");
     option.core.Dom = getLib("Dom");
-    option.core.DomControl = getLib("DomControl");
-    option.core.DomStatic = getLib("DomStatic");
     option.core.VDom = getLib("VDom");
-    option.core.VDomControl = getLib("VDomControl");
+    option.core.DomControl = getLib("DomControl");
     option.core.Routes = getLib("Routes");
     option.core.Controller = getLib("Controller");
     option.core.Exception = getLib("Exception");
@@ -76,6 +74,7 @@ const builds = (framework, option, rootPath) => {
     option.core.Background = getLib("Background");
     option.core.Response = getLib("Response");
     /*
+    option.core.Ajax = getLib("Ajax");
     option.core.Crypto = getLib("Crypto");
     option.core.Socket = getLib("Socket");
     option.core.KeyEvent = getLib("KeyEvent");

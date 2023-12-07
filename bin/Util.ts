@@ -17,10 +17,9 @@ interface HeadTags{
 export default class Util{
 
     /**
-     * #### getFramework
-     * @returns {string} framework
+     * #### framework
      */
-    public static getFramework() : string{
+    public static get framework() : string{
         // @ts-ignore
         return FRAMEWORK;
     }
@@ -133,33 +132,24 @@ export default class Util{
         return string.substring(0, string.indexOf(classType));
     }
 
-    /*
-    2023.11.08 abolition!
-    public static searchForm(formName : string){
-        if(Data.__form[formName]){
-            return Data.__form[formName];
-        }
-    }
-    */
-
     /**
-     * #### dt
+     * #### datetime
      * prints the current date and time
      * Output as fgDateTime class object
      * @returns {FgDateTime} FgDateTime class Object
      */
-    public static dt() : FgDateTime;
+    public static datetime() : FgDateTime;
 
     /**
-     * #### dt
+     * #### datetime
      * Get date and time from given datetime
      * Output as fgDateTime class object
      * @param {string} datetime Specified date and time
      * @returns {FgDateTime} FgDateTime class Object
      */
-    public static dt(datetime : string) : FgDateTime;
+    public static datetime(datetime : string) : FgDateTime;
 
-    public static dt(datetime? : string) : FgDateTime{
+    public static datetime(datetime? : string) : FgDateTime{
         return new FgDateTime(datetime);
     }
 

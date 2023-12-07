@@ -1,9 +1,25 @@
+import Data from "Data";
 import Util from "Util";
-import DomStatic from "DomStatic";
+
+const EventTypes = [
+    "click",
+    "dblclick",
+    "contextmenu",
+    "change",
+    "focus",
+    "mousemove",
+    "mouseup",
+    "mousedown",
+    "keyup",
+    "keydown",
+    "keypress",
+] as const; 
 
 export default class DomControl{
 
     public _qs = null;
+
+    public _virtual : boolean = false;
 
     public constructor(qs){
         this._qs = qs;
@@ -33,7 +49,13 @@ export default class DomControl{
             else{
                 let selectList = [];
                 if(!Array.isArray(selector)){
-                    selectList = [ selector ];
+                    if(selector instanceof NodeList){
+                        // @ts-ignore
+                        selectList = selector;
+                    }
+                    else{
+                        selectList = [ selector ];
+                    }
                 }
                 else{
                     selectList = selector;
@@ -49,6 +71,63 @@ export default class DomControl{
         var qs = document.querySelectorAll(fullSelector);
     
         return new DomControl(qs);
+    }
+
+    public static loadOnVirtual() : DomControl;
+
+    public static loadOnVirtual(refName : string) : DomControl;
+
+    public static loadOnVirtual(refName? : string){
+
+        let v = [];
+        
+        if(refName){
+            let v1 : DomControl;
+            let v2 : DomControl;
+
+            v1 = DomControl.load().findOnVirtual("__ref", refName);
+            for(var n = 0 ; n < v1._qs.length ; n++){
+                var q_ = v1._qs[n];
+                v.push(q_);
+            }
+        
+            if(refName.indexOf("*") > -1){
+
+                var rns = refName.split("*");
+
+                let selector : string = "";
+
+                if(!rns[0].trim()){
+                    selector = "[ref$=\"" + rns[1] + "\"]";
+                }
+                else{
+                    selector = "[ref^=\"" + rns[0] + "\"]";
+                }
+
+                v2 = DomControl.load(selector);
+
+                for(var n = 0 ; n < v2.length ; n++){
+                    var v2_ = v2.index(n);
+                    var refName2 = v2_.attr("ref");
+                    v2_.virtual("__ref", refName2);
+                }
+
+            }
+            else{
+                v2 = DomControl.load("[ref=\"" + refName + "\"]");
+                v2.virtual("__ref", refName);
+            }
+
+            v2.removeAttr("ref");
+            for(var n = 0 ; n < v2._qs.length ; n++){
+                var q_ = v2._qs[n];
+                v.push(q_);
+            }
+        }
+
+        const vdo = new DomControl(v);
+        vdo._virtual = true;
+        return vdo;
     }
 
     /**
@@ -188,11 +267,11 @@ export default class DomControl{
                 continue;
             }
 
-            if(!DomStatic.__uids[qs.uid]){
+            if(!Data.__uids[qs.uid]){
                 continue;
             }
 
-            var uids = DomStatic.__uids[qs.uid];
+            var uids = Data.__uids[qs.uid];
 
             if(!uids.virtual){
                 continue;
@@ -255,6 +334,15 @@ export default class DomControl{
     public child(selector : string) : DomControl;
 
     public child(selector? : string) : DomControl{
+        if(this._virtual){
+            return this.childOnVirtual(selector);
+        }
+        else{
+            return this.childNoVirtual(selector);
+        }
+    }
+
+    private childNoVirtual(selector? : string) : DomControl{
         let qss = [];
         for(var n = 0 ; n < this._qs.length ;n ++){
             const qs = this._qs[n];
@@ -272,6 +360,52 @@ export default class DomControl{
         return new DomControl(qss);
     }
 
+    private childOnVirtual(refName? : string) : DomControl{
+        let v = [];
+        let v1 : DomControl;
+        let v2 : DomControl;
+        v1 = this.childNoVirtual().findOnVirtual("__ref", refName);
+        for(var n = 0 ; n < v1._qs.length ; n++){
+            var q_ = v1._qs[n];
+            v.push(q_);
+        }
+
+        if(!refName){
+            refName = "*";
+        }
+
+        if(refName.indexOf("*") > -1){
+            var rns = refName.split("*");
+
+            if(!rns[0].trim()){
+                v2 = this.childNoVirtual("[ref$=\"" + rns[1] + "\"]");                
+            }
+            else{
+                v2 = this.childNoVirtual("[ref^=\"" + rns[0] + "\"]");
+            }
+
+            for(var n = 0 ; n < v2.length ; n++){
+                var v2_ = v2.index(n);
+                var ref = v2_.attr("ref");
+                v2_.virtual("__ref", ref);
+            }
+        }
+        else{
+            v2 = this.childNoVirtual("[ref=\"" + refName + "\"]");
+            v2.virtual("__ref", refName); 
+        }
+
+        v2.removeAttr("ref");
+        for(var n = 0 ; n < v2._qs.length ; n++){
+            var q_ = v2._qs[n];
+            v.push(q_);
+        }
+
+        return new DomControl(v);
+    }
+
+    public renderingRefreshStatus : boolean = true;
+
     /**
      * ***text*** : 
      * get/set the text inside the element tag
@@ -284,6 +418,9 @@ export default class DomControl{
         for(var n = 0 ; n < this._qs.length ;n ++){
             var qs = this._qs[n];
             qs.innerText = text;
+        }
+        if(this.renderingRefreshStatus){
+            this.renderingRefresh();
         }
     }
 
@@ -300,6 +437,9 @@ export default class DomControl{
             var qs = this._qs[n];
             qs.innerHTML = html;
         }
+        if(this.renderingRefreshStatus){
+            this.renderingRefresh();
+        }
     }
 
     /**
@@ -313,6 +453,9 @@ export default class DomControl{
         for(var n = 0 ; n < this._qs.length ;n ++){
             var qs = this._qs[n];
             qs.outerHtml = html;
+        }
+        if(this.renderingRefreshStatus){
+            this.renderingRefresh();
         }
     }
 
@@ -341,6 +484,9 @@ export default class DomControl{
                 qs.append(contents);
             }
         });
+        if(this.renderingRefreshStatus){
+            this.renderingRefresh();
+        }
         return this;
     }
 
@@ -383,6 +529,9 @@ export default class DomControl{
                 qs.before(contents);
             }
         });
+        if(this.renderingRefreshStatus){
+            this.renderingRefresh();
+        }
         return this;
     }
 
@@ -411,6 +560,9 @@ export default class DomControl{
                 qs.after(contents);
             }
         });
+        if(this.renderingRefreshStatus){
+            this.renderingRefresh();
+        }
         return this;
     }
 
@@ -637,11 +789,11 @@ export default class DomControl{
         if(value == undefined){
             var qs = this._qs[this._qs.length - 1];
 
-            if(!DomStatic.__uids[qs.uid]){
+            if(!Data.__uids[qs.uid]){
                 return null;
             }
 
-            var uids = DomStatic.__uids[qs.uid];
+            var uids = Data.__uids[qs.uid];
             if(!uids.virtual){
                 return null;
             }
@@ -656,16 +808,16 @@ export default class DomControl{
             for(var n = 0 ; n < this._qs.length; n++){
                 var qs = this._qs[n];
 
-                if(!DomStatic.__uids[qs.uid]){
-                    DomStatic.__uids[qs.uid] = {};
+                if(!Data.__uids[qs.uid]){
+                    Data.__uids[qs.uid] = {};
                 }
 
-                if(!DomStatic.__uids[qs.uid].virtual){
-                    DomStatic.__uids[qs.uid].virtual = {};
-                    DomStatic.__uids[qs.uid].target = qs;
+                if(!Data.__uids[qs.uid].virtual){
+                    Data.__uids[qs.uid].virtual = {};
+                    Data.__uids[qs.uid].target = qs;
                 }
                 
-                DomStatic.__uids[qs.uid].virtual[name] = value;
+                Data.__uids[qs.uid].virtual[name] = value;
             }
             return this;    
         }
@@ -681,24 +833,24 @@ export default class DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
 
-            if(!DomStatic.__uids[qs.uid]){
+            if(!Data.__uids[qs.uid]){
                 continue;
             }
 
-            if(!DomStatic.__uids[qs.uid].virtual){
+            if(!Data.__uids[qs.uid].virtual){
                 continue;
             }
             
-            delete DomStatic.__uids[qs.uid].virtual[name];
+            delete Data.__uids[qs.uid].virtual[name];
 
             // @ts-ignore
-            if(DomStatic.__uids[qs.uid].virtual == {}){
-                delete DomStatic.__uids[qs.uid].virtual;
+            if(Data.__uids[qs.uid].virtual == {}){
+                delete Data.__uids[qs.uid].virtual;
             }
             
             // @ts-ignore
-            if(DomStatic.__uids[qs.uid] == {}){
-                delete DomStatic.__uids[qs.uid];
+            if(Data.__uids[qs.uid] == {}){
+                delete Data.__uids[qs.uid];
             }
         }
         return this;
@@ -1106,5 +1258,61 @@ export default class DomControl{
             qs.focus();
         }
         return this;
+    }
+
+      /**
+     * ***refresh*** : 
+     * @returns {VDomControl} VDomCOntrol Class Object 
+     */
+      public refresh(){
+        if(!this._virtual){
+            return this;
+        }
+
+        const refCheckCode = "__refcheck__";
+
+        let c = Object.keys(Data.__uids);
+        for(var n = 0 ; n < c.length ; n++){
+            var uid = c[n];
+            var obj = Data.__uids[uid];
+
+            obj.target.setAttribute(refCheckCode, uid);
+            if(!document.querySelector("[" + refCheckCode + "=\"" + uid + "\"]")){
+                delete Data.__uids[uid];
+            }
+            obj.target.removeAttribute(refCheckCode);
+        }
+
+        return this;
+    }
+
+    public get ref() : string{
+        if(this._virtual){
+            return this.virtual("__ref");
+        }
+    }
+
+    public renderingRefresh(){
+        for(let n = 0 ; n < EventTypes.length; n++){
+            const eventType = EventTypes[n];
+            const target = "v-on-" + eventType;
+            const search = DomControl.load("[" + target + "]");
+            for(let n2 = 0 ; n2 < search.length ; n2++){
+                const s_ = search.index(n2);
+                const handleName = s_.attribute(target);
+                s_.removeAttribute(target);
+                if(Data.__before_controller){
+                    if(Data.__before_controller[handleName]){
+                        s_.on(eventType, Data.__before_controller[handleName]);
+                    }
+                }
+                if(Data.__before_view){
+                    if(Data.__before_view[handleName]){
+                        s_.on(eventType, Data.__before_view[handleName]);
+                    }    
+                }
+            }
+        }
+
     }
 };
