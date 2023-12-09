@@ -242,7 +242,7 @@ class Response {
         }
         var content = use(viewPartPath);
         content = Util_1.default.base64Decode(content);
-        const vw = document.createElement("div");
+        const vw = document.createElement("template");
         vw.innerHTML = content;
         Response.setBindViewPart(vw);
         return vw.innerHTML;
