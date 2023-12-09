@@ -165,7 +165,10 @@ export default class DomControl{
      * @returns {DomControl} DomControl Class Object
      */
     public get first() : DomControl{
-        return new DomControl([ this._qs[0] ]);
+        const res = new DomControl([ this._qs[0] ]);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
     /**
@@ -174,7 +177,10 @@ export default class DomControl{
      * @returns {DomControl} DomControl Class Object
      */
     public get last() : DomControl{
-        return new DomControl([ this._qs[this._qs.length - 1] ]);
+        const res = new DomControl([ this._qs[this._qs.length - 1] ]);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
     /**
@@ -183,7 +189,10 @@ export default class DomControl{
      * @returns {DomControl} DomControl Class Object
      */
     public get parent() : DomControl{
-        return new DomControl([ this._qs[this._qs.length - 1].parentNode ]);
+        const res = new DomControl([ this._qs[this._qs.length - 1].parentNode ]);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
     /**
@@ -193,7 +202,10 @@ export default class DomControl{
      * @returns {DomControl} DomControl Class Object
      */
     public index(index : number) : DomControl{
-        return new DomControl([ this._qs[index] ]);
+        const res = new DomControl([ this._qs[index] ]);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
     /**
@@ -209,7 +221,10 @@ export default class DomControl{
                 qs_.push(q_);
             }
         }
-        return new DomControl(qs_);
+        const res = new DomControl(qs_);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
     /**
@@ -225,7 +240,10 @@ export default class DomControl{
                 qs_.push(q_);
             }
         }
-        return new DomControl(qs_);
+        const res = new DomControl(qs_);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
     /**
@@ -248,7 +266,10 @@ export default class DomControl{
                 qss.push(qs);
             }
         }
-        return new DomControl(qss);
+        const res = new DomControl(qss);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
     /**
@@ -312,7 +333,10 @@ export default class DomControl{
 
             qss.push(qs);
         }
-        return new DomControl(qss);
+        const res = new DomControl(qss);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
     /**
@@ -335,14 +359,32 @@ export default class DomControl{
 
     public child(selector? : string) : DomControl{
         if(this._virtual){
-            return this.childOnVirtual(selector);
+            return this.childVirtual(selector);
         }
         else{
-            return this.childNoVirtual(selector);
+            return this.childDom(selector);
         }
     }
 
-    private childNoVirtual(selector? : string) : DomControl{
+    /**
+     * ***childDom*** : 
+     * Specifies the child element of the argument selector,
+     * If no selector is specified, all child elements are included.
+     * If no selector argument is used, get all child elements.
+     * @returns {DomControl} DomControl Class Object
+     */
+    public childDom() : DomControl;
+
+    /**
+     * ***childDom*** : 
+     * Specifies the child element of the argument selector,
+     * If no selector is specified, all child elements are included
+     * @param {string} selector selector
+     * @returns {DomControl} DomControl Class Object
+     */
+    public childDom(selector? : string) : DomControl;
+
+    public childDom(selector? : string) : DomControl{
         let qss = [];
         for(var n = 0 ; n < this._qs.length ;n ++){
             const qs = this._qs[n];
@@ -357,14 +399,21 @@ export default class DomControl{
                 qss.push(b_);
             })
         }
-        return new DomControl(qss);
+        const res = new DomControl(qss);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
-    private childOnVirtual(refName? : string) : DomControl{
+    private childVirtual() : DomControl;
+
+    private childVirtual(refName : string) : DomControl;
+
+    private childVirtual(refName? : string) : DomControl{
         let v = [];
         let v1 : DomControl;
         let v2 : DomControl;
-        v1 = this.childNoVirtual().findOnVirtual("__ref", refName);
+        v1 = this.childDom().findOnVirtual("__ref", refName);
         for(var n = 0 ; n < v1._qs.length ; n++){
             var q_ = v1._qs[n];
             v.push(q_);
@@ -378,10 +427,10 @@ export default class DomControl{
             var rns = refName.split("*");
 
             if(!rns[0].trim()){
-                v2 = this.childNoVirtual("[ref$=\"" + rns[1] + "\"]");                
+                v2 = this.childDom("[ref$=\"" + rns[1] + "\"]");                
             }
             else{
-                v2 = this.childNoVirtual("[ref^=\"" + rns[0] + "\"]");
+                v2 = this.childDom("[ref^=\"" + rns[0] + "\"]");
             }
 
             for(var n = 0 ; n < v2.length ; n++){
@@ -391,7 +440,7 @@ export default class DomControl{
             }
         }
         else{
-            v2 = this.childNoVirtual("[ref=\"" + refName + "\"]");
+            v2 = this.childDom("[ref=\"" + refName + "\"]");
             v2.virtual("__ref", refName); 
         }
 
@@ -401,7 +450,10 @@ export default class DomControl{
             v.push(q_);
         }
 
-        return new DomControl(v);
+        const res = new DomControl(v);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
 
     public renderingRefreshStatus : boolean = true;
@@ -499,7 +551,7 @@ export default class DomControl{
      */
     public stamp(stampSource : string, callback : Function) : DomControl{
         this.append(stampSource);
-        let target = this.child().last;
+        let target = this.childDom().last;
         callback(target);
         return this;
     }
@@ -596,11 +648,14 @@ export default class DomControl{
      * @param {Function} callback callback function
      * @returns {DomControl} DomControl Class Object
      */
-    public on(eventName : string, callback : Function) : DomControl{
+    public on(eventName : string, callback : Function, bindClass?) : DomControl{
         for(var n = 0 ; n < this._qs.length; n++){
             var qs = this._qs[n];
             qs.addEventListener(eventName, (e) => {
                 const targetDom = new DomControl([e.target]);
+                if(bindClass){
+                    callback = callback.bind(bindClass);
+                }
                 callback(targetDom, e);
             });
         }
@@ -1303,13 +1358,24 @@ export default class DomControl{
                 s_.removeAttribute(target);
                 if(Data.__before_controller){
                     if(Data.__before_controller[handleName]){
-                        s_.on(eventType, Data.__before_controller[handleName]);
+                        s_.on(eventType, Data.__before_controller[handleName], Data.__before_controller);
                     }
                 }
                 if(Data.__before_view){
                     if(Data.__before_view[handleName]){
-                        s_.on(eventType, Data.__before_view[handleName]);
+                        s_.on(eventType, Data.__before_view[handleName], Data.__before_view);
                     }    
+                }
+
+                if(Data.__child_classs){
+                    const c = Object.keys(Data.__child_classs);
+                    for(let n = 0 ; n < c.length ; n++){
+                        const classPath = c[n];
+                        const childClass = Data.__child_classs[classPath];
+                        if(childClass[handleName]){
+                            s_.on(eventType, childClass[handleName], childClass);
+                        }
+                    }
                 }
             }
         }

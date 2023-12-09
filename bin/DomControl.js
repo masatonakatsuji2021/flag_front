@@ -130,7 +130,10 @@ class DomControl {
      * @returns {DomControl} DomControl Class Object
      */
     get first() {
-        return new DomControl([this._qs[0]]);
+        const res = new DomControl([this._qs[0]]);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
     /**
      * ***last*** :
@@ -138,7 +141,10 @@ class DomControl {
      * @returns {DomControl} DomControl Class Object
      */
     get last() {
-        return new DomControl([this._qs[this._qs.length - 1]]);
+        const res = new DomControl([this._qs[this._qs.length - 1]]);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
     /**
      * ***parent*** :
@@ -146,7 +152,10 @@ class DomControl {
      * @returns {DomControl} DomControl Class Object
      */
     get parent() {
-        return new DomControl([this._qs[this._qs.length - 1].parentNode]);
+        const res = new DomControl([this._qs[this._qs.length - 1].parentNode]);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
     /**
      * ***index*** :
@@ -155,7 +164,10 @@ class DomControl {
      * @returns {DomControl} DomControl Class Object
      */
     index(index) {
-        return new DomControl([this._qs[index]]);
+        const res = new DomControl([this._qs[index]]);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
     /**
      * ***even*** :
@@ -170,7 +182,10 @@ class DomControl {
                 qs_.push(q_);
             }
         }
-        return new DomControl(qs_);
+        const res = new DomControl(qs_);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
     /**
      * ***odd*** :
@@ -185,7 +200,10 @@ class DomControl {
                 qs_.push(q_);
             }
         }
-        return new DomControl(qs_);
+        const res = new DomControl(qs_);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
     /**
      * ***findOnAttr*** :
@@ -205,7 +223,10 @@ class DomControl {
                 qss.push(qs);
             }
         }
-        return new DomControl(qss);
+        const res = new DomControl(qss);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
     /**
      * ***findOnVirtual*** :
@@ -256,17 +277,20 @@ class DomControl {
             }
             qss.push(qs);
         }
-        return new DomControl(qss);
+        const res = new DomControl(qss);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
     child(selector) {
         if (this._virtual) {
-            return this.childOnVirtual(selector);
+            return this.childVirtual(selector);
         }
         else {
-            return this.childNoVirtual(selector);
+            return this.childDom(selector);
         }
     }
-    childNoVirtual(selector) {
+    childDom(selector) {
         let qss = [];
         for (var n = 0; n < this._qs.length; n++) {
             const qs = this._qs[n];
@@ -281,13 +305,16 @@ class DomControl {
                 qss.push(b_);
             });
         }
-        return new DomControl(qss);
+        const res = new DomControl(qss);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
-    childOnVirtual(refName) {
+    childVirtual(refName) {
         let v = [];
         let v1;
         let v2;
-        v1 = this.childNoVirtual().findOnVirtual("__ref", refName);
+        v1 = this.childDom().findOnVirtual("__ref", refName);
         for (var n = 0; n < v1._qs.length; n++) {
             var q_ = v1._qs[n];
             v.push(q_);
@@ -298,10 +325,10 @@ class DomControl {
         if (refName.indexOf("*") > -1) {
             var rns = refName.split("*");
             if (!rns[0].trim()) {
-                v2 = this.childNoVirtual("[ref$=\"" + rns[1] + "\"]");
+                v2 = this.childDom("[ref$=\"" + rns[1] + "\"]");
             }
             else {
-                v2 = this.childNoVirtual("[ref^=\"" + rns[0] + "\"]");
+                v2 = this.childDom("[ref^=\"" + rns[0] + "\"]");
             }
             for (var n = 0; n < v2.length; n++) {
                 var v2_ = v2.index(n);
@@ -310,7 +337,7 @@ class DomControl {
             }
         }
         else {
-            v2 = this.childNoVirtual("[ref=\"" + refName + "\"]");
+            v2 = this.childDom("[ref=\"" + refName + "\"]");
             v2.virtual("__ref", refName);
         }
         v2.removeAttr("ref");
@@ -318,7 +345,10 @@ class DomControl {
             var q_ = v2._qs[n];
             v.push(q_);
         }
-        return new DomControl(v);
+        const res = new DomControl(v);
+        res._virtual = this._virtual;
+        res.renderingRefreshStatus = this.renderingRefreshStatus;
+        return res;
     }
     /**
      * ***text*** :
@@ -391,7 +421,7 @@ class DomControl {
      */
     stamp(stampSource, callback) {
         this.append(stampSource);
-        let target = this.child().last;
+        let target = this.childDom().last;
         callback(target);
         return this;
     }
@@ -451,11 +481,14 @@ class DomControl {
      * @param {Function} callback callback function
      * @returns {DomControl} DomControl Class Object
      */
-    on(eventName, callback) {
+    on(eventName, callback, bindClass) {
         for (var n = 0; n < this._qs.length; n++) {
             var qs = this._qs[n];
             qs.addEventListener(eventName, (e) => {
                 const targetDom = new DomControl([e.target]);
+                if (bindClass) {
+                    callback = callback.bind(bindClass);
+                }
                 callback(targetDom, e);
             });
         }
@@ -931,12 +964,22 @@ class DomControl {
                 s_.removeAttribute(target);
                 if (Data_1.default.__before_controller) {
                     if (Data_1.default.__before_controller[handleName]) {
-                        s_.on(eventType, Data_1.default.__before_controller[handleName]);
+                        s_.on(eventType, Data_1.default.__before_controller[handleName], Data_1.default.__before_controller);
                     }
                 }
                 if (Data_1.default.__before_view) {
                     if (Data_1.default.__before_view[handleName]) {
-                        s_.on(eventType, Data_1.default.__before_view[handleName]);
+                        s_.on(eventType, Data_1.default.__before_view[handleName], Data_1.default.__before_view);
+                    }
+                }
+                if (Data_1.default.__child_classs) {
+                    const c = Object.keys(Data_1.default.__child_classs);
+                    for (let n = 0; n < c.length; n++) {
+                        const classPath = c[n];
+                        const childClass = Data_1.default.__child_classs[classPath];
+                        if (childClass[handleName]) {
+                            s_.on(eventType, childClass[handleName], childClass);
+                        }
                     }
                 }
             }

@@ -4,6 +4,7 @@ import VDom from "VDom";
 import Data from "Data";
 import Controller from "Controller";
 import View from "View";
+import Routes from "Routes";
 
 export default class Response{
 
@@ -79,6 +80,8 @@ export default class Response{
             Dom("body").html = viewHtml;
         }
 
+        Response.setBindView();
+        Response.setBindTemplate();
         Response.setBindViewPart();
 
         VDom().refresh();
@@ -324,7 +327,11 @@ export default class Response{
     }
 
     private static setRenderingClass(type : string, className : string){
-        const classPath : string = "app/" + type + "/" + className;
+        let classNamePaths = className.split("/");
+        classNamePaths[classNamePaths.length - 1] = Util.ucFirst(classNamePaths[classNamePaths.length - 1]);
+        let classNamePath = classNamePaths.join("/");
+
+        const classPath : string = "app/" + type + "/" + classNamePath + Util.ucFirst(type);
 
         if(!useExists(classPath)){
             return;
@@ -366,22 +373,44 @@ export default class Response{
         Data.before_template = null;
     }
 
-    public static setBindViewPart(parentElement? : Element){
-        const name = "v-show-viewpart";
-        let viewparts;
+    private static setBindView(parentElement? : Element){
+        return Response._setBind("view", "View", parentElement);
+    }
+    
+    private static setBindTemplate(parentElement? : Element){
+        return Response._setBind("template", "Template", parentElement);
+    }
+
+    private static setBindViewPart(parentElement? : Element){
+        return Response._setBind("viewpart", "ViewPart", parentElement);
+    }
+
+    private static _setBind(type : string, className : string, parentElement? : Element){
+        const name = "v-show-" + type;
+        let targets;
         if(parentElement){
-            viewparts = parentElement.querySelectorAll("[" + name + "]");
+            targets = parentElement.querySelectorAll("[" + name + "]");
         }
         else{
-            viewparts = document.querySelectorAll("[" + name + "]");
+            targets = document.querySelectorAll("[" + name + "]");
         }
-        for(let n = 0 ; n < viewparts.length ; n++){
-            const viewpart = viewparts[n];
-            const vwname = viewpart.getAttribute(name);
-            viewpart.removeAttribute(name);
-            const content = Response.viewPart(vwname);
-            viewpart.outerHTML = content;
-            Response.loadRenderingClass("ViewPart", vwname);
+        for(let n = 0 ; n < targets.length ; n++){
+            const target = targets[n];
+            let targetName = target.getAttribute(name);
+            Response.loadRenderingClass(className, targetName);
+            target.removeAttribute(name);
+            let content;
+            if(type == "view"){
+                content = Response.view(targetName);
+            }
+            else if(type == "template"){
+                content = Response.template(targetName);
+            }
+            else if(type == "viewpart"){
+                content = Response.viewPart(targetName);
+            }
+            target.outerHTML = content;
+            Dom().renderingRefresh();
         }
     }
 };
