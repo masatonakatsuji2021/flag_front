@@ -50,7 +50,71 @@ export default class Response{
         }
     }
 
+    public static async __renderingAnimated(targetDomName, routes, context, contentHtml){
+        
+        return new Promise((resolve)=>{
+        
+            const target = Dom(targetDomName);
+
+            let main = target.childDom("pagelist");
+            if(!main.length){
+                target.html = "<pagelist></pagelist>"
+                main = target.childDom("pagelist");
+            }
+    
+            const next = main.childDom("page-section[id=\"" + routes.url + "\"]");
+    
+            if(next.length){
+                let nows = [];
+                let _next = next._qs[0];
+                for(;;){
+                    const now = _next.nextElementSibling;
+                        if(now){
+                            nows.push(now)
+                        }
+                        else{
+                            break;
+                        }
+                        _next = now;
+                    }
+    
+                    for(let n = 0 ; n < nows.length ; n++){
+                        const now = nows[n];
+                        now.setAttribute("hold", true);
+                            
+
+                        setTimeout(()=>{
+                            now.removeAttribute("hold");
+                            setTimeout(()=>{
+                                now.remove();
+                                resolve(true);
+                            },20);
+                        }, 350);
+                    }
+            }
+            else{
+                const newdom = document.createElement("page-section");
+                newdom.setAttribute("id", routes.url);
+                newdom.setAttribute("hold", "OK");
+                newdom.innerHTML = "<page>" + contentHtml+ "</page><base></base>"
+                main.append(newdom);
+                if(routes.started){
+                    newdom.removeAttribute("hold");
+                    resolve(true);
+                }
+                else{
+                    setTimeout(()=>{
+                        newdom.removeAttribute("hold");
+                        resolve(true);
+                    },20);    
+                }
+            }
+        });
+    }
+
     public static async __rendering(routes, context){
+
+        const myApp = use("app/config/app");
 
         if(!context.view){
             if(routes.controller){
@@ -72,12 +136,23 @@ export default class Response{
             }
 
             const viewHtml = Response.view(context.view);
-            Dom("[spa-contents]").html = viewHtml;
+
+            if(myApp.animated){
+                await Response.__renderingAnimated("[spa-contents]", routes, context, viewHtml);
+            }
+            else{
+                Dom("[spa-contents]").html = viewHtml;    
+            }
         }
         else{
             Data.before_template = null;
             const viewHtml = Response.view(context.view);
-            Dom("body").html = viewHtml;
+            if(myApp.animated){
+                await  Response.__renderingAnimated("body", routes, context, viewHtml);
+            }
+            else{
+                Dom("body").html = viewHtml;
+            }
         }
 
         Response.setBindView();

@@ -35,8 +35,64 @@ class Response {
             location.replace("#" + url);
         }
     }
+    static __renderingAnimated(targetDomName, routes, context, contentHtml) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve) => {
+                const target = (0, Dom_1.default)(targetDomName);
+                let main = target.childDom("pagelist");
+                if (!main.length) {
+                    target.html = "<pagelist></pagelist>";
+                    main = target.childDom("pagelist");
+                }
+                const next = main.childDom("page-section[id=\"" + routes.url + "\"]");
+                if (next.length) {
+                    let nows = [];
+                    let _next = next._qs[0];
+                    for (;;) {
+                        const now = _next.nextElementSibling;
+                        if (now) {
+                            nows.push(now);
+                        }
+                        else {
+                            break;
+                        }
+                        _next = now;
+                    }
+                    for (let n = 0; n < nows.length; n++) {
+                        const now = nows[n];
+                        now.setAttribute("hold", true);
+                        setTimeout(() => {
+                            now.removeAttribute("hold");
+                            setTimeout(() => {
+                                now.remove();
+                                resolve(true);
+                            }, 20);
+                        }, 350);
+                    }
+                }
+                else {
+                    const newdom = document.createElement("page-section");
+                    newdom.setAttribute("id", routes.url);
+                    newdom.setAttribute("hold", "OK");
+                    newdom.innerHTML = "<page>" + contentHtml + "</page><base></base>";
+                    main.append(newdom);
+                    if (routes.started) {
+                        newdom.removeAttribute("hold");
+                        resolve(true);
+                    }
+                    else {
+                        setTimeout(() => {
+                            newdom.removeAttribute("hold");
+                            resolve(true);
+                        }, 20);
+                    }
+                }
+            });
+        });
+    }
     static __rendering(routes, context) {
         return __awaiter(this, void 0, void 0, function* () {
+            const myApp = use("app/config/app");
             if (!context.view) {
                 if (routes.controller) {
                     context.view = routes.controller + "/" + routes.action;
@@ -52,12 +108,22 @@ class Response {
                     (0, Dom_1.default)("body").html = templateHtml;
                 }
                 const viewHtml = Response.view(context.view);
-                (0, Dom_1.default)("[spa-contents]").html = viewHtml;
+                if (myApp.animated) {
+                    yield Response.__renderingAnimated("[spa-contents]", routes, context, viewHtml);
+                }
+                else {
+                    (0, Dom_1.default)("[spa-contents]").html = viewHtml;
+                }
             }
             else {
                 Data_1.default.before_template = null;
                 const viewHtml = Response.view(context.view);
-                (0, Dom_1.default)("body").html = viewHtml;
+                if (myApp.animated) {
+                    yield Response.__renderingAnimated("body", routes, context, viewHtml);
+                }
+                else {
+                    (0, Dom_1.default)("body").html = viewHtml;
+                }
             }
             Response.setBindView();
             Response.setBindTemplate();

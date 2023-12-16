@@ -17,6 +17,12 @@ exports.default = (function () {
     return __awaiter(this, void 0, void 0, function* () {
         window.addEventListener("load", function () {
             return __awaiter(this, void 0, void 0, function* () {
+                const Config = use("app/config/app");
+                if (Config.animated) {
+                    let animatedCss = use("animatedCss");
+                    animatedCss = Util_1.default.base64Decode(animatedCss);
+                    Util_1.default.addHeadStyle(null, animatedCss);
+                }
                 window.addEventListener("popstate", (e) => {
                     if (!Response_1.default.pageEnable) {
                         if (Data_1.default.__before_url) {
@@ -32,7 +38,6 @@ exports.default = (function () {
                     var routes = Routes_1.default.searchRoute(url);
                     Response_1.default.rendering(routes);
                 });
-                const Config = use("app/config/app");
                 // background class method load.
                 if (Config.backgrounds) {
                     for (let n = 0; n < Config.backgrounds.length; n++) {
@@ -44,6 +49,7 @@ exports.default = (function () {
                     }
                 }
                 var routes = Routes_1.default.searchRoute();
+                routes.started = true;
                 Response_1.default.rendering(routes);
             });
         });

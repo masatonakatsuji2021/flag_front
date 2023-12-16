@@ -7,6 +7,14 @@ export default (async function(){
 
     window.addEventListener("load", async function(){
 
+        const Config = use("app/config/app");
+
+        if(Config.animated){
+            let animatedCss = use("animatedCss");
+            animatedCss = Util.base64Decode(animatedCss);
+            Util.addHeadStyle(null, animatedCss);
+        }
+
         window.addEventListener("popstate", (e) => {
 
             if(!Response.pageEnable){
@@ -28,7 +36,6 @@ export default (async function(){
             Response.rendering(routes);
         });
 
-        const Config = use("app/config/app");
 
         // background class method load.
         if(Config.backgrounds){
@@ -42,6 +49,7 @@ export default (async function(){
         }
 
         var routes = Routes.searchRoute();
+        routes.started = true;
         Response.rendering(routes);
     });
 

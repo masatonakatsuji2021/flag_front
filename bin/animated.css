@@ -1,0 +1,42 @@
+*{
+    box-sizing:border-box;
+}
+pagelist{
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+}
+pagelist a{
+    color:darkcyan;
+    cursor:pointer;
+}
+pagelist page-section,
+pagelist modal-section{
+    position:fixed;
+    padding:20px;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:#fff;
+    transition-duration:350ms;
+}
+pagelist page-section base{
+    display: block;
+    background:rgba(0,0,0,0);
+    transition-duration:350ms;
+}
+pagelist page-section:not(:last-child) base{
+    position:fixed;
+    display: block;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.4);
+}
+pagelist page-section[hold]{
+    left: 100%;
+}

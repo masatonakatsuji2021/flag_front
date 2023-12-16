@@ -77,6 +77,7 @@ const builds = (framework, option, rootPath) => {
     option.core.KeyEvent = getLib("KeyEvent");
     */
     option.coreHtml.ExceptionHtml = fs.readFileSync(__dirname + "/bin/Exception.html").toString();
+    option.coreHtml.animatedCss = fs.readFileSync(__dirname + "/bin/animated.css").toString();
     // plugin loadset...
     if (option.plugin) {
         for (var n = 0; n < option.plugin.length; n++) {

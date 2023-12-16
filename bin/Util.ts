@@ -197,12 +197,22 @@ export default class Util{
      * #### addHeadTag
      * Add tags dynamically to head tag.
      * @param {string} type additional tag name
+     * @param {string} body tag on body content
+     * @returns {HeadTags} HeadTags Class Object
+     */
+    public static addHeadTag(type : string, body: string) : HeadTags;
+
+    /**
+     * #### addHeadTag
+     * Add tags dynamically to head tag.
+     * @param {string} type additional tag name
+     * @param {string} body tag on body content
      * @param {object} option Configuration options
      * @returns {HeadTags} HeadTags Class Object
      */
-    public static addHeadTag(type : string, option : object) : HeadTags;
+    public static addHeadTag(type : string, body: string, option : object) : HeadTags;
 
-    public static addHeadTag(type : string, option?) : HeadTags{
+    public static addHeadTag(type : string, body?: string, option?) : HeadTags{
         if(!option){
             option = {};
         }
@@ -211,7 +221,12 @@ export default class Util{
         for(let n = 0 ; n < c.length ; n++){
             let key = c[n];
             let val = option[key];
-            el.setAttribute(key, val);
+            if(val){
+                el.setAttribute(key, val);
+            }
+        }
+        if(body){
+            el.innerHTML = body;
         }
         document.head.appendChild(el);
 
@@ -236,17 +251,27 @@ export default class Util{
      * #### addHeadScript
      * .Add script tag dynamically in head tag.
      * @param {string} path Loading script path
+     * @param {string} body tag on body content
+     * @returns {HeadTags} HeadTags Class Object
+     */
+    public static addHeadScript(path : string, body: string) : HeadTags;
+
+    /**
+     * #### addHeadScript
+     * .Add script tag dynamically in head tag.
+     * @param {string} path Loading script path
+     * @param {string} body tag on body content
      * @param {object} option Configuration options
      * @returns {HeadTags} HeadTags Class Object
      */
-    public static addHeadScript(path : string, option : object) : HeadTags;
+    public static addHeadScript(path : string, body: string, option : object) : HeadTags;
 
-    public static addHeadScript(path : string, option?) : HeadTags{
+    public static addHeadScript(path : string, body? : string,  option?) : HeadTags{
         if(!option){
             option = {};
         }
         option.src = path;
-        return Util.addHeadTag("script", option);
+        return Util.addHeadTag("script", body, option);
     }
 
     /**
@@ -264,15 +289,30 @@ export default class Util{
      * @param {object} option Configuration options
      * @returns {HeadTags} HeadTags Class Object
      */
-    public static addHeadStyle(path : string, option : object) : HeadTags;
+    public static addHeadStyle(path : string, body : string) : HeadTags;
 
-    public static addHeadStyle(path : string, option?) : HeadTags{
+    /**
+     * #### addHeadStyle : 
+     * Add stylesheet loading tag dynamically in head tag.
+     * @param {string} path Loading css file path    
+     * @param {string} body tag on body content
+     * @param {object} option Configuration options
+     * @returns {HeadTags} HeadTags Class Object
+     */
+    public static addHeadStyle(path : string, body : string, option : object) : HeadTags;
+
+    public static addHeadStyle(path : string, body? : string, option?) : HeadTags{
         if(!option){
             option = {};
         }
-        option.rel = "stylesheet";
         option.href = path;
-        return Util.addHeadTag("link", option);
+        let type = "link";
+        if(body){
+            type = "style";
+        }
+        else{
+            option.rel = "stylesheet";
+        }
+        return Util.addHeadTag(type, body, option);
     }
-
 };

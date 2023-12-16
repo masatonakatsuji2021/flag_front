@@ -109,7 +109,7 @@ class Util {
     static promise(callback) {
         return new Promise(callback);
     }
-    static addHeadTag(type, option) {
+    static addHeadTag(type, body, option) {
         if (!option) {
             option = {};
         }
@@ -118,7 +118,12 @@ class Util {
         for (let n = 0; n < c.length; n++) {
             let key = c[n];
             let val = option[key];
-            el.setAttribute(key, val);
+            if (val) {
+                el.setAttribute(key, val);
+            }
+        }
+        if (body) {
+            el.innerHTML = body;
         }
         document.head.appendChild(el);
         return {
@@ -128,20 +133,26 @@ class Util {
             },
         };
     }
-    static addHeadScript(path, option) {
+    static addHeadScript(path, body, option) {
         if (!option) {
             option = {};
         }
         option.src = path;
-        return Util.addHeadTag("script", option);
+        return Util.addHeadTag("script", body, option);
     }
-    static addHeadStyle(path, option) {
+    static addHeadStyle(path, body, option) {
         if (!option) {
             option = {};
         }
-        option.rel = "stylesheet";
         option.href = path;
-        return Util.addHeadTag("link", option);
+        let type = "link";
+        if (body) {
+            type = "style";
+        }
+        else {
+            option.rel = "stylesheet";
+        }
+        return Util.addHeadTag(type, body, option);
     }
 }
 exports.default = Util;
