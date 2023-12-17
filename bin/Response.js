@@ -24,11 +24,15 @@ class Response {
     static get pageEnable() {
         return Data_1.default.__page_status;
     }
+    static get vectol() {
+        return Data_1.default.__step_mode;
+    }
     static redirect(url, sliented) {
         if (!url) {
             url = "/";
         }
         if (sliented) {
+            Data_1.default.__step_mode = true;
             location.href = "#" + url;
         }
         else {
@@ -102,8 +106,8 @@ class Response {
                 }
             }
             if (context.template) {
-                if (Data_1.default.before_template != context.template) {
-                    Data_1.default.before_template = context.template;
+                if (Data_1.default.__before_template != context.template) {
+                    Data_1.default.__before_template = context.template;
                     const templateHtml = Response.template(context.template);
                     (0, Dom_1.default)("body").html = templateHtml;
                 }
@@ -116,7 +120,7 @@ class Response {
                 }
             }
             else {
-                Data_1.default.before_template = null;
+                Data_1.default.__before_template = null;
                 const viewHtml = Response.view(context.view);
                 if (myApp.animated) {
                     yield Response.__renderingAnimated("body", routes, context, viewHtml);
@@ -140,13 +144,12 @@ class Response {
             }
             const Controller_ = use(contPath);
             const cont = new Controller_();
+            let beginStatus = false;
             if (Data_1.default.__before_controller_path != contPath) {
                 Data_1.default.__before_controller_path = contPath;
-                if (cont.handleBegin) {
-                    yield cont.handleBegin();
-                }
+                beginStatus = true;
             }
-            yield cont.handleBefore();
+            yield cont.handleBefore(beginStatus);
             Data_1.default.__before_controller = cont;
             Data_1.default.__before_action = routes.action;
             Data_1.default.__before_view = null;
@@ -161,9 +164,9 @@ class Response {
                     yield cont[method]();
                 }
             }
-            yield cont.handleAfter();
+            yield cont.handleAfter(beginStatus);
             yield Response.__rendering(routes, cont);
-            yield cont.handleRenderBefore();
+            yield cont.handleRenderBefore(beginStatus);
             if (cont[routes.action]) {
                 const method = routes.action;
                 if (routes.aregment) {
@@ -173,7 +176,7 @@ class Response {
                     yield cont[method]();
                 }
             }
-            yield cont.handleRenderAfter();
+            yield cont.handleRenderAfter(beginStatus);
         });
     }
     static renderingOnView(routes) {
@@ -344,7 +347,7 @@ class Response {
         content = Util_1.default.base64Decode(content);
         (0, Dom_1.default)("body").removeVirtual("__before_render__").html = content;
         Data_1.default.__before_controller = null;
-        Data_1.default.before_template = null;
+        Data_1.default.__before_template = null;
     }
     static setBindView(parentElement) {
         return Response._setBind("view", "View", parentElement);

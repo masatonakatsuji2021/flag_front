@@ -23,7 +23,23 @@ exports.default = (function () {
                     animatedCss = Util_1.default.base64Decode(animatedCss);
                     Util_1.default.addHeadStyle(null, animatedCss);
                 }
-                window.addEventListener("popstate", (e) => {
+                window.addEventListener("click", (e) => {
+                    const target = e.target;
+                    // @ts-ignore
+                    if (target.localName !== "a") {
+                        return;
+                    }
+                    // @ts-ignore
+                    const href = target.getAttribute("href");
+                    if (!href) {
+                        return;
+                    }
+                    if (href.indexOf("#") !== 0) {
+                        return;
+                    }
+                    Data_1.default.__step_mode = true;
+                });
+                window.addEventListener("popstate", (e) => __awaiter(this, void 0, void 0, function* () {
                     if (!Response_1.default.pageEnable) {
                         if (Data_1.default.__before_url) {
                             history.pushState(null, null, Data_1.default.__before_url);
@@ -36,8 +52,9 @@ exports.default = (function () {
                     var url = location.hash.substring(1);
                     Data_1.default.__before_url = location.hash;
                     var routes = Routes_1.default.searchRoute(url);
-                    Response_1.default.rendering(routes);
-                });
+                    yield Response_1.default.rendering(routes);
+                    Data_1.default.__step_mode = false;
+                }));
                 // background class method load.
                 if (Config.backgrounds) {
                     for (let n = 0; n < Config.backgrounds.length; n++) {

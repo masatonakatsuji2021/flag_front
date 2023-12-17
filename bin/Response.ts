@@ -19,6 +19,10 @@ export default class Response{
         return Data.__page_status;
     }
 
+    public static get vectol() : boolean{
+        return Data.__step_mode;
+    }
+
     /**
      * ***redirect*** : 
      * redirect to another page.  
@@ -43,6 +47,7 @@ export default class Response{
         }
         
         if(sliented){
+            Data.__step_mode = true;
             location.href = "#" + url;
         }
         else{
@@ -126,8 +131,8 @@ export default class Response{
 
         if(context.template){
 
-            if(Data.before_template != context.template){
-                Data.before_template = context.template;
+            if(Data.__before_template != context.template){
+                Data.__before_template = context.template;
                 const templateHtml = Response.template(context.template);
                 Dom("body").html = templateHtml;
             }
@@ -142,7 +147,7 @@ export default class Response{
             }
         }
         else{
-            Data.before_template = null;
+            Data.__before_template = null;
             const viewHtml = Response.view(context.view);
 
             if(myApp.animated){
@@ -172,14 +177,13 @@ export default class Response{
         const Controller_ = use(contPath);
         const cont : Controller = new Controller_();
 
+        let beginStatus = false;
         if(Data.__before_controller_path != contPath){
             Data.__before_controller_path = contPath;
-            if(cont.handleBegin){
-                await cont.handleBegin();
-            }
+            beginStatus = true;
         }
 
-        await cont.handleBefore();
+        await cont.handleBefore(beginStatus);
 
         Data.__before_controller = cont;
         Data.__before_action = routes.action;
@@ -195,14 +199,14 @@ export default class Response{
             }
             else{
                 await cont[method]();
-            }    
+            }
         }
 
-        await cont.handleAfter();
+        await cont.handleAfter(beginStatus);
 
         await Response.__rendering(routes, cont);
 
-        await cont.handleRenderBefore();
+        await cont.handleRenderBefore(beginStatus);
 
         if(cont[routes.action]){
             const method : string = routes.action;
@@ -215,7 +219,7 @@ export default class Response{
             }
         }
 
-        await cont.handleRenderAfter(); 
+        await cont.handleRenderAfter(beginStatus); 
 
     }
     
@@ -438,7 +442,7 @@ export default class Response{
         content = Util.base64Decode(content);
         Dom("body").removeVirtual("__before_render__").html = content;
         Data.__before_controller = null;
-        Data.before_template = null;
+        Data.__before_template = null;
     }
 
     private static setBindView(parentElement? : Element){

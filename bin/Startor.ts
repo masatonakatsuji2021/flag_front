@@ -15,14 +15,34 @@ export default (async function(){
             Util.addHeadStyle(null, animatedCss);
         }
 
-        window.addEventListener("popstate", (e) => {
+        window.addEventListener("click", (e) => {
+
+            const target = e.target;
+
+            // @ts-ignore
+            if(target.localName !== "a"){
+                return;
+            }
+
+            // @ts-ignore
+            const href = target.getAttribute("href");
+            if(!href){
+                return;
+            }
+            if(href.indexOf("#") !== 0){
+                return;
+            }
+
+            Data.__step_mode = true;
+        });
+
+        window.addEventListener("popstate", async (e) => {
 
             if(!Response.pageEnable){
                 if(Data.__before_url){
                     history.pushState(null,null,Data.__before_url);
                 }
                 else{
-
                     history.pushState(null,null);
                 }
                 return false;
@@ -33,9 +53,10 @@ export default (async function(){
             Data.__before_url = location.hash;
 
             var routes = Routes.searchRoute(url);
-            Response.rendering(routes);
-        });
+            await Response.rendering(routes);
 
+            Data.__step_mode = false;
+        });
 
         // background class method load.
         if(Config.backgrounds){

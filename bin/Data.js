@@ -2,10 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class Data {
 }
-Data.__form = {};
+Data.__step_mode = true;
 Data.__before_url = null;
-Data.__file_uploads = {};
-Data.before_template = null;
+Data.__before_template = null;
 Data.__before_controller = null;
 Data.__before_controller_path = null;
 Data.__before_view = null;

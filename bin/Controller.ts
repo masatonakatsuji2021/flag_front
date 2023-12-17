@@ -51,36 +51,29 @@ export default class Controller{
     }
 
     /**
-     * handleBegin :  
-     * Event handler that is executed when the controller is called for the first time during page transition.  
-     * This event hand is not executed when the page transitions between the same Controllers..
-     */
-    handleBegin() : void{}
-
-    /**
      * handleBefore : 
      * Event handler executed just before transitioning to the page.
      */
-    handleBefore() : void{}
+    handleBefore(beginStatus? : boolean) : void{}
 
     /**
      * handleAfter : 
      * Event handler executed immediately after transitioning to the page
      */
-    handleAfter() : void{}
+    handleAfter(beginStatus? : boolean) : void{}
 
     /**
      * handleRenderBefore : 
      * Event handler executed immediately after page transition and rendering process to the screen is completed
      */
-    handleRenderBefore() : void{}
+    handleRenderBefore(beginStatus? : boolean) : void{}
 
     /**
      * handleRenderAfter : 
      * Event handler that is executed after page transition, after rendering process to the screen is completed, 
      * and after the event for each action is completed.
      */
-    handleRenderAfter() : void{}
+    handleRenderAfter(beginStatus? : boolean) : void{}
 
     /**
      * handleLeave : 
