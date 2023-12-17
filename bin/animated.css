@@ -1,12 +1,14 @@
-*{
+pagelist *{
     box-sizing:border-box;
 }
 pagelist{
-    position:fixed;
+    position:absolute;
     left:0;
     top:0;
     width:100%;
     height:100%;
+    overflow:hidden;
+    direction: rtl;
 }
 pagelist a{
     color:darkcyan;
@@ -14,29 +16,38 @@ pagelist a{
 }
 pagelist page-section,
 pagelist modal-section{
-    position:fixed;
-    padding:20px;
+    position:absolute;
     left:0;
     top:0;
     width:100%;
     height:100%;
     background:#fff;
+    color:#444;
+    transform:translateX(0);
+    direction: ltr;
     transition-duration:350ms;
 }
 pagelist page-section base{
-    display: block;
-    background:rgba(0,0,0,0);
-    transition-duration:350ms;
-}
-pagelist page-section:not(:last-child) base{
-    position:fixed;
+    position:absolute;
     display: block;
     left:0;
     top:0;
     width:100%;
     height:100%;
+    background:rgba(0,0,0,0);
+    transition-duration:350ms;
+}
+pagelist page-section:not(:last-child) base{
     background:rgba(0,0,0,0.4);
 }
 pagelist page-section[hold]{
-    left: 100%;
+    transform:translateX(100%);
+}
+pagelist page-section page{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    top:0;
+    overflow:auto;
 }

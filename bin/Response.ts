@@ -82,7 +82,6 @@ export default class Response{
                         const now = nows[n];
                         now.setAttribute("hold", true);
                             
-
                         setTimeout(()=>{
                             now.removeAttribute("hold");
                             setTimeout(()=>{
@@ -96,7 +95,7 @@ export default class Response{
                 const newdom = document.createElement("page-section");
                 newdom.setAttribute("id", routes.url);
                 newdom.setAttribute("hold", "OK");
-                newdom.innerHTML = "<page>" + contentHtml+ "</page><base></base>"
+                newdom.innerHTML = "<base></base><page>" + contentHtml+ "</page>"
                 main.append(newdom);
                 if(routes.started){
                     newdom.removeAttribute("hold");
@@ -128,9 +127,7 @@ export default class Response{
         if(context.template){
 
             if(Data.before_template != context.template){
-
                 Data.before_template = context.template;
-
                 const templateHtml = Response.template(context.template);
                 Dom("body").html = templateHtml;
             }
@@ -147,6 +144,7 @@ export default class Response{
         else{
             Data.before_template = null;
             const viewHtml = Response.view(context.view);
+
             if(myApp.animated){
                 await  Response.__renderingAnimated("body", routes, context, viewHtml);
             }
@@ -181,19 +179,13 @@ export default class Response{
             }
         }
 
+        await cont.handleBefore();
+
         Data.__before_controller = cont;
         Data.__before_action = routes.action;
         Data.__before_view = null;
+        Data.__before_view_path = null;
         Data.__child_classs = {};
-        
-        if(!(
-            cont[routes.action] ||
-            cont["before_" + routes.action]
-        )){
-            throw("\"" + routes.action + "\" method on \"" + controllerName + "\" class is not found.");
-        }
-
-        await cont.handleBefore();
         
         if(cont["before_" + routes.action]){
             const method : string = "before_" + routes.action;
@@ -247,6 +239,7 @@ export default class Response{
 
         Data.__before_view = vm;
         Data.__before_controller = null;
+        Data.__before_controller_path = null;
         Data.__before_action = null;
         Data.__child_classs = {};
 
@@ -263,7 +256,7 @@ export default class Response{
         }
         else{
             await vm.handle();
-        }        
+        }
 
         await vm.handleRenderAfter();
     }

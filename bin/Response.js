@@ -74,7 +74,7 @@ class Response {
                     const newdom = document.createElement("page-section");
                     newdom.setAttribute("id", routes.url);
                     newdom.setAttribute("hold", "OK");
-                    newdom.innerHTML = "<page>" + contentHtml + "</page><base></base>";
+                    newdom.innerHTML = "<base></base><page>" + contentHtml + "</page>";
                     main.append(newdom);
                     if (routes.started) {
                         newdom.removeAttribute("hold");
@@ -146,15 +146,12 @@ class Response {
                     yield cont.handleBegin();
                 }
             }
+            yield cont.handleBefore();
             Data_1.default.__before_controller = cont;
             Data_1.default.__before_action = routes.action;
             Data_1.default.__before_view = null;
+            Data_1.default.__before_view_path = null;
             Data_1.default.__child_classs = {};
-            if (!(cont[routes.action] ||
-                cont["before_" + routes.action])) {
-                throw ("\"" + routes.action + "\" method on \"" + controllerName + "\" class is not found.");
-            }
-            yield cont.handleBefore();
             if (cont["before_" + routes.action]) {
                 const method = "before_" + routes.action;
                 if (routes.aregment) {
@@ -196,6 +193,7 @@ class Response {
             }
             Data_1.default.__before_view = vm;
             Data_1.default.__before_controller = null;
+            Data_1.default.__before_controller_path = null;
             Data_1.default.__before_action = null;
             Data_1.default.__child_classs = {};
             yield vm.handleBefore();
