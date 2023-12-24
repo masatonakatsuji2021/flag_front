@@ -47,10 +47,10 @@ class View {
      */
     handleAlways() { }
     handleBegin() { }
-    handleBefore() { }
-    handleAfter() { }
-    handleRenderBefore() { }
-    handleRenderAfter() { }
+    handleBefore(beginStatus) { }
+    handleAfter(beginStatus) { }
+    handleRenderBefore(beginStatus) { }
+    handleRenderAfter(beginStatus) { }
     handleLeave() { }
 }
 exports.default = View;

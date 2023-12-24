@@ -144,12 +144,22 @@ class Response {
             }
             const Controller_ = use(contPath);
             const cont = new Controller_();
+            const viewName = Util_1.default.ucFirst(routes.action) + "View";
+            const viewPath = "app/View/" + Util_1.default.ucFirst(routes.controller) + "/" + viewName;
+            let vw;
+            if (useExists(viewPath)) {
+                const View_ = use(viewPath);
+                vw = new View_();
+            }
             let beginStatus = false;
             if (Data_1.default.__before_controller_path != contPath) {
                 Data_1.default.__before_controller_path = contPath;
                 beginStatus = true;
             }
             yield cont.handleBefore(beginStatus);
+            if (vw) {
+                yield vw.handleBefore(beginStatus);
+            }
             Data_1.default.__before_controller = cont;
             Data_1.default.__before_action = routes.action;
             Data_1.default.__before_view = null;
@@ -165,8 +175,14 @@ class Response {
                 }
             }
             yield cont.handleAfter(beginStatus);
+            if (vw) {
+                yield vw.handleAfter(beginStatus);
+            }
             yield Response.__rendering(routes, cont);
             yield cont.handleRenderBefore(beginStatus);
+            if (vw) {
+                yield vw.handleRenderBefore(beginStatus);
+            }
             if (cont[routes.action]) {
                 const method = routes.action;
                 if (routes.aregment) {
@@ -176,7 +192,18 @@ class Response {
                     yield cont[method]();
                 }
             }
+            if (vw) {
+                if (routes.aregment) {
+                    yield vw.handle(...routes.aregment);
+                }
+                else {
+                    yield vw.handle();
+                }
+            }
             yield cont.handleRenderAfter(beginStatus);
+            if (vw) {
+                yield vw.handleRenderAfter(beginStatus);
+            }
         });
     }
     static renderingOnView(routes) {

@@ -177,6 +177,15 @@ export default class Response{
         const Controller_ = use(contPath);
         const cont : Controller = new Controller_();
 
+        const viewName = Util.ucFirst(routes.action) + "View";
+        const viewPath : string = "app/View/" + Util.ucFirst(routes.controller) + "/" + viewName;
+        
+        let vw : View; 
+        if(useExists(viewPath)){
+            const View_ = use(viewPath);
+            vw = new View_();
+        }
+
         let beginStatus = false;
         if(Data.__before_controller_path != contPath){
             Data.__before_controller_path = contPath;
@@ -184,6 +193,9 @@ export default class Response{
         }
 
         await cont.handleBefore(beginStatus);
+        if(vw){
+            await vw.handleBefore(beginStatus);
+        }
 
         Data.__before_controller = cont;
         Data.__before_action = routes.action;
@@ -204,9 +216,17 @@ export default class Response{
 
         await cont.handleAfter(beginStatus);
 
+        if(vw){
+            await vw.handleAfter(beginStatus);
+        }
+
         await Response.__rendering(routes, cont);
 
         await cont.handleRenderBefore(beginStatus);
+
+        if(vw){
+            await vw.handleRenderBefore(beginStatus);
+        }
 
         if(cont[routes.action]){
             const method : string = routes.action;
@@ -219,8 +239,20 @@ export default class Response{
             }
         }
 
+        if(vw){
+            if(routes.aregment){
+                await vw.handle(...routes.aregment);
+            }
+            else{
+                await vw.handle();
+            }
+        }
+
         await cont.handleRenderAfter(beginStatus); 
 
+        if(vw){
+            await vw.handleRenderAfter(beginStatus);
+        }
     }
     
     private static async renderingOnView(routes){

@@ -52,13 +52,13 @@ export default class View{
 
     handleBegin() : void{}
 
-    handleBefore() : void{}
+    handleBefore(beginStatus? : boolean) : void{}
     
-    handleAfter() : void{}
+    handleAfter(beginStatus? : boolean) : void{}
 
-    handleRenderBefore() : void{}
+    handleRenderBefore(beginStatus? : boolean) : void{}
 
-    handleRenderAfter() :void{}
+    handleRenderAfter(beginStatus? : boolean) :void{}
 
     handleLeave() : void{}
 }
