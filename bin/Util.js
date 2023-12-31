@@ -44,6 +44,49 @@ class Util {
         }
         return content;
     }
+    static loadResource(resourceName, base64Decoded) {
+        const res = Util.loadHtml("Resource/" + resourceName);
+        if (!res) {
+            return;
+        }
+        if (base64Decoded) {
+            return Util.base64Decode(res);
+        }
+        else {
+            return res;
+        }
+    }
+    static LoadResourceOnDataUrl(resourceName, setMime) {
+        let mime = Util.getMime(resourceName);
+        if (setMime) {
+            mime = setMime;
+        }
+        return "data:" + mime + ";base64," + Util.loadResource(resourceName);
+    }
+    static getMime(fileName) {
+        const fileNames = fileName.split(".");
+        const extName = fileNames[fileNames.length - 1];
+        const mimes = {
+            html: "text/html; charset=utf-8",
+            htm: "text/html; charset=utf-8",
+            elf: "text/html; charset=utf-8",
+            js: "text/javascript",
+            json: "application/json",
+            jpg: "image/jpeg",
+            jpeg: "image/jpeg",
+            gif: "image/gif",
+            png: "image/png",
+            ico: "image/vnd.microsoft.icon",
+            aac: "audio/aac",
+            mid: "audio/midi",
+            pdf: "application/pdf",
+        };
+        let mime = "text/plain";
+        if (mimes[extName]) {
+            mime = mimes[extName];
+        }
+        return mime;
+    }
     static uniqId(length) {
         if (!length) {
             length = 32;

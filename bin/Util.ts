@@ -75,6 +75,91 @@ export default class Util{
     }
 
     /**
+     * ***loadResource*** : 
+     * Get the content set in the resource area.
+     * @param {string} resourceName Resource File Name
+     * @returns {string} base64 encoded resource data
+     */
+    public static loadResource(resourceName : string) : string;
+
+    /**
+     * ***loadResource*** : 
+     * Get the content set in the resource area.
+     * @param {string} resourceName Resource File Name
+     * @param {boolean} base64Decoded If "true", perform base64 decoding
+     * @returns {any} resource data
+     */
+    public static loadResource(resourceName : string, base64Decoded : boolean);
+
+    public static loadResource(resourceName : string, base64Decoded? : boolean){
+        const res = Util.loadHtml("Resource/" + resourceName);
+        if(!res){
+            return;
+        }
+
+        if(base64Decoded){
+            return Util.base64Decode(res);
+        }
+        else{
+            return res;
+        }
+    }
+
+    /**
+     * ***LoadResourceOnDataUrl*** : 
+     * Convert content data of resource area to format accessible by dataURL/
+     * @param {string} resourceName Resource File Name
+     * @returns {string} data URL text
+     */
+    public static LoadResourceOnDataUrl(resourceName : string) : string;
+
+    /**
+     * ***LoadResourceOnDataUrl*** : 
+     * Convert content data of resource area to format accessible by dataURL/
+     * @param {string} resourceName Resource File Name
+     * @param {string} setMime setting mime type
+     * @returns {string} data URL text
+     */
+    public static LoadResourceOnDataUrl(resourceName : string, setMime : string) : string;
+
+    public static LoadResourceOnDataUrl(resourceName : string, setMime? : string){
+        let mime = Util.getMime(resourceName);
+        if(setMime){
+            mime = setMime;
+        }
+        return "data:" + mime + ";base64," + Util.loadResource(resourceName);
+    }
+
+    private static getMime(fileName : string){
+        
+        const fileNames = fileName.split(".");
+        const extName = fileNames[fileNames.length - 1];
+
+        const mimes = {
+            html:   "text/html; charset=utf-8",
+            htm:    "text/html; charset=utf-8",
+            elf:    "text/html; charset=utf-8",
+            js:     "text/javascript",
+            json:   "application/json",
+            jpg:    "image/jpeg",
+            jpeg:   "image/jpeg",
+            gif:    "image/gif",
+            png:    "image/png",
+            ico:    "image/vnd.microsoft.icon",
+            aac:    "audio/aac",
+            mid:    "audio/midi",
+            pdf:    "application/pdf",
+        };
+
+        let mime = "text/plain";
+        if(mimes[extName]){
+            mime = mimes[extName];
+        }
+
+        return mime;
+    }
+
+    /**
      * #### uniqId
      * Generates an arbitrary string of 32 characters
      * @returns {string} uniq id string

@@ -4,6 +4,7 @@ const Cli_1 = require("@flagfw/flag/bin/Cli");
 const fs = require("fs");
 const child_process_1 = require("child_process");
 const filePath = require("path");
+const Util_1 = require("@flagfw/flag/bin/Util");
 const setScript = function (name, contents) {
     contents = "var exports = {};\n" + contents + ";\nreturn exports;";
     return "flag.setFn(\"" + name + "\", function(){\n" + contents + "});\n";
@@ -223,6 +224,16 @@ exports.default = (option, cliOption) => {
                 maps.sources.push(fileName);
                 maps.sourcesContent.push(fcontents);
             }
+        }
+    }
+    const resourceFiles = deepSearch(option.resourcePath);
+    if (resourceFiles) {
+        for (let n = 0; n < resourceFiles.file.length; n++) {
+            const file = resourceFiles.file[n];
+            const buffer = fs.readFileSync(file);
+            const b64 = Util_1.default.base64Encode(buffer);
+            scriptStr += setContent("Resource/" + file.substring(option.resourcePath.length + 1), b64);
+            Cli_1.default.green("#").outn(" Resource  ".padEnd(padEnd) + file.substring(option.resourcePath.length + 1));
         }
     }
     fs.mkdirSync(option.buildPath, {

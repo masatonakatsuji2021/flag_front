@@ -24,6 +24,7 @@ const builds = (framework, option, rootPath) => {
     option.appPath = option.rootPath + "/app";
     option.renderingPath = option.rootPath + "/rendering";
     option.commonPath = option.rootPath + "/common";
+    option.resourcePath = option.rootPath + "/resource";
     option.framework = framework;
     option.buildPath = rootPath + "/frameworks/" + framework;
     if (framework == "cordova" ||

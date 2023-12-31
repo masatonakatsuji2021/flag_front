@@ -2,6 +2,7 @@ import FlagCLI from "@flagfw/flag/bin/Cli";
 import * as fs from "fs";
 import { execSync } from "child_process";
 import * as filePath from "path";
+import Util from "@flagfw/flag/bin/Util";
 
 const setScript = function(name, contents){
     contents = "var exports = {};\n" + contents + ";\nreturn exports;";
@@ -274,6 +275,21 @@ export default (option?, cliOption?) => {
         }
     }
 
+    const resourceFiles = deepSearch(option.resourcePath);
+
+    if(resourceFiles){
+        for(let n = 0 ; n < resourceFiles.file.length ; n++){
+            const file = resourceFiles.file[n];
+
+            const buffer = fs.readFileSync(file);
+            const b64 = Util.base64Encode(buffer);
+        
+            scriptStr += setContent("Resource/" + file.substring(option.resourcePath.length + 1), b64);
+
+            FlagCLI.green("#").outn(" Resource  ".padEnd(padEnd) + file.substring(option.resourcePath.length + 1));
+        }
+    }
+    
     fs.mkdirSync(option.buildPath,{
         recursive: true,
     });
