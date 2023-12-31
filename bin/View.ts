@@ -9,6 +9,11 @@ import Response from "Response";
  */
 export default class View{
 
+    /**
+     * ***view*** : 
+     * Change the view name to be displayed.  
+     * If not specified, the "rendering/View/{viewName}.html" file will be displayed as the HTML source by default.
+     */
     public view : string = null;
 
     /**
@@ -23,6 +28,10 @@ export default class View{
         Response.__rendering(routes, this);
     }
 
+    /**
+     * ***template*** : 
+     * If you have a template HTML file, specify it here.
+     */
     public template : string = null;
 
     /**

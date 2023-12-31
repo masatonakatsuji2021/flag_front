@@ -1,17 +1,15 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * -----------------------------------------------------
- *
  * FLAG - Single Page Action(SPA) FW
  *
  * Controller
  *
  * Date   : 2023/04/21
  * Author : nakatsuji masato
- *
  * -----------------------------------------------------
  */
-Object.defineProperty(exports, "__esModule", { value: true });
 const Routes_1 = require("Routes");
 const Response_1 = require("Response");
 /**
@@ -20,7 +18,16 @@ const Response_1 = require("Response");
  */
 class Controller {
     constructor() {
+        /**
+         * ***view*** :
+         * Change the view name to be displayed.
+         * If not specified, the "rendering/View/{ControllerName}/{ActionName}.html" file will be displayed as the HTML source by default.
+         */
         this.view = null;
+        /**
+         * ***template*** :
+         * If you have a template HTML file, specify it here.
+         */
         this.template = null;
     }
     /**
@@ -45,28 +52,28 @@ class Controller {
         Response_1.default.__rendering(routes, this);
     }
     /**
-     * handleBefore :
+     * ***handleBefore*** :
      * Event handler executed just before transitioning to the page.
      */
     handleBefore(beginStatus) { }
     /**
-     * handleAfter :
+     * ***handleAfter*** :
      * Event handler executed immediately after transitioning to the page
      */
     handleAfter(beginStatus) { }
     /**
-     * handleRenderBefore :
+     * ***handleRenderBefore*** :
      * Event handler executed immediately after page transition and rendering process to the screen is completed
      */
     handleRenderBefore(beginStatus) { }
     /**
-     * handleRenderAfter :
+     * ***handleRenderAfter*** :
      * Event handler that is executed after page transition, after rendering process to the screen is completed,
      * and after the event for each action is completed.
      */
     handleRenderAfter(beginStatus) { }
     /**
-     * handleLeave :
+     * ***handleLeave*** :
      * Event handler executed when leaving the page
      * @param {string} action before access controller action name
      */

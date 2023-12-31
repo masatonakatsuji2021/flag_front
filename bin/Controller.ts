@@ -1,21 +1,15 @@
 /**
  * -----------------------------------------------------
- * 
  * FLAG - Single Page Action(SPA) FW
  * 
  * Controller
  * 
  * Date   : 2023/04/21
  * Author : nakatsuji masato
- * 
  * -----------------------------------------------------
  */
-
-import Data from "Data";
 import Routes from "Routes";
 import Response from "Response";
-import VDom from "VDom";
-import Dom from "Dom";
 
 /**
  * Controller : 
@@ -23,6 +17,11 @@ import Dom from "Dom";
  */
 export default class Controller{
 
+    /**
+     * ***view*** : 
+     * Change the view name to be displayed.  
+     * If not specified, the "rendering/View/{ControllerName}/{ActionName}.html" file will be displayed as the HTML source by default.
+     */
     public view : string = null;
 
     /**
@@ -36,7 +35,11 @@ export default class Controller{
         const routes = Routes.getRoute();
         Response.__rendering(routes, this);
     }
-    
+
+    /**
+     * ***template*** : 
+     * If you have a template HTML file, specify it here.
+     */
     public template : string = null;
 
     /**
@@ -51,32 +54,32 @@ export default class Controller{
     }
 
     /**
-     * handleBefore : 
+     * ***handleBefore*** : 
      * Event handler executed just before transitioning to the page.
      */
     handleBefore(beginStatus? : boolean) : void{}
 
     /**
-     * handleAfter : 
+     * ***handleAfter*** : 
      * Event handler executed immediately after transitioning to the page
      */
     handleAfter(beginStatus? : boolean) : void{}
 
     /**
-     * handleRenderBefore : 
+     * ***handleRenderBefore*** : 
      * Event handler executed immediately after page transition and rendering process to the screen is completed
      */
     handleRenderBefore(beginStatus? : boolean) : void{}
 
     /**
-     * handleRenderAfter : 
+     * ***handleRenderAfter*** : 
      * Event handler that is executed after page transition, after rendering process to the screen is completed, 
      * and after the event for each action is completed.
      */
     handleRenderAfter(beginStatus? : boolean) : void{}
 
     /**
-     * handleLeave : 
+     * ***handleLeave*** : 
      * Event handler executed when leaving the page
      * @param {string} action before access controller action name
      */
