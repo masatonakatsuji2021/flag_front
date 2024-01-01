@@ -110,6 +110,7 @@ class Response {
                     Data_1.default.__before_template = context.template;
                     const templateHtml = Response.template(context.template);
                     (0, Dom_1.default)("body").html = templateHtml;
+                    yield Response.loadRenderingClass("Template", context.template);
                 }
                 const viewHtml = Response.view(context.view);
                 if (myApp.animated) {

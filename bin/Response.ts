@@ -135,6 +135,8 @@ export default class Response{
                 Data.__before_template = context.template;
                 const templateHtml = Response.template(context.template);
                 Dom("body").html = templateHtml;
+
+                await Response.loadRenderingClass("Template", context.template);
             }
 
             const viewHtml = Response.view(context.view);

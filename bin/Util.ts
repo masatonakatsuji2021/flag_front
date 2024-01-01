@@ -139,6 +139,7 @@ export default class Util{
             html:   "text/html; charset=utf-8",
             htm:    "text/html; charset=utf-8",
             elf:    "text/html; charset=utf-8",
+            css:    "text/css",
             js:     "text/javascript",
             json:   "application/json",
             jpg:    "image/jpeg",

@@ -10,7 +10,16 @@ const Response_1 = require("Response");
  */
 class View {
     constructor() {
+        /**
+         * ***view*** :
+         * Change the view name to be displayed.
+         * If not specified, the "rendering/View/{viewName}.html" file will be displayed as the HTML source by default.
+         */
         this.view = null;
+        /**
+         * ***template*** :
+         * If you have a template HTML file, specify it here.
+         */
         this.template = null;
     }
     /**
