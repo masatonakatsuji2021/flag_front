@@ -136,9 +136,8 @@ export default class Util{
         const extName = fileNames[fileNames.length - 1];
 
         const mimes = {
-            html:   "text/html; charset=utf-8",
-            htm:    "text/html; charset=utf-8",
-            elf:    "text/html; charset=utf-8",
+            html:   "text/html",
+            htm:    "text/html",
             css:    "text/css",
             js:     "text/javascript",
             json:   "application/json",
@@ -150,6 +149,9 @@ export default class Util{
             aac:    "audio/aac",
             mid:    "audio/midi",
             pdf:    "application/pdf",
+            mp3:    "audio/mpeg",
+            ttf:    "font/ttf",
+            otf:    "font/otf",
         };
 
         let mime = "text/plain";
@@ -400,5 +402,15 @@ export default class Util{
             option.rel = "stylesheet";
         }
         return Util.addHeadTag(type, body, option);
+    }
+
+    public static addHeadStyleOnResource(resourceName : string, option?){
+        const content = Util.LoadResourceOnDataUrl(resourceName, "test/css");
+        return Util.addHeadStyle(content, option);
+    }
+
+    public static addHeadScriptOnResource(resourceName : string, option?){
+        const script = Util.LoadResourceOnDataUrl(resourceName, "text/javascript");
+        return Util.addHeadScript(script, null, option);
     }
 };
